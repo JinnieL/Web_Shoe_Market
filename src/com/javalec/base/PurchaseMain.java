@@ -17,6 +17,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.javalec.funtion.BuyAction;
+
 
 public class PurchaseMain extends JFrame {
 
@@ -70,7 +72,7 @@ public class PurchaseMain extends JFrame {
 		});
 		setTitle("주문");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 448);
+		setBounds(100, 100, 584, 440);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -85,7 +87,7 @@ public class PurchaseMain extends JFrame {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 45, 438, 270);
+			scrollPane.setBounds(6, 45, 572, 276);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
@@ -95,23 +97,29 @@ public class PurchaseMain extends JFrame {
 			BtnBuy = new JButton("구매");
 			BtnBuy.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-						
+					BuyAction();
 				}
 			});
-			BtnBuy.setBounds(74, 365, 117, 29);
+			BtnBuy.setBounds(113, 365, 117, 29);
 		}
 		return BtnBuy;
 	}
 	private JButton getBtnCancellation() {
 		if (BtnCancellation == null) {
 			BtnCancellation = new JButton("취소");
-			BtnCancellation.setBounds(251, 365, 117, 29);
+			BtnCancellation.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					CancellationAction();
+				}
+			});
+			BtnCancellation.setBounds(387, 365, 117, 29);
 		}
 		return BtnCancellation;
 	}
 	private JTable getInnerTable() {
 		if (innerTable == null) {
 			innerTable = new JTable();
+			innerTable.setModel(outerTable);
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
 		return innerTable;
@@ -120,7 +128,7 @@ public class PurchaseMain extends JFrame {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("");
 			lblNewLabel.setIcon(new ImageIcon(PurchaseMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel.setBounds(185, 6, 85, 27);
+			lblNewLabel.setBounds(252, 6, 85, 27);
 		}
 		return lblNewLabel;
 	}
@@ -146,44 +154,51 @@ public class PurchaseMain extends JFrame {
 		// 물품 이미지 
 		int vColIndex = 0;
 		TableColumn col = innerTable.getColumnModel().getColumn(vColIndex);
-		int width = 30;
+		int width = 200;
 		col.setPreferredWidth(width);
 		
 		
 		// 상품명 
 		vColIndex = 1;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
-		width = 80;
+		width = 150;
 		col.setPreferredWidth(width);
 
 		
 		// 상품 사이즈 
 		vColIndex = 2;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
-		width = 120;
+		width = 100;
 		col.setPreferredWidth(width);
 		
 		
 		// 상품 수량
 		vColIndex = 3;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
-		width = 200;
+		width = 35;
 		col.setPreferredWidth(width);
 
 		
 		// 상품  가격
 		vColIndex = 4;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
-		width = 200;
+		width = 100;
 		col.setPreferredWidth(width);
 	}
 	
 	// 구매 버튼 액션
+		private void BuyAction() {
+			BuyAction ba = new BuyAction();
+			ba.setVisible(true);
+		}
 	
 	
-	
-	
-	
+	// 취소 버튼 액션 
+		private void CancellationAction() {
+			CartMain cm = new CartMain();
+			cm.setVisible(true);
+		}
+		
 	
 	
 	
