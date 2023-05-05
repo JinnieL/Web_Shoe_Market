@@ -9,7 +9,6 @@ public class CartDto {
 	String name;		// 상품명
 	String filename;	// 이미지
 
-
 	
 	public CartDto() {
 		// TODO Auto-generated constructor stub
@@ -17,15 +16,7 @@ public class CartDto {
 
 
 
-	public CartDto(int cartNO, String name, int cartQty, int cartPrice, String filename) {
-		super();
-		this.cartNO = cartNO;
-		this.cartQty = cartQty;
-		this.cartPrice = cartPrice;
-		this.name = name;
-	}
-
-	public CartDto(int cartNO, int cartQty, int cartPrice, String name, String filename) {
+	public CartDto(int cartNO,String name, int cartQty, int cartPrice, String filename) {
 		super();
 		this.cartNO = cartNO;
 		this.cartQty = cartQty;

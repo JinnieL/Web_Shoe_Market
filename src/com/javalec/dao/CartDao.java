@@ -27,6 +27,9 @@ public class CartDao {
 	String name;
 	String fileName;
 	FileInputStream file;
+	String userid;
+	int productCode;
+	
 	
 	public CartDao() {
 		// TODO Auto-generated constructor stub
@@ -34,6 +37,13 @@ public class CartDao {
 	
 	
 
+	
+	public CartDao(int cartNO, int cartQty) {
+		super();
+		this.cartNO = cartNO;
+		this.cartQty = cartQty;
+	}
+	
 
 	public CartDao(int cartNO) {
 		super();
@@ -42,12 +52,12 @@ public class CartDao {
 
 
 
-
+	// 테이블에 데이터
 	public ArrayList<CartDto> selectList(){
 		ArrayList<CartDto> beanList = new ArrayList<CartDto>();	//데이터를 쌓을 장소
 		
-		String query = "select cartNo, productName, productPrice, cartQty, productImageName, productImage from cart, user, product";
-		String query1 = " where cart.userid = user.userid and cart.productCode = product.productCode and user.userid = 'donghyun'";
+		String query = "select c.cartNo, p.productName, p.productPrice, c.cartQty, p.productImageName, p.productImage from cart c, user u, product p";
+		String query1 = " where c.userid = u.userid and c.productCode = p.productCode";
 	
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");											
@@ -62,7 +72,6 @@ public class CartDao {
 				int wqPirce = rs.getInt(3);
 				int wkQty = rs.getInt(4);
 				String wkFilename = rs.getString(5);
-				System.out.println(wkFilename);
 
 				File file = new File("./" + wkFilename);
 				
@@ -84,11 +93,12 @@ public class CartDao {
 		return beanList;	
 		
 	}	
-	
-	
+
+	// 취소
 	public boolean deleteAction() {
 		PreparedStatement ps = null;
 		try {
+			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
@@ -110,6 +120,8 @@ public class CartDao {
 
 	}
 	
+	
+	// 장바구니 비우기
 	public boolean alldeleteAction() {
 		PreparedStatement ps = null;
 		try {
@@ -132,8 +144,38 @@ public class CartDao {
 		
 	}
 	
+	// 수량 업데이트
+	public boolean tableUpdate() {
+		PreparedStatement ps = null;
+		System.out.println(cartNO);
+		System.out.println(cartQty);
+		try {
+			// DB 연결!!! 선언자
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql,id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+
+			String query = "update cart set cartQty = ?";
+			String query1 = " where cartNo = ?";
+		
+			ps = conn_mysql.prepareStatement(query + query1); 
+
+			ps.setInt(1, cartQty);
+			ps.setInt(2, cartNO);
+			
+			ps.executeUpdate();
+			conn_mysql.close();
+			return true;
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	
-	
+
 	
 	
 	

@@ -10,6 +10,7 @@ import javax.swing.table.TableColumn;
 
 import com.javalec.dao.CartDao;
 import com.javalec.dto.CartDto;
+import com.javalec.funtion.ImageResize;
 import com.javalec.util.ShareVar;
 
 import javax.swing.JScrollPane;
@@ -31,6 +32,9 @@ import java.util.ArrayList;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class CartMain extends JFrame {
 
@@ -41,7 +45,7 @@ public class CartMain extends JFrame {
 	private JTextField tfTotal;
 	private JButton btnEmpty;
 	private JButton btnOrder;
-	private JButton btnModify;
+	private JButton btnUpdate;
 	private JButton btnCancel;
 	private JButton btnMain;
 	
@@ -49,8 +53,13 @@ public class CartMain extends JFrame {
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	
 	ArrayList<CartDto> beanList = null;
+	int qty = 0;
+	
 	private JLabel lblUser;
 	private JLabel lblNewLabel;
+	private JTextField tfUpdate;
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_2;
 	/**
 	 * Launch the application.
 	 */
@@ -91,11 +100,14 @@ public class CartMain extends JFrame {
 		contentPane.add(getTfTotal());
 		contentPane.add(getBtnEmpty());
 		contentPane.add(getBtnOrder());
-		contentPane.add(getBtnModify());
+		contentPane.add(getBtnUpdate());
 		contentPane.add(getBtnCancel());
 		contentPane.add(getBtnMain());
 		contentPane.add(getLblUser());
 		contentPane.add(getLblNewLabel());
+		contentPane.add(getTfUpdate());
+		contentPane.add(getLblNewLabel_1());
+		contentPane.add(getLblNewLabel_2());
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
@@ -117,6 +129,10 @@ public class CartMain extends JFrame {
 			};
 			innerTable.addMouseListener(new MouseAdapter() {	
 
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					tableClick();
+				}
 			});
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			innerTable.setModel(outerTable);	
@@ -162,23 +178,33 @@ public class CartMain extends JFrame {
 			btnOrder = new JButton("주문");
 			btnOrder.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					redirectPurchase();
 				}
 			});
 			btnOrder.setBounds(0, 298, 85, 29);
 		}
 		return btnOrder;
 	}
-	private JButton getBtnModify() {
-		if (btnModify == null) {
-			btnModify = new JButton("수량수정");
-			btnModify.setEnabled(false);
-			btnModify.setBounds(82, 298, 85, 29);
+	
+	// 수량 업데이트
+	private JButton getBtnUpdate() {
+		if (btnUpdate == null) {
+			btnUpdate = new JButton("수량 수정");
+			btnUpdate.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tableUpdate();
+					tableInit();
+					searchAction();
+				}
+			});
+			btnUpdate.setEnabled(false);
+			btnUpdate.setBounds(205, 298, 85, 29);
 		}
-		return btnModify;
+		return btnUpdate;
 	}
 	private JButton getBtnCancel() {
 		if (btnCancel == null) {
-			btnCancel = new JButton("취소");
+			btnCancel = new JButton("상품 취소");
 			btnCancel.setEnabled(false);
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -187,14 +213,19 @@ public class CartMain extends JFrame {
 					searchAction();
 				}
 			});
-			btnCancel.setBounds(164, 298, 85, 29);
+			btnCancel.setBounds(80, 298, 85, 29);
 		}
 		return btnCancel;
 	}
 	private JButton getBtnMain() {
 		if (btnMain == null) {
 			btnMain = new JButton("메인");
-			btnMain.setBounds(246, 298, 85, 29);
+			btnMain.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					redirectUserMain();
+				}
+			});
+			btnMain.setBounds(0, 270, 85, 29);
 		}
 		return btnMain;
 	}
@@ -242,6 +273,10 @@ public class CartMain extends JFrame {
 		width = 100;
 		col.setPreferredWidth(width);
 		
+		btnCancel.setEnabled(false);
+		btnUpdate.setEnabled(false);
+		tfUpdate.setEditable(false);
+		
 	}
 	
 	// table data
@@ -253,14 +288,16 @@ public class CartMain extends JFrame {
 		int priceQty = 0;			// 상품별 수량 가격 합계
 		
 		int listCount = beanList.size(); // table data 갯수
-		System.out.println(listCount);
-		
+	
 		for(int i = 0; i < listCount; i++) {
 			priceQty = beanList.get(i).getCartPrice() * beanList.get(i).getCartQty();
 			
-			ImageIcon icon = new ImageIcon("./" + beanList.get(i).getName());
-			System.out.println("./" + beanList.get(i).getName());
-			Object[] tempData = {icon, beanList.get(i).getName(), beanList.get(i).getCartQty() + "개",
+			ImageIcon icon = new ImageIcon("./" + beanList.get(i).getFilename());
+			int x = 180;
+			int y = 130;
+			ImageResize resize = new ImageResize(icon, x, y);
+			ImageIcon cartImage = resize.imageResizing();
+			Object[] tempData = {cartImage, beanList.get(i).getName(), beanList.get(i).getCartQty() + "개",
 																	priceQty + "원"};
 			priceSum += priceQty; 
 			outerTable.addRow(tempData);
@@ -272,7 +309,7 @@ public class CartMain extends JFrame {
 	
 	}
 	
-	
+	// 장바구니 취소
 	private void tableDelete() {
 		int i = innerTable.getSelectedRow();
 		
@@ -288,6 +325,7 @@ public class CartMain extends JFrame {
 		
 	}
 	
+	// 장바구니 비우기
 	private void tableEmpty() {
 		CartDao dao = new CartDao();
 		int i = JOptionPane.showConfirmDialog(this, "장바구니를 비우시겠습니까???", "장바구니",JOptionPane.YES_NO_OPTION);
@@ -304,7 +342,54 @@ public class CartMain extends JFrame {
 		
 	}
 	
+	// main 버튼
+	private void redirectUserMain() {
+		UserMain userMain = new UserMain();
+		userMain.setVisible(true);
+		dispose();
+	}
 	
+	// 주문 버튼
+	private void redirectPurchase() {
+		Purchase purchase = new Purchase();
+		purchase.setVisible(true);
+		dispose();
+	}
+	
+	// 수량 update
+	private void tableUpdate() {
+		int i = innerTable.getSelectedRow();
+		int userqty = Integer.parseInt(tfUpdate.getText());	// 사용자가 입력한 수량
+		// 업데이트
+		if(userqty == 0) {
+			JOptionPane.showMessageDialog(this, "0개는 입력하실 수 없습니다.\n" + "수량을 다시 입력해주세요!" + "오류" + JOptionPane.ERROR_MESSAGE);
+			return;
+		}else {
+			
+			CartDao dao = new CartDao(beanList.get(i).getCartNO(),userqty);
+			Boolean result = dao.tableUpdate();
+			
+			if(result) {
+				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" +  "수량이 변경되었습니다.", "상품 정보", JOptionPane.INFORMATION_MESSAGE);
+			}else {
+				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" +  "변경 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	
+		
+	}
+	
+	// table 클릭
+	private void tableClick() {
+		int i = innerTable.getSelectedRow();
+		qty = beanList.get(i).getCartQty();
+		
+		tfUpdate.setText(Integer.toString(qty));
+		btnCancel.setEnabled(true);
+		btnUpdate.setEnabled(true);
+		tfUpdate.setEditable(true);
+		
+	}	
 	
 	
 	private JLabel getLblUser() {
@@ -322,6 +407,42 @@ public class CartMain extends JFrame {
 			lblNewLabel.setBounds(6, 10, 79, 16);
 		}
 		return lblNewLabel;
+	}
+	private JTextField getTfUpdate() {
+		if (tfUpdate == null) {
+			tfUpdate = new JTextField();
+			tfUpdate.setEditable(false);
+			tfUpdate.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {						// 숫자만 입력될 수 있도록 오류 체크
+					if(e.getKeyChar() >= '0' && e.getKeyChar() <= '9') {
+						
+					}else {
+						JOptionPane.showMessageDialog(null, "숫자만 입력해주세요!","경고!",JOptionPane.ERROR_MESSAGE);
+						tfUpdate.setText(Integer.toString(qty));
+					}
+				}
+			});
+			tfUpdate.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfUpdate.setBounds(164, 298, 33, 26);
+			tfUpdate.setColumns(10);
+		}
+		return tfUpdate;
+	}
+	private JLabel getLblNewLabel_1() {
+		if (lblNewLabel_1 == null) {
+			lblNewLabel_1 = new JLabel("상품을 선택 하시면 수정/취소를 할 수 있습니다");
+			lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+			lblNewLabel_1.setBounds(88, 283, 206, 16);
+		}
+		return lblNewLabel_1;
+	}
+	private JLabel getLblNewLabel_2() {
+		if (lblNewLabel_2 == null) {
+			lblNewLabel_2 = new JLabel("개");
+			lblNewLabel_2.setBounds(195, 303, 19, 16);
+		}
+		return lblNewLabel_2;
 	}
 } // end
 
