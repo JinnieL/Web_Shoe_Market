@@ -8,6 +8,7 @@ public class CartDto {
 	int cartPrice;		// 가격
 	String name;		// 상품명
 
+
 	
 	public CartDto() {
 		// TODO Auto-generated constructor stub
@@ -15,13 +16,16 @@ public class CartDto {
 
 
 
-	public CartDto(int cartNO, String name, int cartQty, int cartPrice) {
+	public CartDto(int cartNO, String name, int cartQty, int cartPrice ) {
 		super();
 		this.cartNO = cartNO;
 		this.cartQty = cartQty;
 		this.cartPrice = cartPrice;
 		this.name = name;
 	}
+
+
+
 
 
 

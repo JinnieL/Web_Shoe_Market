@@ -15,6 +15,7 @@ import com.javalec.util.ShareVar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.Icon;
@@ -28,6 +29,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.SwingConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CartMain extends JFrame {
 
@@ -47,6 +50,7 @@ public class CartMain extends JFrame {
 	
 	ArrayList<CartDto> beanList = null;
 	private JLabel lblUser;
+	private JLabel lblNewLabel;
 	/**
 	 * Launch the application.
 	 */
@@ -71,7 +75,7 @@ public class CartMain extends JFrame {
 			@Override
 			public void windowOpened(WindowEvent e) {	// windowopend
 				tableInit();	// table 정리
-				queryAction();	// table 내용
+				searchAction();	// table 내용
 			}
 		});
 		setTitle("Cart");
@@ -91,6 +95,7 @@ public class CartMain extends JFrame {
 		contentPane.add(getBtnCancel());
 		contentPane.add(getBtnMain());
 		contentPane.add(getLblUser());
+		contentPane.add(getLblNewLabel());
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
@@ -110,6 +115,9 @@ public class CartMain extends JFrame {
 				}
 				
 			};
+			innerTable.addMouseListener(new MouseAdapter() {	
+
+			});
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			innerTable.setModel(outerTable);	
 			innerTable.setRowHeight(150);
@@ -120,7 +128,8 @@ public class CartMain extends JFrame {
 	private JLabel getLblTotal() {
 		if (lblTotal == null) {
 			lblTotal = new JLabel("");
-			lblTotal.setBounds(317, 270, 53, 16);
+			lblTotal.setHorizontalAlignment(SwingConstants.TRAILING);
+			lblTotal.setBounds(240, 270, 124, 16);
 		}
 		return lblTotal;
 	}
@@ -139,7 +148,7 @@ public class CartMain extends JFrame {
 			btnEmpty = new JButton("장바구니 비우기");
 			btnEmpty.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {	// 장바구니 비우기
-					emptyAction();
+		
 					
 				}
 			});
@@ -168,6 +177,13 @@ public class CartMain extends JFrame {
 	private JButton getBtnCancel() {
 		if (btnCancel == null) {
 			btnCancel = new JButton("취소");
+			btnCancel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tableDelet();
+					tableInit();
+					searchAction();
+				}
+			});
 			btnCancel.setBounds(164, 298, 85, 29);
 		}
 		return btnCancel;
@@ -226,41 +242,54 @@ public class CartMain extends JFrame {
 	}
 	
 	// table data
-	private void queryAction() {
+	private void searchAction() {
 		CartDao dao = new CartDao();
 		beanList = dao.selectList();
 		int priceSum = 0;
+		int priceQty = 0;
+		
 		String filePath = Integer.toString(ShareVar.filename);
 		
 		int listCount = beanList.size(); // table data 갯수
 		
 		for(int i = 0; i < listCount; i++) {
-			ImageIcon icon = new ImageIcon(filePath);
-			Object[] tempData = {icon, beanList.get(i).getName(), beanList.get(i).getCartQty(),
-																	beanList.get(i).getCartPrice()};
-			priceSum += beanList.get(i).getCartPrice(); 
+			priceQty = beanList.get(i).getCartPrice() * beanList.get(i).getCartQty();
+			
+			//ImageIcon icon = new ImageIcon(filePath);
+			ImageIcon icon = new ImageIcon(CartMain.class.getResource("/com/javalec/images/p000001.png")); // 이미지test
+			Object[] tempData = {icon, beanList.get(i).getName(), beanList.get(i).getCartQty() + "개",
+																	priceQty + "원"};
+			priceSum += priceQty; 
 			outerTable.addRow(tempData);
 			
+
 		}
 		
-		tfTotal.setText(Integer.toString(priceSum));
-		lblTotal.setText("총" + beanList.size() + " 합계:" );
-		lblUser.setText("님의 장바구니 입니다.");
+		tfTotal.setText(Integer.toString(priceSum)+ "원");
+		lblTotal.setText("총" + beanList.size() + "개 합계:" );
+		lblUser.setText( "님의 장바구니 입니다.");
 		File file = new File(filePath);							// 파일이 저장 되어 있으므로 지워줘야된다
 		file.delete();	
 	
 	}
 	
-
 	
-	
-	// 장바구니 table 삭제
-	private void emptyAction() {
+	private void tableDelet() {
+		int i = innerTable.getSelectedRow();
+		
+		CartDao dao = new CartDao(i);
+		Boolean result = dao.deleteAction();
+		
+		if(result) {
+			JOptionPane.showMessageDialog(this,"장바구니 취소\n" +  "신발이 취소 되었습니다!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(this,"주소록 정보 삭제\n" +  "삭제중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
 		
 		
 		
 	}
-	
 	
 	
 	
@@ -270,9 +299,17 @@ public class CartMain extends JFrame {
 		if (lblUser == null) {
 			lblUser = new JLabel("");
 			lblUser.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblUser.setBounds(298, 10, 198, 16);
+			lblUser.setBounds(185, 10, 311, 16);
 		}
 		return lblUser;
+	}
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("");
+			lblNewLabel.setIcon(new ImageIcon(CartMain.class.getResource("/com/javalec/images/logoSmall.png")));
+			lblNewLabel.setBounds(6, 10, 79, 16);
+		}
+		return lblNewLabel;
 	}
 } // end
 

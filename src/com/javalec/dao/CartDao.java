@@ -32,11 +32,15 @@ public class CartDao {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
 
-	public CartDao(String name) {
+
+	public CartDao(int cartNO) {
 		super();
-		this.name = name;
+		this.cartNO = cartNO;
 	}
+
+
 
 
 	public ArrayList<CartDto> selectList(){
@@ -44,18 +48,20 @@ public class CartDao {
 		
 		String query = "select cartNO, productName, productPrice, cartQty from cart, user, product";
 		String query1 = " where cart.userid = user.userid and cart.productCode = product.productCode";
+	
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");											
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);	
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			ResultSet rs = stmt_mysql.executeQuery(query + query1);	// 데이터 베이스(데이터 한줄이 들어가있다)
+			ResultSet rs = stmt_mysql.executeQuery(query + query1 );	// 데이터 베이스(데이터 한줄이 들어가있다)
 			
 			while(rs.next()) {							// rs 에서 읽어올 것이 없을 경우까지
 				int wkSeq = rs.getInt(1);				// 한줄에 데이터 하나씩 빼주는 작업
 				String wkName = rs.getString(2);
 				int wqPirce = rs.getInt(3);
 				int wkQty = rs.getInt(4);
+
 				
 //				ShareVar.filename += 1;
 //				File file = new File(Integer.toString(ShareVar.filename));
@@ -77,7 +83,7 @@ public class CartDao {
 		
 		return beanList;	
 		
-	}
+	}	
 	
 	
 	public boolean deleteAction() {
@@ -87,10 +93,10 @@ public class CartDao {
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			String query = "delete from userinfo where userid = ?";
+			String query = "delete from cart where cartNo = ?";
 			
 			ps = conn_mysql.prepareStatement(query);
-			ps.setString(1, name);
+			ps.setInt(1, cartNO);
 			
 			
 			ps.executeUpdate();
