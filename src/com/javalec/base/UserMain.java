@@ -29,6 +29,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class UserMain extends JFrame {
 
@@ -39,7 +41,6 @@ public class UserMain extends JFrame {
 	private JLabel lblNewLabel;
 	private JScrollPane scrollPane;
 	private JLabel lblMyPage;
-	private JLabel lblCart;
 	private JTable innerTable;
 	private ArrayList<ProductDto> beanList = null;
 
@@ -63,6 +64,7 @@ public class UserMain extends JFrame {
 	 * Table 생성
 	 */
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	private JButton btnCart;
 	
 
 	/**
@@ -90,7 +92,7 @@ public class UserMain extends JFrame {
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getScrollPane());
 		contentPane.add(getLblMyPage());
-		contentPane.add(getLblCart());
+		contentPane.add(getBtnCart());
 	}
 	private JComboBox getCbSelection() {
 		if (cbSelection == null) {
@@ -153,31 +155,11 @@ public class UserMain extends JFrame {
 		}
 		return lblMyPage;
 	}
-	private JLabel getLblCart() {
-		if (lblCart == null) {
-			lblCart = new JLabel("");
-			lblCart.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					redirectCart();
-				}
-			});
-			ImageIcon icon = new ImageIcon(UserMain.class.getResource("/com/javalec/images/cartBtn.png"));
-			int x = 60;
-			int y = 60;
-			ImageResize resize = new ImageResize(icon, x, y);
-			ImageIcon cartIcon = resize.imageResizing();
-			
-			lblCart.setIcon(cartIcon);
-			lblCart.setBounds(26, 528, 60, 60);
-		}
-		return lblCart;
-	}
 	private JTable getInnerTable() {
 		if (innerTable == null) {
 			innerTable = new JTable() {
 				public Class getColumnClass(int column) {
-					return (column == 0) ? Icon.class : Object.class;
+					return (column == 1) ? Icon.class : Object.class;
 				}
 			};
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -187,38 +169,60 @@ public class UserMain extends JFrame {
 			innerTable.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					tableClick();
 				}
 			});
 		}
 		return innerTable;
 	}
 	
+	private JButton getBtnCart() {
+		if (btnCart == null) {
+			btnCart = new JButton("장바구니 현황");
+			btnCart.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					redirectCart();
+				}
+			});
+			btnCart.setBounds(16, 528, 117, 56);
+		}
+		return btnCart;
+	}
+	
+	/**** Functions ****/
+	
 	/* 01. 테이블 정리 메소드 */
 	private void tableInit() {
+		outerTable.addColumn("No");
 		outerTable.addColumn("사진");
 		outerTable.addColumn("상품명");
 		outerTable.addColumn("가격");
-		outerTable.setColumnCount(3);
+		outerTable.setColumnCount(4);
 		
 		int i = outerTable.getRowCount();
 		for(int j=0; j<i; j++) {
 			outerTable.removeRow(0);
 		}
-		
-		/*사진 컬럼 크기 */
+		/* 사진 컬러 크기*/
 		int vColIndex = 0;
 		TableColumn col = innerTable.getColumnModel().getColumn(vColIndex);
-		int width = 250;
+		int width = 25;
+		col.setPreferredWidth(width);
+		
+		/*사진 컬럼 크기 */
+		vColIndex = 1;
+		col = innerTable.getColumnModel().getColumn(vColIndex);
+		width = 250;
 		col.setPreferredWidth(width);
 		
 		/* 상품명 컬럼 크기 */
-		vColIndex = 1;
+		vColIndex = 2;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
-		width = 140;
+		width = 130;
 		col.setPreferredWidth(width);
 		
 		/* 가격 컬럼 크기 */
-		vColIndex = 2;
+		vColIndex = 3;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 60;
 		col.setPreferredWidth(width);
@@ -238,17 +242,34 @@ public class UserMain extends JFrame {
 			int y = 150;
 			ImageResize resize = new ImageResize(icon, x, y);
 			ImageIcon productIcon = resize.imageResizing();
-			Object[] tempData = {productIcon, beanList.get(i).getProductName(), beanList.get(i).getProductPrice()};
+			Object[] tempData = {beanList.get(i).getProductCode(), productIcon, beanList.get(i).getProductName(), beanList.get(i).getProductPrice()};
 			outerTable.addRow(tempData);
 		}
 		System.out.println("02. Method Pass");
 	}
 	
-	/* 03. Cart Btn 눌렀을 때 */
+	/* 03. 카트 버튼을 클릭했을 때 */
 	private void redirectCart() {
 		CartMain cartMain = new CartMain();
 		cartMain.setVisible(true);
 		dispose();
 	}
 	
+	/* 04. 테이블을 클릭 했을 때 */
+	private void tableClick() {
+		int i = innerTable.getSelectedRow();
+		int wkNo = (int)innerTable.getValueAt(i, 0);
+		ImageIcon wkImage = (ImageIcon)innerTable.getValueAt(i, 1);
+		ProductDetailMain productDetailMain = new ProductDetailMain();
+		productDetailMain.setProductCode(wkNo);
+		productDetailMain.setProductImage(wkImage);
+		productDetailMain.setVisible(true);
+		dispose();
+		System.out.println("04. Method Pass");
+	}
+	
+
+	
+	
+
 } // End Class

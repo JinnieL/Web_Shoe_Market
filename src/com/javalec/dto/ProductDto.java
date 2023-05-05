@@ -13,6 +13,8 @@ public class ProductDto {
 	String productDeletedate;
 	String productImageName;
 	int brandNo;
+	String brandName;
+	int size;
 	
 	/* Constructor */
 	public ProductDto() {
@@ -20,20 +22,24 @@ public class ProductDto {
 	}
 
 	/* 테이블에 데이터를 띄워줄 생성자 */
-	public ProductDto(String productName, int productPrice, String productImageName) {
+	public ProductDto(int productCode, String productName, int productPrice, String productImageName) {
 		super();
+		this.productCode = productCode;
 		this.productName = productName;
 		this.productPrice = productPrice;
 		this.productImageName = productImageName;
 	}
+	
+	/* 상품 상세 페이지에 띄울 데이터를 가져와줄 생성자*/
+	public ProductDto(int productCode, String productName, int productPrice, String brandName, int size) {
+		super();
+		this.productCode = productCode;
+		this.productName = productName;
+		this.productPrice = productPrice;
+		this.brandName = brandName;
+		this.size = size;
+	}
 
-	
-	
-	
-	
-	
-	
-	
 	/* getter & setter */
 	public int getProductCode() {
 		return productCode;
@@ -98,6 +104,24 @@ public class ProductDto {
 	public void setBrandNo(int brandNo) {
 		this.brandNo = brandNo;
 	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+
 
 	
 
