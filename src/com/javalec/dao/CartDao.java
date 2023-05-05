@@ -46,8 +46,8 @@ public class CartDao {
 	public ArrayList<CartDto> selectList(){
 		ArrayList<CartDto> beanList = new ArrayList<CartDto>();	//데이터를 쌓을 장소
 		
-		String query = "select cartNO, productName, productPrice, cartQty, productImageName, productImage from cart, user, product";
-		String query1 = " where cart.userid = user.userid and cart.productCode = product.productCode";
+		String query = "select cartNo, productName, productPrice, cartQty, productImageName, productImage from cart, user, product";
+		String query1 = " where cart.userid = user.userid and cart.productCode = product.productCode and user.userid = 'donghyun'";
 	
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");											
@@ -62,27 +62,20 @@ public class CartDao {
 				int wqPirce = rs.getInt(3);
 				int wkQty = rs.getInt(4);
 				String wkFilename = rs.getString(5);
-				
+				System.out.println(wkFilename);
 
 				File file = new File("./" + wkFilename);
-
-				try (FileOutputStream output = new FileOutputStream(file)) {
-					InputStream input = rs.getBinaryStream(6);
-					
-					byte[] buffer = new byte[1024];
-					while(input.read(buffer) > 0) {
-						output.write(buffer);
-					}
-				}catch(Exception e) {
-					e.printStackTrace();
+				
+				FileOutputStream output = new FileOutputStream(file);
+				InputStream input = rs.getBinaryStream(6);
+				byte[] buffer = new byte[1024];
+				
+				while(input.read(buffer) > 0) {
+					output.write(buffer);
 				}
-				
-			
-				
 				CartDto dto = new CartDto(wkSeq, wkName, wkQty, wqPirce, wkFilename); // db에 가져온 데이터를 한줄에 넣기위해
 				beanList.add(dto);
 			}
-			
 			conn_mysql.close();
 		}catch (Exception e) {	// 에러 걸리면
 			e.printStackTrace();
