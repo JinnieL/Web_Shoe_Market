@@ -21,6 +21,7 @@ public class ProductDetailMain extends JFrame {
 	private JLabel lblProductImage;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel;
+	private JLabel lblBuy;
 
 	/**
 	 * Launch the application.
@@ -54,6 +55,7 @@ public class ProductDetailMain extends JFrame {
 		contentPane.add(getLblProductImage());
 		contentPane.add(getLblNewLabel_1());
 		contentPane.add(getLblNewLabel());
+		contentPane.add(getLblBuy());
 	}
 	private JLabel getLblProductImage() {
 		if (lblProductImage == null) {
@@ -85,6 +87,19 @@ public class ProductDetailMain extends JFrame {
 		return lblNewLabel;
 	}
 	
+	private JLabel getLblBuy() {
+		if (lblBuy == null) {
+			lblBuy = new JLabel("");
+			ImageIcon icon = new ImageIcon(ProductDetailMain.class.getResource("/com/javalec/images/buyBtn.png"));
+			int x = 120;
+			int y = 80;
+			ImageResize resize = new ImageResize(icon, x, y);
+			ImageIcon buyIcon = resize.imageResizing();
+			lblBuy.setIcon(buyIcon);
+			lblBuy.setBounds(45, 350, 120, 80);
+		}
+		return lblBuy;
+	}
 }	// End Class
 
 
