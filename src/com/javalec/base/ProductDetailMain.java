@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.javalec.funtion.ImageResize;
+
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -56,8 +59,11 @@ public class ProductDetailMain extends JFrame {
 		if (lblProductImage == null) {
 			lblProductImage = new JLabel("");
 			ImageIcon productIcon = new ImageIcon(ProductDetailMain.class.getResource("/com/javalec/images/P000001.png"));
-			ImageIcon pIcon = imageResize(productIcon, 400, 200);
-			lblProductImage.setIcon(pIcon);
+			int x = 200;
+			int y = 100;
+			ImageResize imageResize = new ImageResize(productIcon, x, y);
+			ImageIcon resizeIcon = imageResize.imageResizing();
+			lblProductImage.setIcon(resizeIcon);
 			lblProductImage.setBounds(6, 60, 400, 200);
 		}
 		return lblProductImage;
@@ -78,16 +84,6 @@ public class ProductDetailMain extends JFrame {
 		}
 		return lblNewLabel;
 	}
-
-
-	/* Function */
-	private ImageIcon imageResize(ImageIcon icon, int x, int y) {
-		Image img = icon.getImage();
-		Image changeImg = img.getScaledInstance(x, y, Image.SCALE_SMOOTH);
-		ImageIcon changeIcon = new ImageIcon(changeImg);
-		return changeIcon;
-	}
-	
 	
 }	// End Class
 
