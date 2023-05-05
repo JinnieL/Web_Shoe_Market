@@ -15,13 +15,15 @@ import javax.swing.ImageIcon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PurchaseMain extends JFrame {
 
 	private JPanel contentPane;
 	private JScrollPane scrollPane;
-	private JButton btnNewButton;
-	private JButton btnNewButton_1;
+	private JButton BtnBuy;
+	private JButton BtnCancellation;
 	private JTable innerTable;
 	private JLabel lblNewLabel;
 
@@ -75,8 +77,8 @@ public class PurchaseMain extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.add(getScrollPane());
-		contentPane.add(getBtnNewButton());
-		contentPane.add(getBtnNewButton_1());
+		contentPane.add(getBtnBuy());
+		contentPane.add(getBtnCancellation());
 		contentPane.add(getLblNewLabel());
 	}
 
@@ -88,19 +90,24 @@ public class PurchaseMain extends JFrame {
 		}
 		return scrollPane;
 	}
-	private JButton getBtnNewButton() {
-		if (btnNewButton == null) {
-			btnNewButton = new JButton("구매");
-			btnNewButton.setBounds(74, 365, 117, 29);
+	private JButton getBtnBuy() {
+		if (BtnBuy == null) {
+			BtnBuy = new JButton("구매");
+			BtnBuy.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+						
+				}
+			});
+			BtnBuy.setBounds(74, 365, 117, 29);
 		}
-		return btnNewButton;
+		return BtnBuy;
 	}
-	private JButton getBtnNewButton_1() {
-		if (btnNewButton_1 == null) {
-			btnNewButton_1 = new JButton("취소");
-			btnNewButton_1.setBounds(251, 365, 117, 29);
+	private JButton getBtnCancellation() {
+		if (BtnCancellation == null) {
+			BtnCancellation = new JButton("취소");
+			BtnCancellation.setBounds(251, 365, 117, 29);
 		}
-		return btnNewButton_1;
+		return BtnCancellation;
 	}
 	private JTable getInnerTable() {
 		if (innerTable == null) {
@@ -164,12 +171,15 @@ public class PurchaseMain extends JFrame {
 		col.setPreferredWidth(width);
 
 		
-		// 상품 가격
+		// 상품  가격
 		vColIndex = 4;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 200;
 		col.setPreferredWidth(width);
 	}
+	
+	// 구매 버튼 액션
+	
 	
 	
 	
