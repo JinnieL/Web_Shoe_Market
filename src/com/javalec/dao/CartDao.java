@@ -56,7 +56,7 @@ public class CartDao {
 	public ArrayList<CartDto> selectList(){
 		ArrayList<CartDto> beanList = new ArrayList<CartDto>();	//데이터를 쌓을 장소
 		
-		String query = "select c.cartNo, p.productName, p.productPrice, c.cartQty, p.productImageName, p.productImage from cart c, user u, product p";
+		String query = "select c.cartNo, p.productName, p.productPrice, c.size, c.cartQty, p.productImageName, p.productImage from cart c, user u, product p";
 		String query1 = " where c.userid = u.userid and c.productCode = p.productCode";
 	
 		try {
@@ -69,20 +69,22 @@ public class CartDao {
 			while(rs.next()) {							// rs 에서 읽어올 것이 없을 경우까지
 				int wkSeq = rs.getInt(1);				// 한줄에 데이터 하나씩 빼주는 작업
 				String wkName = rs.getString(2);
-				int wqPirce = rs.getInt(3);
-				int wkQty = rs.getInt(4);
-				String wkFilename = rs.getString(5);
+				int wkPirce = rs.getInt(3);
+				int wkSize = rs.getInt(4);
+				int wkQty = rs.getInt(5);
+				
+				String wkFilename = rs.getString(6);
 
 				File file = new File("./" + wkFilename);
 				
 				FileOutputStream output = new FileOutputStream(file);
-				InputStream input = rs.getBinaryStream(6);
+				InputStream input = rs.getBinaryStream(7);
 				byte[] buffer = new byte[1024];
 				
 				while(input.read(buffer) > 0) {
 					output.write(buffer);
 				}
-				CartDto dto = new CartDto(wkSeq, wkName, wkQty, wqPirce, wkFilename); // db에 가져온 데이터를 한줄에 넣기위해
+				CartDto dto = new CartDto(wkSeq, wkName, wkSize, wkQty, wkPirce, wkFilename); // db에 가져온 데이터를 한줄에 넣기위해
 				beanList.add(dto);
 			}
 			conn_mysql.close();
