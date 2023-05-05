@@ -214,7 +214,7 @@ public class UserMain extends JFrame {
 		/* 상품명 컬럼 크기 */
 		vColIndex = 1;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
-		width = 100;
+		width = 140;
 		col.setPreferredWidth(width);
 		
 		/* 가격 컬럼 크기 */

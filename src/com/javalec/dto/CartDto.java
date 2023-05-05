@@ -25,8 +25,14 @@ public class CartDto {
 		this.name = name;
 	}
 
-
-
+	public CartDto(int cartNO, int cartQty, int cartPrice, String name, String filename) {
+		super();
+		this.cartNO = cartNO;
+		this.cartQty = cartQty;
+		this.cartPrice = cartPrice;
+		this.name = name;
+		this.filename = filename;
+	}
 
 
 

@@ -252,27 +252,23 @@ public class CartMain extends JFrame {
 		int priceSum = 0;			// 총 합계
 		int priceQty = 0;			// 상품별 수량 가격 합계
 		
-		String filePath = Integer.toString(ShareVar.filename);
-		
 		int listCount = beanList.size(); // table data 갯수
+		System.out.println(listCount);
 		
 		for(int i = 0; i < listCount; i++) {
 			priceQty = beanList.get(i).getCartPrice() * beanList.get(i).getCartQty();
 			
-			ImageIcon icon = new ImageIcon("./" + beanList.get(i).getFilename());
+			ImageIcon icon = new ImageIcon("./" + beanList.get(i).getName());
+			System.out.println("./" + beanList.get(i).getName());
 			Object[] tempData = {icon, beanList.get(i).getName(), beanList.get(i).getCartQty() + "개",
 																	priceQty + "원"};
 			priceSum += priceQty; 
 			outerTable.addRow(tempData);
-			
-
 		}
 		
 		tfTotal.setText(Integer.toString(priceSum)+ "원");
-		lblTotal.setText("총 " + beanList.size() + "개 합계:" );
+		lblTotal.setText("총 " + listCount + "개 합계:" );
 		lblUser.setText( " 님의 장바구니 입니다.");
-		File file = new File(filePath);							// 파일이 저장 되어 있으므로 지워줘야된다
-		file.delete();	
 	
 	}
 	
