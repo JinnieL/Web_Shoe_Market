@@ -164,7 +164,7 @@ public class PurchaseMain extends JFrame {
 		col.setPreferredWidth(width);
 
 		
-		// 상품 가격
+		// 상품  가격
 		vColIndex = 4;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 200;
