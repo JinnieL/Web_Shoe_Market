@@ -7,6 +7,7 @@ public class CartDto {
 	int cartQty;		// 수량
 	int cartPrice;		// 가격
 	String name;		// 상품명
+	String filename;	// 이미지
 
 
 	
@@ -16,7 +17,7 @@ public class CartDto {
 
 
 
-	public CartDto(int cartNO, String name, int cartQty, int cartPrice ) {
+	public CartDto(int cartNO, String name, int cartQty, int cartPrice, String filename) {
 		super();
 		this.cartNO = cartNO;
 		this.cartQty = cartQty;
@@ -31,6 +32,18 @@ public class CartDto {
 
 	public int getCartNO() {
 		return cartNO;
+	}
+
+
+
+	public String getFilename() {
+		return filename;
+	}
+
+
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 

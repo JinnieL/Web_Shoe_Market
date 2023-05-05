@@ -46,7 +46,7 @@ public class CartDao {
 	public ArrayList<CartDto> selectList(){
 		ArrayList<CartDto> beanList = new ArrayList<CartDto>();	//데이터를 쌓을 장소
 		
-		String query = "select cartNO, productName, productPrice, cartQty from cart, user, product";
+		String query = "select cartNO, productName, productPrice, cartQty, productImageName, productImage from cart, user, product";
 		String query1 = " where cart.userid = user.userid and cart.productCode = product.productCode";
 	
 		try {
@@ -54,29 +54,36 @@ public class CartDao {
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);	
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			ResultSet rs = stmt_mysql.executeQuery(query + query1 );	// 데이터 베이스(데이터 한줄이 들어가있다)
+			ResultSet rs = stmt_mysql.executeQuery(query + query1);	// 데이터 베이스(데이터 한줄이 들어가있다)
 			
 			while(rs.next()) {							// rs 에서 읽어올 것이 없을 경우까지
 				int wkSeq = rs.getInt(1);				// 한줄에 데이터 하나씩 빼주는 작업
 				String wkName = rs.getString(2);
 				int wqPirce = rs.getInt(3);
 				int wkQty = rs.getInt(4);
+				String wkFilename = rs.getString(5);
+				
 
+				File file = new File("./" + wkFilename);
+
+				try (FileOutputStream output = new FileOutputStream(file)) {
+					InputStream input = rs.getBinaryStream(6);
+					
+					byte[] buffer = new byte[1024];
+					while(input.read(buffer) > 0) {
+						output.write(buffer);
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
 				
-//				ShareVar.filename += 1;
-//				File file = new File(Integer.toString(ShareVar.filename));
-//				FileOutputStream output = new FileOutputStream(file);
-//				InputStream input = rs.getBinaryStream(5);
-//				byte[] buffer = new byte[1024];
-//				while(input.read(buffer) > 0) {
-//					output.write(buffer);
-//				}
+			
 				
-				CartDto dto = new CartDto(wkSeq, wkName, wkQty, wqPirce); // db에 가져온 데이터를 한줄에 넣기위해
+				CartDto dto = new CartDto(wkSeq, wkName, wkQty, wqPirce, wkFilename); // db에 가져온 데이터를 한줄에 넣기위해
 				beanList.add(dto);
 			}
 			
-			
+			conn_mysql.close();
 		}catch (Exception e) {	// 에러 걸리면
 			e.printStackTrace();
 		}
@@ -110,7 +117,27 @@ public class CartDao {
 
 	}
 	
-	
+	public boolean alldeleteAction() {
+		PreparedStatement ps = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			String query = "delete from cart";
+			
+			ps = conn_mysql.prepareStatement(query);
+			
+			ps.executeUpdate();
+			conn_mysql.close();
+						
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+	}
 	
 	
 	

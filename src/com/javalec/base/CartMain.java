@@ -148,8 +148,9 @@ public class CartMain extends JFrame {
 			btnEmpty = new JButton("장바구니 비우기");
 			btnEmpty.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {	// 장바구니 비우기
-		
-					
+					tableEmpty();
+					tableInit();
+					searchAction();
 				}
 			});
 			btnEmpty.setBounds(370, 298, 130, 29);
@@ -170,6 +171,7 @@ public class CartMain extends JFrame {
 	private JButton getBtnModify() {
 		if (btnModify == null) {
 			btnModify = new JButton("수량수정");
+			btnModify.setEnabled(false);
 			btnModify.setBounds(82, 298, 85, 29);
 		}
 		return btnModify;
@@ -177,9 +179,10 @@ public class CartMain extends JFrame {
 	private JButton getBtnCancel() {
 		if (btnCancel == null) {
 			btnCancel = new JButton("취소");
+			btnCancel.setEnabled(false);
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					tableDelet();
+					tableDelete();
 					tableInit();
 					searchAction();
 				}
@@ -243,10 +246,11 @@ public class CartMain extends JFrame {
 	
 	// table data
 	private void searchAction() {
+		beanList = new ArrayList<CartDto>();
 		CartDao dao = new CartDao();
 		beanList = dao.selectList();
-		int priceSum = 0;
-		int priceQty = 0;
+		int priceSum = 0;			// 총 합계
+		int priceQty = 0;			// 상품별 수량 가격 합계
 		
 		String filePath = Integer.toString(ShareVar.filename);
 		
@@ -255,8 +259,7 @@ public class CartMain extends JFrame {
 		for(int i = 0; i < listCount; i++) {
 			priceQty = beanList.get(i).getCartPrice() * beanList.get(i).getCartQty();
 			
-			//ImageIcon icon = new ImageIcon(filePath);
-			ImageIcon icon = new ImageIcon(CartMain.class.getResource("/com/javalec/images/p000001.png")); // 이미지test
+			ImageIcon icon = new ImageIcon("./" + beanList.get(i).getFilename());
 			Object[] tempData = {icon, beanList.get(i).getName(), beanList.get(i).getCartQty() + "개",
 																	priceQty + "원"};
 			priceSum += priceQty; 
@@ -266,31 +269,44 @@ public class CartMain extends JFrame {
 		}
 		
 		tfTotal.setText(Integer.toString(priceSum)+ "원");
-		lblTotal.setText("총" + beanList.size() + "개 합계:" );
-		lblUser.setText( "님의 장바구니 입니다.");
+		lblTotal.setText("총 " + beanList.size() + "개 합계:" );
+		lblUser.setText( " 님의 장바구니 입니다.");
 		File file = new File(filePath);							// 파일이 저장 되어 있으므로 지워줘야된다
 		file.delete();	
 	
 	}
 	
 	
-	private void tableDelet() {
+	private void tableDelete() {
 		int i = innerTable.getSelectedRow();
 		
-		CartDao dao = new CartDao(i);
+		CartDao dao = new CartDao(beanList.get(i).getCartNO());
 		Boolean result = dao.deleteAction();
 		
 		if(result) {
 			JOptionPane.showMessageDialog(this,"장바구니 취소\n" +  "신발이 취소 되었습니다!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
 		}else {
-			JOptionPane.showMessageDialog(this,"주소록 정보 삭제\n" +  "삭제중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this,"장바구니 신발 삭제\n" +  "취소 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		
 		
 		
 	}
 	
+	private void tableEmpty() {
+		CartDao dao = new CartDao();
+		int i = JOptionPane.showConfirmDialog(this, "장바구니를 비우시겠습니까???", "장바구니",JOptionPane.YES_NO_OPTION);
+		boolean result =  dao.alldeleteAction();
+		if(i == 0) {
+			if(result) {
+				JOptionPane.showMessageDialog(this,"장바구니 비우기\n"  + "님의 장바구니가 비워졌습니다.!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
+			}else {
+				JOptionPane.showMessageDialog(this,"장바구니 비우기\n" +  "비우는 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}else {
+			
+		}
+		
+	}
 	
 	
 	
