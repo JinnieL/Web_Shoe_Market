@@ -11,6 +11,7 @@ import com.javalec.dto.ProductDto;
 import com.javalec.funtion.ImageResize;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.Color;
@@ -27,6 +28,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ProductDetailMain extends JFrame {
 
@@ -34,8 +37,6 @@ public class ProductDetailMain extends JFrame {
 	private JLabel lblProductImage;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel;
-	
-	private int productCode;
 	private ImageIcon productImage;
 	private JTextField tfBrandName;
 	private JLabel lblNewLabel_2;
@@ -45,7 +46,6 @@ public class ProductDetailMain extends JFrame {
 	private JLabel lblNewLabel_3;
 	private JComboBox cbSize;
 	
-	private ArrayList<ProductDto> beanList;
 	private JButton btnNewButton;
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_1_1;
@@ -53,6 +53,11 @@ public class ProductDetailMain extends JFrame {
 	private JLabel lblNewLabel_3_1;
 	private JComboBox cbQty;
 	
+	private String userid;
+	private int productCode;
+	private int cartQty;
+	private int size;
+	private ArrayList<ProductDto> beanList;
 	
 	public ProductDetailMain(int productCode, ImageIcon productImage) throws HeadlessException {
 		super();
@@ -60,6 +65,7 @@ public class ProductDetailMain extends JFrame {
 		this.productImage = productImage;
 	}
 	
+	/* getter & setter */
 	public int getProductCode() {
 		return productCode;
 	}
@@ -76,9 +82,13 @@ public class ProductDetailMain extends JFrame {
 		this.productImage = productImage;
 	}
 
+	public String getUserid() {
+		return userid;
+	}
 
-
-
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 
 	/**
 	 * Launch the application.
@@ -223,6 +233,11 @@ public class ProductDetailMain extends JFrame {
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("장바구니에 담기");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					addToCart();
+				}
+			});
 			btnNewButton.setBounds(418, 261, 117, 68);
 		}
 		return btnNewButton;
@@ -313,8 +328,14 @@ public class ProductDetailMain extends JFrame {
 	
 	/* 03. 장바구니에 담기 눌렀을 때 실행되는 메소드 */
 	private void addToCart() {
-		
-		
+		cartQty = Integer.parseInt((String)cbQty.getSelectedItem());
+		size = Integer.parseInt((String)cbSize.getSelectedItem());
+		ProductDao productDao = new ProductDao(userid, cartQty, productCode, size);
+
+		boolean result = productDao.addToCart();
+		if(result == true) {
+			JOptionPane.showMessageDialog(this, "장바구니에 상품 추가!\n" + beanList.get(0).getProductName() + "이 " + cartQty + "개 추가 되었습니다.");
+		}
 		
 	}
 	
