@@ -6,6 +6,7 @@ public class CartDto {
 	int cartNO;			// 주문번호
 	int cartQty;		// 수량
 	int cartPrice;		// 가격
+	int cartSize;		// 신발 사이즈
 	String name;		// 상품명
 	String filename;	// 이미지
 
@@ -16,13 +17,30 @@ public class CartDto {
 
 
 
-	public CartDto(int cartNO,String name, int cartQty, int cartPrice, String filename) {
+	public CartDto(int cartNO,String name, int cartSize, int cartQty, int cartPrice, String filename) {
 		super();
 		this.cartNO = cartNO;
 		this.cartQty = cartQty;
 		this.cartPrice = cartPrice;
 		this.name = name;
 		this.filename = filename;
+		this.cartSize = cartSize;
+	}
+
+
+
+	
+	
+	
+	
+	public int getCartSize() {
+		return cartSize;
+	}
+
+
+
+	public void setCartSize(int cartSize) {
+		this.cartSize = cartSize;
 	}
 
 

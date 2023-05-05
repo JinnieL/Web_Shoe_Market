@@ -35,6 +35,7 @@ import java.awt.event.MouseEvent;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Toolkit;
 
 public class CartMain extends JFrame {
 
@@ -80,6 +81,7 @@ public class CartMain extends JFrame {
 	 * Create the frame.
 	 */
 	public CartMain() {
+		setTitle("장바구니");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {	// windowopend
@@ -87,9 +89,8 @@ public class CartMain extends JFrame {
 				searchAction();	// table 내용
 			}
 		});
-		setTitle("Cart");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 502, 361);
+		setBounds(100, 100, 597, 361);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -112,7 +113,7 @@ public class CartMain extends JFrame {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 38, 490, 223);
+			scrollPane.setBounds(6, 38, 585, 223);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
@@ -145,7 +146,7 @@ public class CartMain extends JFrame {
 		if (lblTotal == null) {
 			lblTotal = new JLabel("");
 			lblTotal.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblTotal.setBounds(240, 270, 124, 16);
+			lblTotal.setBounds(333, 273, 124, 16);
 		}
 		return lblTotal;
 	}
@@ -154,7 +155,7 @@ public class CartMain extends JFrame {
 			tfTotal = new JTextField();
 			tfTotal.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfTotal.setEditable(false);
-			tfTotal.setBounds(366, 265, 130, 26);
+			tfTotal.setBounds(457, 265, 130, 26);
 			tfTotal.setColumns(10);
 		}
 		return tfTotal;
@@ -169,7 +170,7 @@ public class CartMain extends JFrame {
 					searchAction();
 				}
 			});
-			btnEmpty.setBounds(370, 298, 130, 29);
+			btnEmpty.setBounds(461, 298, 130, 29);
 		}
 		return btnEmpty;
 	}
@@ -181,7 +182,7 @@ public class CartMain extends JFrame {
 					redirectPurchase();
 				}
 			});
-			btnOrder.setBounds(0, 298, 85, 29);
+			btnOrder.setBounds(87, 298, 85, 29);
 		}
 		return btnOrder;
 	}
@@ -198,7 +199,7 @@ public class CartMain extends JFrame {
 				}
 			});
 			btnUpdate.setEnabled(false);
-			btnUpdate.setBounds(205, 298, 85, 29);
+			btnUpdate.setBounds(301, 298, 85, 29);
 		}
 		return btnUpdate;
 	}
@@ -213,7 +214,7 @@ public class CartMain extends JFrame {
 					searchAction();
 				}
 			});
-			btnCancel.setBounds(80, 298, 85, 29);
+			btnCancel.setBounds(170, 298, 85, 29);
 		}
 		return btnCancel;
 	}
@@ -225,7 +226,7 @@ public class CartMain extends JFrame {
 					redirectUserMain();
 				}
 			});
-			btnMain.setBounds(0, 270, 85, 29);
+			btnMain.setBounds(6, 298, 85, 29);
 		}
 		return btnMain;
 	}
@@ -237,9 +238,10 @@ public class CartMain extends JFrame {
 	private void tableInit() {
 		outerTable.addColumn("상품사진");	// 타이틀 네임
 		outerTable.addColumn("상품명");
+		outerTable.addColumn("사이즈(mm)");
 		outerTable.addColumn("수량");
 		outerTable.addColumn("가격");		
-		outerTable.setColumnCount(4);		// 타이틀이 몇개냐
+		outerTable.setColumnCount(5);		// 타이틀이 몇개냐
 	
 		int i = outerTable.getRowCount();	// 테이블에 데이터가 몇개 있는지
 		
@@ -261,14 +263,20 @@ public class CartMain extends JFrame {
 		width = 150;
 		col.setPreferredWidth(width);
 		
+		// 신발  사이즈
+		vColIndex = 2;
+		col = innerTable.getColumnModel().getColumn(vColIndex);
+		width = 100;
+		col.setPreferredWidth(width);
+		
 		// 수량 사이즈
-		vColIndex =2;
+		vColIndex =3;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 40;
 		col.setPreferredWidth(width);
 		
 		// 가격 사이즈
-		vColIndex =3;
+		vColIndex =4;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 100;
 		col.setPreferredWidth(width);
@@ -276,6 +284,7 @@ public class CartMain extends JFrame {
 		btnCancel.setEnabled(false);
 		btnUpdate.setEnabled(false);
 		tfUpdate.setEditable(false);
+		tfUpdate.setText(null);
 		
 	}
 	
@@ -292,20 +301,22 @@ public class CartMain extends JFrame {
 		for(int i = 0; i < listCount; i++) {
 			priceQty = beanList.get(i).getCartPrice() * beanList.get(i).getCartQty();
 			
+			
 			ImageIcon icon = new ImageIcon("./" + beanList.get(i).getFilename());
 			int x = 180;
 			int y = 130;
 			ImageResize resize = new ImageResize(icon, x, y);
 			ImageIcon cartImage = resize.imageResizing();
-			Object[] tempData = {cartImage, beanList.get(i).getName(), beanList.get(i).getCartQty() + "개",
-																	priceQty + "원"};
+			Object[] tempData = {cartImage, beanList.get(i).getName(), beanList.get(i).getCartSize() + "mm" ,beanList.get(i).getCartQty() + "개",
+																		String.format("%,d", priceQty)+ "원"};
 			priceSum += priceQty; 
 			outerTable.addRow(tempData);
 		}
 		
-		tfTotal.setText(Integer.toString(priceSum)+ "원");
+		
+		tfTotal.setText(String.format("%,d", priceSum)+ "원");
 		lblTotal.setText("총 " + listCount + "개 합계:" );
-		lblUser.setText( " 님의 장바구니 입니다.");
+		lblUser.setText(" 님의 장바구니 입니다.");
 	
 	}
 	
@@ -396,7 +407,7 @@ public class CartMain extends JFrame {
 		if (lblUser == null) {
 			lblUser = new JLabel("");
 			lblUser.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblUser.setBounds(185, 10, 311, 16);
+			lblUser.setBounds(280, 10, 311, 16);
 		}
 		return lblUser;
 	}
@@ -424,7 +435,7 @@ public class CartMain extends JFrame {
 				}
 			});
 			tfUpdate.setHorizontalAlignment(SwingConstants.TRAILING);
-			tfUpdate.setBounds(164, 298, 33, 26);
+			tfUpdate.setBounds(260, 298, 33, 26);
 			tfUpdate.setColumns(10);
 		}
 		return tfUpdate;
@@ -433,14 +444,14 @@ public class CartMain extends JFrame {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("상품을 선택 하시면 수정/취소를 할 수 있습니다");
 			lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-			lblNewLabel_1.setBounds(88, 283, 206, 16);
+			lblNewLabel_1.setBounds(184, 283, 206, 16);
 		}
 		return lblNewLabel_1;
 	}
 	private JLabel getLblNewLabel_2() {
 		if (lblNewLabel_2 == null) {
 			lblNewLabel_2 = new JLabel("개");
-			lblNewLabel_2.setBounds(195, 303, 19, 16);
+			lblNewLabel_2.setBounds(291, 303, 19, 16);
 		}
 		return lblNewLabel_2;
 	}

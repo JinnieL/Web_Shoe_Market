@@ -42,6 +42,8 @@ public class UserMain extends JFrame {
 	private JScrollPane scrollPane;
 	private JLabel lblMyPage;
 	private JTable innerTable;
+	
+	private String userid = "donghyun";
 	private ArrayList<ProductDto> beanList = null;
 
 	/**
@@ -258,10 +260,11 @@ public class UserMain extends JFrame {
 	/* 04. 테이블을 클릭 했을 때 */
 	private void tableClick() {
 		int i = innerTable.getSelectedRow();
-		int wkNo = (int)innerTable.getValueAt(i, 0);
+		int wkCode = (int)innerTable.getValueAt(i, 0);
 		ImageIcon wkImage = (ImageIcon)innerTable.getValueAt(i, 1);
 		ProductDetailMain productDetailMain = new ProductDetailMain();
-		productDetailMain.setProductCode(wkNo);
+		productDetailMain.setUserid(userid);
+		productDetailMain.setProductCode(wkCode);
 		productDetailMain.setProductImage(wkImage);
 		productDetailMain.setVisible(true);
 		dispose();
