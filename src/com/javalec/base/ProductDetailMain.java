@@ -10,12 +10,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 
 public class ProductDetailMain extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblProductImage;
 	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -39,7 +41,7 @@ public class ProductDetailMain extends JFrame {
 	public ProductDetailMain() {
 		setTitle("상품 상세");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 600);
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -48,11 +50,15 @@ public class ProductDetailMain extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.add(getLblProductImage());
 		contentPane.add(getLblNewLabel_1());
+		contentPane.add(getLblNewLabel());
 	}
 	private JLabel getLblProductImage() {
 		if (lblProductImage == null) {
-			lblProductImage = new JLabel("상품 이미지");
-			lblProductImage.setBounds(6, 60, 200, 200);
+			lblProductImage = new JLabel("");
+			ImageIcon productIcon = new ImageIcon(ProductDetailMain.class.getResource("/com/javalec/images/P000001.png"));
+			ImageIcon pIcon = imageResize(productIcon, 400, 200);
+			lblProductImage.setIcon(pIcon);
+			lblProductImage.setBounds(6, 60, 400, 200);
 		}
 		return lblProductImage;
 	}
@@ -60,8 +66,30 @@ public class ProductDetailMain extends JFrame {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("");
 			lblNewLabel_1.setIcon(new ImageIcon(ProductDetailMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel_1.setBounds(178, 6, 90, 42);
+			lblNewLabel_1.setBounds(352, 6, 90, 42);
 		}
 		return lblNewLabel_1;
 	}
-}
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("New label");
+			lblNewLabel.setFont(new Font("Noto Sans KR Medium", Font.PLAIN, 13));
+			lblNewLabel.setBounds(418, 60, 81, 16);
+		}
+		return lblNewLabel;
+	}
+
+
+	/* Function */
+	private ImageIcon imageResize(ImageIcon icon, int x, int y) {
+		Image img = icon.getImage();
+		Image changeImg = img.getScaledInstance(x, y, Image.SCALE_SMOOTH);
+		ImageIcon changeIcon = new ImageIcon(changeImg);
+		return changeIcon;
+	}
+	
+	
+}	// End Class
+
+
+
