@@ -115,6 +115,11 @@ public class UserMain extends JFrame {
 	private JButton getBtnSelection() {
 		if (btnSelection == null) {
 			btnSelection = new JButton("검색");
+			btnSelection.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					conditionQuery();
+				}
+			});
 			btnSelection.setBackground(Color.BLACK);
 			btnSelection.setForeground(Color.BLACK);
 			btnSelection.setBounds(405, 61, 89, 29);
@@ -271,6 +276,27 @@ public class UserMain extends JFrame {
 		System.out.println("04. Method Pass");
 	}
 	
+	/* 05. 검색 버튼을 눌렀을 때 검색을 수행하는 메소드 */
+	private void conditionQuery() {
+		int i = cbSelection.getSelectedIndex();
+		String conditionQueryColumn = "";
+		switch(i) {
+		case 0:
+			conditionQueryColumn = "brandName";
+			break;
+		case 1:
+			conditionQueryColumn = "productName";
+			break;
+		default:
+			break;
+		}
+		tableInit();
+		conditionQueryAction(conditionQueryColumn);
+	}
+	
+	private void conditionQueryAction(String conditionQueryColumn) {
+		
+	}
 
 	
 	

@@ -105,6 +105,7 @@ public class PurchaseMain extends JFrame {
 	private JTable getInnerTable() {
 		if (innerTable == null) {
 			innerTable = new JTable();
+			innerTable.setModel(outerTable);
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
 		return innerTable;

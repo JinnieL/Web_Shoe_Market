@@ -154,4 +154,14 @@ public class ProductDao {
 		}
 	}
 	
+	/* 04. 검색 기능을 수행하는 메소드 */
+	public 
+	
+	
+	
+	
+	
+	
+	
+	
 }	// End Class
