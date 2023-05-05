@@ -9,5 +9,6 @@ public class ShareVar {
 	public static final String DBUser = "root";
 	/* DB 비밀번호 */
 	public static final String DBPass = "qwer1234";
-	
+	/* File */
+	public static int filename = 0;
 }

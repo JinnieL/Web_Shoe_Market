@@ -7,17 +7,26 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+
+import com.javalec.dao.CartDao;
+import com.javalec.dto.CartDto;
+import com.javalec.util.ShareVar;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.ArrayList;
+
 import javax.swing.SwingConstants;
 
 public class CartMain extends JFrame {
@@ -25,8 +34,8 @@ public class CartMain extends JFrame {
 	private JPanel contentPane;
 	private JScrollPane scrollPane;
 	private JTable innerTable;
-	private JLabel lblNewLabel;
-	private JTextField textField;
+	private JLabel lblTotal;
+	private JTextField tfTotal;
 	private JButton btnEmpty;
 	private JButton btnOrder;
 	private JButton btnModify;
@@ -35,7 +44,9 @@ public class CartMain extends JFrame {
 	
 	// Table
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-
+	
+	ArrayList<CartDto> beanList = null;
+	private JLabel lblUser;
 	/**
 	 * Launch the application.
 	 */
@@ -58,31 +69,33 @@ public class CartMain extends JFrame {
 	public CartMain() {
 		addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowOpened(WindowEvent e) {
-				tableInit();
+			public void windowOpened(WindowEvent e) {	// windowopend
+				tableInit();	// table 정리
+				queryAction();	// table 내용
 			}
 		});
 		setTitle("Cart");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 502, 337);
+		setBounds(100, 100, 502, 361);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.add(getScrollPane());
-		contentPane.add(getLblNewLabel());
-		contentPane.add(getTextField());
+		contentPane.add(getLblTotal());
+		contentPane.add(getTfTotal());
 		contentPane.add(getBtnEmpty());
 		contentPane.add(getBtnOrder());
 		contentPane.add(getBtnModify());
 		contentPane.add(getBtnCancel());
 		contentPane.add(getBtnMain());
+		contentPane.add(getLblUser());
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 6, 490, 223);
+			scrollPane.setBounds(6, 38, 490, 223);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
@@ -104,27 +117,33 @@ public class CartMain extends JFrame {
 		
 		return innerTable;
 	}
-	private JLabel getLblNewLabel() {
-		if (lblNewLabel == null) {
-			lblNewLabel = new JLabel("총 합계 :");
-			lblNewLabel.setBounds(317, 238, 53, 16);
+	private JLabel getLblTotal() {
+		if (lblTotal == null) {
+			lblTotal = new JLabel("");
+			lblTotal.setBounds(317, 270, 53, 16);
 		}
-		return lblNewLabel;
+		return lblTotal;
 	}
-	private JTextField getTextField() {
-		if (textField == null) {
-			textField = new JTextField();
-			textField.setHorizontalAlignment(SwingConstants.TRAILING);
-			textField.setEditable(false);
-			textField.setBounds(366, 233, 130, 26);
-			textField.setColumns(10);
+	private JTextField getTfTotal() {
+		if (tfTotal == null) {
+			tfTotal = new JTextField();
+			tfTotal.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfTotal.setEditable(false);
+			tfTotal.setBounds(366, 265, 130, 26);
+			tfTotal.setColumns(10);
 		}
-		return textField;
+		return tfTotal;
 	}
 	private JButton getBtnEmpty() {
 		if (btnEmpty == null) {
 			btnEmpty = new JButton("장바구니 비우기");
-			btnEmpty.setBounds(370, 266, 130, 29);
+			btnEmpty.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {	// 장바구니 비우기
+					emptyAction();
+					
+				}
+			});
+			btnEmpty.setBounds(370, 298, 130, 29);
 		}
 		return btnEmpty;
 	}
@@ -135,34 +154,36 @@ public class CartMain extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 				}
 			});
-			btnOrder.setBounds(0, 266, 85, 29);
+			btnOrder.setBounds(0, 298, 85, 29);
 		}
 		return btnOrder;
 	}
 	private JButton getBtnModify() {
 		if (btnModify == null) {
 			btnModify = new JButton("수량수정");
-			btnModify.setBounds(82, 266, 85, 29);
+			btnModify.setBounds(82, 298, 85, 29);
 		}
 		return btnModify;
 	}
 	private JButton getBtnCancel() {
 		if (btnCancel == null) {
 			btnCancel = new JButton("취소");
-			btnCancel.setBounds(164, 266, 85, 29);
+			btnCancel.setBounds(164, 298, 85, 29);
 		}
 		return btnCancel;
 	}
 	private JButton getBtnMain() {
 		if (btnMain == null) {
 			btnMain = new JButton("메인");
-			btnMain.setBounds(246, 266, 85, 29);
+			btnMain.setBounds(246, 298, 85, 29);
 		}
 		return btnMain;
 	}
 	
 	// ================= function ===================
 	
+	
+	// table 초기 작업
 	private void tableInit() {
 		outerTable.addColumn("상품사진");	// 타이틀 네임
 		outerTable.addColumn("상품명");
@@ -204,17 +225,54 @@ public class CartMain extends JFrame {
 		
 	}
 	
+	// table data
+	private void queryAction() {
+		CartDao dao = new CartDao();
+		beanList = dao.selectList();
+		int priceSum = 0;
+		String filePath = Integer.toString(ShareVar.filename);
+		
+		int listCount = beanList.size(); // table data 갯수
+		
+		for(int i = 0; i < listCount; i++) {
+			ImageIcon icon = new ImageIcon(filePath);
+			Object[] tempData = {icon, beanList.get(i).getName(), beanList.get(i).getCartQty(),
+																	beanList.get(i).getCartPrice()};
+			priceSum += beanList.get(i).getCartPrice(); 
+			outerTable.addRow(tempData);
+			
+		}
+		
+		tfTotal.setText(Integer.toString(priceSum));
+		lblTotal.setText("총" + beanList.size() + " 합계:" );
+		lblUser.setText("님의 장바구니 입니다.");
+		File file = new File(filePath);							// 파일이 저장 되어 있으므로 지워줘야된다
+		file.delete();	
+	
+	}
+	
+
+	
+	
+	// 장바구니 table 삭제
+	private void emptyAction() {
+		
+		
+		
+	}
 	
 	
 	
 	
 	
 	
-	
-	
-	
-	
-	
-	
+	private JLabel getLblUser() {
+		if (lblUser == null) {
+			lblUser = new JLabel("");
+			lblUser.setHorizontalAlignment(SwingConstants.TRAILING);
+			lblUser.setBounds(298, 10, 198, 16);
+		}
+		return lblUser;
+	}
 } // end
 
