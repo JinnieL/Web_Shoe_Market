@@ -1,98 +1,165 @@
 package com.javalec.dto;
 
-import java.sql.Timestamp;
+import java.io.FileInputStream;
+import java.sql.Date;
 
 public class PurchaseDto {
 
 	//  Field
 	
 	int purchaseNo;
-	String userid;
 	int productCode;
 	int size;
-	Timestamp purchaseInsertdate;
-	Timestamp prtchaseDeletedate;
 	int purchaseQty;
+	String userid;
+	Date purchaseInsertdate;
+	Date prtchaseDeletedate;
+	String name;
+	String fileName;
+	FileInputStream file;
+	
+	
 	
 	// Constructor
-	public PurchaseDto() {
+	
+	public PurchaseDto(int wkSeq, int wkCode, int wkSize, int wkQty, String wkId, Date wkPurchaseInsertdate) {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PurchaseDto(int purchaseNo, String userid, int productCode, int size, Timestamp purchaseInsertdate,
-			Timestamp prtchaseDeletedate, int purchaseQty) {
-		super();
-		this.purchaseNo = purchaseNo;
-		this.userid = userid;
-		this.productCode = productCode;
-		this.size = size;
-		this.purchaseInsertdate = purchaseInsertdate;
-		this.prtchaseDeletedate = prtchaseDeletedate;
-		this.purchaseQty = purchaseQty;
-	}
 
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// Method
-	
 	public int getPurchaseNo() {
 		return purchaseNo;
 	}
+
 
 	public void setPurchaseNo(int purchaseNo) {
 		this.purchaseNo = purchaseNo;
 	}
 
-	public String getUserid() {
-		return userid;
-	}
-
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
 
 	public int getProductCode() {
 		return productCode;
 	}
 
+
 	public void setProductCode(int productCode) {
 		this.productCode = productCode;
 	}
+
 
 	public int getSize() {
 		return size;
 	}
 
+
 	public void setSize(int size) {
 		this.size = size;
 	}
 
-	public Timestamp getPurchaseInsertdate() {
-		return purchaseInsertdate;
-	}
-
-	public void setPurchaseInsertdate(Timestamp purchaseInsertdate) {
-		this.purchaseInsertdate = purchaseInsertdate;
-	}
-
-	public Timestamp getPrtchaseDeletedate() {
-		return prtchaseDeletedate;
-	}
-
-	public void setPrtchaseDeletedate(Timestamp prtchaseDeletedate) {
-		this.prtchaseDeletedate = prtchaseDeletedate;
-	}
 
 	public int getPurchaseQty() {
 		return purchaseQty;
 	}
 
+
 	public void setPurchaseQty(int purchaseQty) {
 		this.purchaseQty = purchaseQty;
 	}
-	
-	
-	
+
+
+	public String getUserid() {
+		return userid;
+	}
+
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+
+	public Date getPurchaseInsertdate() {
+		return purchaseInsertdate;
+	}
+
+
+	public void setPurchaseInsertdate(Date purchaseInsertdate) {
+		this.purchaseInsertdate = purchaseInsertdate;
+	}
+
+
+	public Date getPrtchaseDeletedate() {
+		return prtchaseDeletedate;
+	}
+
+
+	public void setPrtchaseDeletedate(Date prtchaseDeletedate) {
+		this.prtchaseDeletedate = prtchaseDeletedate;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getFileName() {
+		return fileName;
+	}
+
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+
+	public FileInputStream getFile() {
+		return file;
+	}
+
+
+	public void setFile(FileInputStream file) {
+		this.file = file;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public int getCartQty() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 	
 	
 	
