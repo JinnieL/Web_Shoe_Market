@@ -1,6 +1,7 @@
 package com.javalec.funtion;
 
 import java.awt.EventQueue;
+import java.awt.Label;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,11 +13,12 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.javalec.base.CurrentMain;
+import com.javalec.base.UserMain;
 
 public class BuyAction extends JFrame {
 
 	private JPanel contentPane;
-	private JLabel lblNewLabel;
+	private JLabel lblUserName;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 	private JButton btnNewButton;
@@ -51,20 +53,20 @@ public class BuyAction extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		contentPane.add(getLblNewLabel());
+		contentPane.add(getLblUserName());
 		contentPane.add(getLblNewLabel_1());
 		contentPane.add(getLblNewLabel_2());
 		contentPane.add(getBtnNewButton());
 		contentPane.add(getBtnNewButton_1());
 		contentPane.add(getLblNewLabel_3());
 	}
-	private JLabel getLblNewLabel() {
-		if (lblNewLabel == null) {
-			lblNewLabel = new JLabel("New label");
-			lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-			lblNewLabel.setBounds(71, 128, 119, 16);
+	private JLabel getLblUserName() {
+		if (lblUserName == null) {
+			lblUserName = new JLabel("New label");
+			lblUserName.setHorizontalAlignment(SwingConstants.RIGHT);
+			lblUserName.setBounds(71, 128, 119, 16);
 		}
-		return lblNewLabel;
+		return lblUserName;
 	}
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
@@ -85,6 +87,11 @@ public class BuyAction extends JFrame {
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("메인 페이지");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					redirectMain();
+				}
+			});
 			btnNewButton.setBounds(31, 274, 99, 45);
 		}
 		return btnNewButton;
@@ -110,16 +117,29 @@ public class BuyAction extends JFrame {
 		return lblNewLabel_3;
 	}
 	
+	
+	//-----Function
+	
+	
 	// 주문 현황으로 넘어가는 버튼 액션
 		private void CurrentMain() {
 			CurrentMain crm = new CurrentMain();
 			crm.setVisible(true);
 		}
 	
+	// 메인 화면으로 넘어가는 버튼액
+		private void redirectMain() {
+			UserMain main = new UserMain();
+			main.setVisible(true);
+			dispose();
+		}
 	
-	
-	
-	
+	// 아이디 보여지는것 
+		Label label = new Label();
+		
+		String tfId = "User Data"; // 삽입할 유저 데이터
+		
+
 	
 	
 	

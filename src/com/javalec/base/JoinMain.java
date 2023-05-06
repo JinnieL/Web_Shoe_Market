@@ -13,6 +13,8 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Choice;
+import javax.swing.JComboBox;
 
 public class JoinMain extends JFrame {
 

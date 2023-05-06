@@ -14,10 +14,18 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import com.javalec.dao.CartDao;
+import com.javalec.dao.PurchaseDao;
+import com.javalec.dto.PurchaseDto;
 import com.javalec.funtion.BuyAction;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class PurchaseMain extends JFrame {
@@ -36,7 +44,8 @@ public class PurchaseMain extends JFrame {
 	//  Table
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-	
+	ArrayList<PurchaseDto> dtoList = null;
+	int qty = 0;
 	
 	
 	
@@ -120,6 +129,12 @@ public class PurchaseMain extends JFrame {
 	private JTable getInnerTable() {
 		if (innerTable == null) {
 			innerTable = new JTable();
+			innerTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					tableClick();
+				}
+			});
 			innerTable.setModel(outerTable);
 			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
@@ -148,6 +163,7 @@ public class PurchaseMain extends JFrame {
 		
 		int i = outerTable.getRowCount();   // 표의 행을 표기
 		for(int j = 0; j < i; j++) {
+			
 			outerTable.removeRow(0);
 		}
 		
@@ -171,7 +187,7 @@ public class PurchaseMain extends JFrame {
 		// 사이즈 
 		vColIndex = 2;
 		col = innerTable.getColumnModel().getColumn(vColIndex);
-		width = 40;
+		width = 70;
 		col.setPreferredWidth(width);
 		
 		
@@ -204,9 +220,25 @@ public class PurchaseMain extends JFrame {
 	}
 	
 	
+	private void searchAction() {
+			dtoList = new ArrayList<PurchaseDto>();
+			PurchaseDao dao = new PurchaseDao();
+			dtoList = dao.selectList();
+			
+			int listCount = dtoList.size();
+			
+			
+			
+	}
 	
+	// table Click
 	
-	
+	private void tableClick() {
+		int i = innerTable.getSelectedRow();
+		qty = dtoList.get(i).getCartQty();
+		
+		BtnBuy.setEnabled(true);
+	}
 	
 	
 	
