@@ -36,6 +36,8 @@ import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Toolkit;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class CartMain extends JFrame {
 
@@ -48,7 +50,6 @@ public class CartMain extends JFrame {
 	private JButton btnOrder;
 	private JButton btnUpdate;
 	private JButton btnCancel;
-	private JButton btnMain;
 	
 	// Table
 	private final DefaultTableModel outerTable = new DefaultTableModel();
@@ -58,9 +59,10 @@ public class CartMain extends JFrame {
 	
 	private JLabel lblUser;
 	private JLabel lblNewLabel;
-	private JTextField tfUpdate;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
+	private JLabel lblMain;
+	private JComboBox cbQty;
 	/**
 	 * Launch the application.
 	 */
@@ -90,7 +92,7 @@ public class CartMain extends JFrame {
 			}
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 597, 361);
+		setBounds(100, 100, 597, 465);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -103,17 +105,17 @@ public class CartMain extends JFrame {
 		contentPane.add(getBtnOrder());
 		contentPane.add(getBtnUpdate());
 		contentPane.add(getBtnCancel());
-		contentPane.add(getBtnMain());
 		contentPane.add(getLblUser());
 		contentPane.add(getLblNewLabel());
-		contentPane.add(getTfUpdate());
 		contentPane.add(getLblNewLabel_1());
 		contentPane.add(getLblNewLabel_2());
+		contentPane.add(getLblMain());
+		contentPane.add(getCbQty());
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 38, 585, 223);
+			scrollPane.setBounds(6, 38, 585, 327);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
@@ -146,7 +148,7 @@ public class CartMain extends JFrame {
 		if (lblTotal == null) {
 			lblTotal = new JLabel("");
 			lblTotal.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblTotal.setBounds(333, 273, 124, 16);
+			lblTotal.setBounds(333, 377, 124, 16);
 		}
 		return lblTotal;
 	}
@@ -155,7 +157,7 @@ public class CartMain extends JFrame {
 			tfTotal = new JTextField();
 			tfTotal.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfTotal.setEditable(false);
-			tfTotal.setBounds(457, 265, 130, 26);
+			tfTotal.setBounds(457, 369, 130, 26);
 			tfTotal.setColumns(10);
 		}
 		return tfTotal;
@@ -170,7 +172,7 @@ public class CartMain extends JFrame {
 					searchAction();
 				}
 			});
-			btnEmpty.setBounds(461, 298, 130, 29);
+			btnEmpty.setBounds(461, 402, 130, 29);
 		}
 		return btnEmpty;
 	}
@@ -182,7 +184,7 @@ public class CartMain extends JFrame {
 					redirectPurchase();
 				}
 			});
-			btnOrder.setBounds(87, 298, 85, 29);
+			btnOrder.setBounds(6, 402, 85, 29);
 		}
 		return btnOrder;
 	}
@@ -199,7 +201,7 @@ public class CartMain extends JFrame {
 				}
 			});
 			btnUpdate.setEnabled(false);
-			btnUpdate.setBounds(301, 298, 85, 29);
+			btnUpdate.setBounds(243, 402, 85, 29);
 		}
 		return btnUpdate;
 	}
@@ -214,21 +216,9 @@ public class CartMain extends JFrame {
 					searchAction();
 				}
 			});
-			btnCancel.setBounds(170, 298, 85, 29);
+			btnCancel.setBounds(87, 402, 85, 29);
 		}
 		return btnCancel;
-	}
-	private JButton getBtnMain() {
-		if (btnMain == null) {
-			btnMain = new JButton("메인");
-			btnMain.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					redirectUserMain();
-				}
-			});
-			btnMain.setBounds(6, 298, 85, 29);
-		}
-		return btnMain;
 	}
 	
 	// ================= function ===================
@@ -283,8 +273,8 @@ public class CartMain extends JFrame {
 		
 		btnCancel.setEnabled(false);
 		btnUpdate.setEnabled(false);
-		tfUpdate.setEditable(false);
-		tfUpdate.setText(null);
+		cbQty.setEnabled(false);
+		cbQty.setSelectedIndex(0);
 		
 	}
 	
@@ -362,21 +352,17 @@ public class CartMain extends JFrame {
 	
 	// 주문 버튼
 	private void redirectPurchase() {
-		Purchase purchase = new Purchase();
-		purchase.setVisible(true);
+		PurchaseMain main = new PurchaseMain();
+		main.setVisible(true);
 		dispose();
 	}
 	
 	// 수량 update
 	private void tableUpdate() {
 		int i = innerTable.getSelectedRow();
-		int userqty = Integer.parseInt(tfUpdate.getText());	// 사용자가 입력한 수량
+		int userqty = Integer.parseInt((String)cbQty.getSelectedItem());	// 사용자 선택한 수량
 		// 업데이트
-		if(userqty == 0) {
-			JOptionPane.showMessageDialog(this, "0개는 입력하실 수 없습니다.\n" + "수량을 다시 입력해주세요!" + "오류" + JOptionPane.ERROR_MESSAGE);
-			return;
-		}else {
-			
+		
 			CartDao dao = new CartDao(beanList.get(i).getCartNO(),userqty);
 			Boolean result = dao.tableUpdate();
 			
@@ -385,7 +371,7 @@ public class CartMain extends JFrame {
 			}else {
 				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" +  "변경 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
-		}
+		
 	
 		
 	}
@@ -395,10 +381,10 @@ public class CartMain extends JFrame {
 		int i = innerTable.getSelectedRow();
 		qty = beanList.get(i).getCartQty();
 		
-		tfUpdate.setText(Integer.toString(qty));
 		btnCancel.setEnabled(true);
 		btnUpdate.setEnabled(true);
-		tfUpdate.setEditable(true);
+		cbQty.setEnabled(true);
+
 		
 	}	
 	
@@ -415,45 +401,55 @@ public class CartMain extends JFrame {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("");
 			lblNewLabel.setIcon(new ImageIcon(CartMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel.setBounds(6, 10, 79, 16);
+			lblNewLabel.setBounds(254, 10, 93, 16);
 		}
 		return lblNewLabel;
 	}
-	private JTextField getTfUpdate() {
-		if (tfUpdate == null) {
-			tfUpdate = new JTextField();
-			tfUpdate.setEditable(false);
-			tfUpdate.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {						// 숫자만 입력될 수 있도록 오류 체크
-					if(e.getKeyChar() >= '0' && e.getKeyChar() <= '9') {
-						
-					}else {
-						JOptionPane.showMessageDialog(null, "숫자만 입력해주세요!","경고!",JOptionPane.ERROR_MESSAGE);
-						tfUpdate.setText(Integer.toString(qty));
-					}
-				}
-			});
-			tfUpdate.setHorizontalAlignment(SwingConstants.TRAILING);
-			tfUpdate.setBounds(260, 298, 33, 26);
-			tfUpdate.setColumns(10);
-		}
-		return tfUpdate;
-	}
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
-			lblNewLabel_1 = new JLabel("상품을 선택 하시면 수정/취소를 할 수 있습니다");
-			lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-			lblNewLabel_1.setBounds(184, 283, 206, 16);
+			lblNewLabel_1 = new JLabel("상품을 선택 하시면 수정/취소를 할 수 있습니다.");
+			lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+			lblNewLabel_1.setBounds(94, 388, 227, 16);
 		}
 		return lblNewLabel_1;
 	}
 	private JLabel getLblNewLabel_2() {
 		if (lblNewLabel_2 == null) {
 			lblNewLabel_2 = new JLabel("개");
-			lblNewLabel_2.setBounds(291, 303, 19, 16);
+			lblNewLabel_2.setBounds(233, 407, 19, 16);
 		}
 		return lblNewLabel_2;
+	}
+	private JLabel getLblMain() {
+		if (lblMain == null) {
+			lblMain = new JLabel("");
+			lblMain.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					redirectUserMain();
+				}
+			});
+			//lblMain.setIcon(new ImageIcon(CartMain.class.getResource("/com/javalec/images/backArrow.png")));
+			ImageIcon icon = new ImageIcon(ProductDetailMain.class.getResource("/com/javalec/images/backArrow.png"));
+			int x = 20;
+			int y = 20;
+			
+			ImageResize resize = new ImageResize(icon, x, y);
+			ImageIcon backArrow = resize.imageResizing();
+			
+			lblMain.setIcon(backArrow);
+			lblMain.setBounds(6, 0, 41, 37);
+		}
+		return lblMain;
+	}
+	private JComboBox getCbQty() {
+		if (cbQty == null) {
+			cbQty = new JComboBox();
+			cbQty.setEnabled(false);
+			cbQty.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"}));
+			cbQty.setBounds(173, 403, 60, 27);
+		}
+		return cbQty;
 	}
 } // end
 
