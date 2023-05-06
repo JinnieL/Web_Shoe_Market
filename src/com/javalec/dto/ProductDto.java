@@ -1,7 +1,5 @@
 package com.javalec.dto;
 
-import java.io.FileInputStream;
-
 public class ProductDto {
 	
 	/* Field */
@@ -15,13 +13,16 @@ public class ProductDto {
 	int brandNo;
 	String brandName;
 	int size;
+	int cartQty;
+	int purchaseQty;
+	int productStock;
 	
 	/* Constructor */
 	public ProductDto() {
 		// TODO Auto-generated constructor stub
 	}
 
-	/* 테이블에 데이터를 띄워줄 생성자 */
+	/* 테이블에 데이터를 띄워 줄 생성자 */
 	public ProductDto(int productCode, String productName, int productPrice, String productImageName) {
 		super();
 		this.productCode = productCode;
@@ -30,7 +31,7 @@ public class ProductDto {
 		this.productImageName = productImageName;
 	}
 	
-	/* 상품 상세 페이지에 띄울 데이터를 가져와줄 생성자*/
+	/* 상품 상세 페이지에 띄울 데이터를 가져와 줄 생성자*/
 	public ProductDto(int productCode, String productName, int productPrice, String brandName, int size) {
 		super();
 		this.productCode = productCode;
@@ -38,6 +39,23 @@ public class ProductDto {
 		this.productPrice = productPrice;
 		this.brandName = brandName;
 		this.size = size;
+	}
+	
+	/* 검색 기능에 데이터를 가져와 줄 생성자 */
+	public ProductDto(int productCode, int productPrice, String productName, String brandName) {
+		super();
+		this.productCode = productCode;
+		this.productPrice = productPrice;
+		this.productName = productName;
+		this.brandName = brandName;
+	}
+
+	/* 카트담기, 주문 시 수량 체크할 데이터를 가져와 줄 생성자 */
+	public ProductDto(int productCode, int size, int productStock) {
+		super();
+		this.productCode = productCode;
+		this.size = size;
+		this.productStock = productStock;
 	}
 
 	/* getter & setter */
@@ -121,6 +139,31 @@ public class ProductDto {
 		this.size = size;
 	}
 
+	public int getCartQty() {
+		return cartQty;
+	}
+
+	public void setCartQty(int cartQty) {
+		this.cartQty = cartQty;
+	}
+
+	public int getPurchaseQty() {
+		return purchaseQty;
+	}
+
+	public void setPurchaseQty(int purchaseQty) {
+		this.purchaseQty = purchaseQty;
+	}
+
+	public int getProductStock() {
+		return productStock;
+	}
+
+	public void setProductStock(int productStock) {
+		this.productStock = productStock;
+	}
+
+	
 
 
 	

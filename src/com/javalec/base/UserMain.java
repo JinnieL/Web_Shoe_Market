@@ -45,6 +45,8 @@ public class UserMain extends JFrame {
 	
 	private String userid = "donghyun";
 	private ArrayList<ProductDto> beanList = null;
+	private ImageIcon icon;
+	private ImageIcon productIcon;
 
 	/**
 	 * Launch the application.
@@ -115,6 +117,11 @@ public class UserMain extends JFrame {
 	private JButton getBtnSelection() {
 		if (btnSelection == null) {
 			btnSelection = new JButton("검색");
+			btnSelection.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					conditionQuery();
+				}
+			});
 			btnSelection.setBackground(Color.BLACK);
 			btnSelection.setForeground(Color.BLACK);
 			btnSelection.setBounds(405, 61, 89, 29);
@@ -228,7 +235,6 @@ public class UserMain extends JFrame {
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 60;
 		col.setPreferredWidth(width);
-		System.out.println("01. Metohd Pass");
 	}
 	
 	/* 02. 테이블에 데이터 채워주기 */
@@ -239,15 +245,14 @@ public class UserMain extends JFrame {
 		int listCount = beanList.size();
 		
 		for(int i=0; i<listCount; i++) {
-			ImageIcon icon = new ImageIcon("./" + beanList.get(i).getProductImageName());
+			icon = new ImageIcon("./" + beanList.get(i).getProductImageName());
 			int x = 250;
 			int y = 150;
 			ImageResize resize = new ImageResize(icon, x, y);
-			ImageIcon productIcon = resize.imageResizing();
+			productIcon = resize.imageResizing();
 			Object[] tempData = {beanList.get(i).getProductCode(), productIcon, beanList.get(i).getProductName(), beanList.get(i).getProductPrice()};
 			outerTable.addRow(tempData);
 		}
-		System.out.println("02. Method Pass");
 	}
 	
 	/* 03. 카트 버튼을 클릭했을 때 */
@@ -268,7 +273,42 @@ public class UserMain extends JFrame {
 		productDetailMain.setProductImage(wkImage);
 		productDetailMain.setVisible(true);
 		dispose();
-		System.out.println("04. Method Pass");
+	}
+	
+	/* 05. 검색 버튼을 눌렀을 때 컬럼을 선택하고 검색을 호출하는 메소드 */
+	private void conditionQuery() {
+		int i = cbSelection.getSelectedIndex();
+		String conditionQueryColumn = "";
+		switch(i) {
+		case 0:
+			conditionQueryColumn = "brandName";
+			break;
+		case 1:
+			conditionQueryColumn = "productName";
+			break;
+		default:
+			break;
+		}
+		tableInit();
+		conditionQueryAction(conditionQueryColumn);
+	}
+	
+	/* 06. 검색 기능을 수행하는 메소드 */
+	private void conditionQueryAction(String conditionQueryColumn) {
+		ProductDao productDao = new ProductDao(conditionQueryColumn, tfSelection.getText());
+		beanList = productDao.conditionList();
+		int listCount = beanList.size();
+		
+		for(int i=0; i<listCount; i++) {
+			icon = new ImageIcon("./" + beanList.get(i).getProductImageName());
+			int x = 250;
+			int y = 150;
+			ImageResize resize = new ImageResize(icon, x, y);
+			productIcon = resize.imageResizing();
+			Object[] tempData = {beanList.get(i).getProductCode(), productIcon, beanList.get(i).getProductName(), beanList.get(i).getProductPrice()};
+			outerTable.addRow(tempData);
+		}
+		
 	}
 	
 

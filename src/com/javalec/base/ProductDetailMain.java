@@ -47,7 +47,7 @@ public class ProductDetailMain extends JFrame {
 	private JComboBox cbSize;
 	
 	private JButton btnNewButton;
-	private JButton btnNewButton_1;
+	private JButton btnPurchase;
 	private JButton btnNewButton_1_1;
 	private JLabel lblMain;
 	private JLabel lblNewLabel_3_1;
@@ -56,8 +56,10 @@ public class ProductDetailMain extends JFrame {
 	private String userid;
 	private int productCode;
 	private int cartQty;
+	private int purchaseQty;
 	private int size;
 	private ArrayList<ProductDto> beanList;
+	private boolean check;
 	
 	public ProductDetailMain(int productCode, ImageIcon productImage) throws HeadlessException {
 		super();
@@ -136,7 +138,7 @@ public class ProductDetailMain extends JFrame {
 		contentPane.add(getLblNewLabel_3());
 		contentPane.add(getCbSize());
 		contentPane.add(getBtnNewButton());
-		contentPane.add(getBtnNewButton_1());
+		contentPane.add(getBtnPurchase());
 		contentPane.add(getBtnNewButton_1_1());
 		contentPane.add(getLblMain());
 		contentPane.add(getLblNewLabel_3_1());
@@ -235,19 +237,29 @@ public class ProductDetailMain extends JFrame {
 			btnNewButton = new JButton("장바구니에 담기");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					addToCart();
+					check = checkQty();
+					if(check == true) {
+						addToCart();
+					} else {
+						JOptionPane.showMessageDialog(null, "재고가 부족합니다.\n" + "수량을 확인해주세요.");
+					}
 				}
 			});
 			btnNewButton.setBounds(418, 261, 117, 68);
 		}
 		return btnNewButton;
 	}
-	private JButton getBtnNewButton_1() {
-		if (btnNewButton_1 == null) {
-			btnNewButton_1 = new JButton("주문하기");
-			btnNewButton_1.setBounds(547, 261, 117, 68);
+	private JButton getBtnPurchase() {
+		if (btnPurchase == null) {
+			btnPurchase = new JButton("주문하기");
+			btnPurchase.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					checkQty();
+				}
+			});
+			btnPurchase.setBounds(547, 261, 117, 68);
 		}
-		return btnNewButton_1;
+		return btnPurchase;
 	}
 	private JButton getBtnNewButton_1_1() {
 		if (btnNewButton_1_1 == null) {
@@ -334,11 +346,23 @@ public class ProductDetailMain extends JFrame {
 
 		boolean result = productDao.addToCart();
 		if(result == true) {
-			JOptionPane.showMessageDialog(this, "장바구니에 상품 추가!\n" + beanList.get(0).getProductName() + "이 " + cartQty + "개 추가 되었습니다.");
+			JOptionPane.showMessageDialog(this, "장바구니에 상품 추가!\n" + tfProductName.getText() + "이 " + cartQty + "개 추가 되었습니다.");
 		}
 		
 	}
 	
+	/* 04. 장바구니에 담기, 주문 전 수량을 체크해주는 메소드 */
+	private boolean checkQty() {
+		size = Integer.parseInt((String)cbSize.getSelectedItem());
+		int selectCartQty = Integer.parseInt((String)cbQty.getSelectedItem());
+		int selectPurchaseQty = Integer.parseInt((String)cbQty.getSelectedItem());;
+		ProductDao productDao = new ProductDao();
+		beanList = productDao.checkQty(productCode, size);
+		if(selectCartQty > beanList.get(0).getProductStock() || selectPurchaseQty > beanList.get(0).getProductStock()) {
+			return false;
+		}
+		return true;
+	}
 	
 }	// End Class
 
