@@ -69,6 +69,7 @@ public class UserMain extends JFrame {
 	 */
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private JButton btnCart;
+	private JButton btnPurchaseHistory;
 	
 
 	/**
@@ -84,7 +85,7 @@ public class UserMain extends JFrame {
 		});
 		setTitle("유저 메인");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 700);
+		setBounds(100, 100, 510, 700);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -97,6 +98,7 @@ public class UserMain extends JFrame {
 		contentPane.add(getScrollPane());
 		contentPane.add(getLblMyPage());
 		contentPane.add(getBtnCart());
+		contentPane.add(getBtnPurchaseHistory());
 	}
 	private JComboBox getCbSelection() {
 		if (cbSelection == null) {
@@ -139,7 +141,7 @@ public class UserMain extends JFrame {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(16, 112, 468, 404);
+			scrollPane.setBounds(16, 112, 478, 404);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
@@ -212,7 +214,7 @@ public class UserMain extends JFrame {
 		for(int j=0; j<i; j++) {
 			outerTable.removeRow(0);
 		}
-		/* 사진 컬러 크기*/
+		/* 사진 컬럼 크기*/
 		int vColIndex = 0;
 		TableColumn col = innerTable.getColumnModel().getColumn(vColIndex);
 		int width = 25;
@@ -310,9 +312,18 @@ public class UserMain extends JFrame {
 		}
 		
 	}
-	
-
-	
-	
-
+	private JButton getBtnPurchaseHistory() {
+		if (btnPurchaseHistory == null) {
+			btnPurchaseHistory = new JButton("주문내역");
+			btnPurchaseHistory.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					PurchaseHistoryMain historyMain = new PurchaseHistoryMain();
+					historyMain.setVisible(true);
+					dispose();
+				}
+			});
+			btnPurchaseHistory.setBounds(145, 528, 117, 56);
+		}
+		return btnPurchaseHistory;
+	}
 } // End Class
