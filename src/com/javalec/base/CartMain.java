@@ -318,7 +318,7 @@ public class CartMain extends JFrame {
 		Boolean result = dao.deleteAction();
 		
 		if(result) {
-			JOptionPane.showMessageDialog(this,"장바구니 취소\n" +  "신발이 취소 되었습니다!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this,"장바구니 취소\n" + beanList.get(i).getName() + " 신발이 \n취소 되었습니다!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
 		}else {
 			JOptionPane.showMessageDialog(this,"장바구니 신발 삭제\n" +  "취소 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -367,7 +367,7 @@ public class CartMain extends JFrame {
 			Boolean result = dao.tableUpdate();
 			
 			if(result) {
-				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" +  "수량이 변경되었습니다.", "상품 정보", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" + beanList.get(i).getName() + "신발 \n수량이 변경되었습니다.", "상품 정보", JOptionPane.INFORMATION_MESSAGE);
 			}else {
 				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" +  "변경 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -393,7 +393,7 @@ public class CartMain extends JFrame {
 		if (lblUser == null) {
 			lblUser = new JLabel("");
 			lblUser.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblUser.setBounds(280, 10, 311, 16);
+			lblUser.setBounds(337, 10, 254, 16);
 		}
 		return lblUser;
 	}
