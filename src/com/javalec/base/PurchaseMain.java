@@ -295,14 +295,20 @@ public class PurchaseMain extends JFrame {
 			Boolean result = dao.updateQty();
 			Boolean result1 = dao.addToPurchase();
 			Boolean result2 = dao.alldeleteAction(userid);
-			
+			String[] buttonNaum = {"메인","주문내역"};
 			if(result) {
-				int i = JOptionPane.showConfirmDialog(this, "상품이 구매되었습니다.", "구맨완료",JOptionPane.YES_OPTION);
+				int i = JOptionPane.showOptionDialog(this, "상품이 구매 되었습니다!!", "구매완료", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, buttonNaum, buttonNaum[0]);
 					if(i == 0) {
 						UserMain userMain = new UserMain();
 						userMain.setUserid(userid);
 						userMain.setVisible(true);
 						dispose();
+					}else {
+						PurchaseHistoryMain historyMain = new PurchaseHistoryMain();
+						historyMain.setUserid(userid);
+						historyMain.setVisible(true);
+						dispose();
+						
 					}
 			}else {
 				JOptionPane.showMessageDialog(this,"구매오류\n" +  "구매 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
