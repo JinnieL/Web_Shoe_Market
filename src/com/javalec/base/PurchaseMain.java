@@ -26,11 +26,11 @@ import java.awt.event.ActionEvent;
 
 import com.javalec.dao.PurchaseDao;
 import com.javalec.dto.PurchaseDto;
-import com.javalec.funtion.BuyAction;
 import com.javalec.funtion.ImageResize;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
 
 
 public class PurchaseMain extends JFrame {
@@ -41,22 +41,32 @@ public class PurchaseMain extends JFrame {
 	private JButton BtnCancellation;
 	private JTable innerTable;
 	private JLabel lblNewLabel;
-	private int purchaseNo;
+
+	
+	/* Field */
+	String userid;
 	
 	
+	/* Constructor */
+	
+	/* 로그인 유저를 가져올 getter & setter */
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 	
 	
 	//  Table
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	ArrayList<PurchaseDto> beanList = null;
-	ArrayList<PurchaseDto> purchaseList = null;
-	int qty = 0;
+
+
+	
 	private JButton BtnDelete;
-	
-	
-	
-	
+	private JLabel lblUser;
 	
 	
 	
@@ -100,6 +110,7 @@ public class PurchaseMain extends JFrame {
 		contentPane.add(getBtnCancellation());
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getBtnDelete());
+		contentPane.add(getLblUser());
 	}
 
 	private JScrollPane getScrollPane() {
@@ -213,6 +224,7 @@ public class PurchaseMain extends JFrame {
 		col.setPreferredWidth(width);
 		
 		BtnDelete.setEnabled(false);
+		lblUser.setText(userid + "님의 구매페이지 입니다.");
 		
 	}
 	
@@ -221,7 +233,7 @@ public class PurchaseMain extends JFrame {
 	private void searchAction() {
 		beanList = new ArrayList<PurchaseDto>();
 		PurchaseDao dao = new PurchaseDao();
-		beanList = dao.selectList();
+		beanList = dao.selectList(userid);
 		int priceSum = 0;			// 총 합계
 		int priceQty = 0;			// 상품별 수량 가격 합계
 		
@@ -263,7 +275,7 @@ public class PurchaseMain extends JFrame {
 		int i = innerTable.getSelectedRow();
 		
 		PurchaseDao dao = new PurchaseDao(beanList.get(i).getPurchasseNO());
-		Boolean result = dao.deleteAction();
+		Boolean result = dao.deleteAction(userid);
 		
 		if(result) {
 			JOptionPane.showMessageDialog(this,"주문 취소\n" + beanList.get(i).getName() + " 주문이 \n취소 되었습니다!", "주문 정보", JOptionPane.INFORMATION_MESSAGE);
@@ -282,22 +294,26 @@ public class PurchaseMain extends JFrame {
 			PurchaseDao dao = new PurchaseDao();
 			Boolean result = dao.updateQty();
 			Boolean result1 = dao.addToPurchase();
-			Boolean result2 = dao.alldeleteAction();
+			Boolean result2 = dao.alldeleteAction(userid);
 			
 			if(result) {
-				JOptionPane.showMessageDialog(this,"구매\n 상품 구매 되었습니다!", "구매 정보", JOptionPane.INFORMATION_MESSAGE);
+				int i = JOptionPane.showConfirmDialog(this, "상품이 구매되었습니다.", "구맨완료",JOptionPane.YES_OPTION);
+					if(i == 0) {
+						UserMain userMain = new UserMain();
+						userMain.setUserid(userid);
+						userMain.setVisible(true);
+						dispose();
+					}
 			}else {
 				JOptionPane.showMessageDialog(this,"구매오류\n" +  "구매 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if(result1 == false) {
-				JOptionPane.showMessageDialog(this,"관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this,"1관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if(result2 == false) {
-				JOptionPane.showMessageDialog(this,"관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this,"2관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			
-			BuyAction ba = new BuyAction();
-			ba.setVisible(true);
 			dispose();
 
 		}
@@ -306,6 +322,7 @@ public class PurchaseMain extends JFrame {
 	// 취소 버튼 액션 
 		private void CancellationAction() {
 			CartMain cm = new CartMain();
+			cm.setUserid(userid);
 			cm.setVisible(true);
 			dispose();
 		}
@@ -327,5 +344,13 @@ public class PurchaseMain extends JFrame {
 			BtnDelete.setBounds(121, 365, 117, 29);
 		}
 		return BtnDelete;
+	}
+	private JLabel getLblUser() {
+		if (lblUser == null) {
+			lblUser = new JLabel("");
+			lblUser.setHorizontalAlignment(SwingConstants.TRAILING);
+			lblUser.setBounds(349, 17, 229, 16);
+		}
+		return lblUser;
 	}
 }// End

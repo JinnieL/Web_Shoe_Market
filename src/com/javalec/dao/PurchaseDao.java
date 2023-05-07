@@ -35,7 +35,7 @@ public class PurchaseDao {
 	int productCode;
 	int size;
 	int purchaseQty;
-	String userid = "doughyun";
+	String userid;
 	String purchaseInsertdate;
 	String prtchaseDeletedate;
 	String name;
@@ -57,11 +57,11 @@ public class PurchaseDao {
 	
 	
 	// 테이블에 데이터
-	public ArrayList<PurchaseDto> selectList(){
+	public ArrayList<PurchaseDto> selectList(String userid){
 		ArrayList<PurchaseDto> beanList = new ArrayList<PurchaseDto>();	//데이터를 쌓을 장소
 		
 		String query = "select c.cartNo, p.productName, p.productPrice, c.size, c.cartQty, p.productImageName, p.productImage from cart c, user u, product p";
-		String query1 = " where c.userid = u.userid and c.productCode = p.productCode";
+		String query1 = " where c.userid = u.userid and c.productCode = p.productCode and c.userid = " + "'" + userid + "'" ;
 	
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");											
@@ -101,7 +101,7 @@ public class PurchaseDao {
 	
 	// 테이블 데이터 취소
 	
-	public boolean deleteAction() {
+	public boolean deleteAction(String userid) {
 		PreparedStatement ps = null;
 		try {
 			
@@ -109,7 +109,7 @@ public class PurchaseDao {
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			String query = "delete from cart where cartNo = ?";
+			String query = "delete from cart where cartNo = ? and userid = "+ "'" + userid + "'";
 			
 			ps = conn_mysql.prepareStatement(query);
 			ps.setInt(1, purchaseNo);
@@ -139,7 +139,6 @@ public class PurchaseDao {
 			String query = "select userid, productCode, size, cartQty from cart ";
 			String insert = "insert into purchase (userid, productCode, size, purchaseQty)";
 			String insert1 = " values( ?, ?, ?, ?)" ;
-			System.out.println(">>>>>>>>>>>>");
 			ResultSet rs = stmt.executeQuery(query);
 			ps = con.prepareStatement(insert + insert1); 
 			
@@ -211,14 +210,14 @@ public class PurchaseDao {
 
 	
 	// 구매 후 장바구니 비우기
-	public boolean alldeleteAction() {
+	public boolean alldeleteAction(String userid) {
 		PreparedStatement ps = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			String query = "delete from cart";
+			String query = "delete from cart where userid = " + "'" + userid + "'" ;
 			
 			ps = conn_mysql.prepareStatement(query);
 			

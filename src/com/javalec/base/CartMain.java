@@ -367,6 +367,7 @@ public class CartMain extends JFrame {
 	// main 버튼
 	private void redirectUserMain() {
 		UserMain userMain = new UserMain();
+		userMain.setUserid(userid);
 		userMain.setVisible(true);
 		dispose();
 	}
@@ -374,6 +375,7 @@ public class CartMain extends JFrame {
 	// 주문 버튼
 	private void redirectPurchase() {
 		PurchaseMain main = new PurchaseMain();
+		main.setUserid(userid);
 		main.setVisible(true);
 		dispose();
 	}
