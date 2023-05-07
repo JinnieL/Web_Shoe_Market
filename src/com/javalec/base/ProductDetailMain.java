@@ -254,7 +254,15 @@ public class ProductDetailMain extends JFrame {
 			btnPurchase = new JButton("주문하기");
 			btnPurchase.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					checkQty();
+					boolean result = checkQty();
+					if(result == true) {
+						PurchaseMain purchaseMain = new PurchaseMain();
+						purchaseMain.setVisible(true);
+						dispose();
+					} else {
+						/* 오류 메세지 추가 예정 */
+						System.out.println("오류");
+					}
 				}
 			});
 			btnPurchase.setBounds(547, 261, 117, 68);
