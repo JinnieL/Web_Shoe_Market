@@ -292,6 +292,7 @@ public class UserMain extends JFrame {
 	/* 03. 카트 버튼을 클릭했을 때 */
 	private void redirectCart() {
 		CartMain cartMain = new CartMain();
+		cartMain.setUserid(userid);
 		cartMain.setVisible(true);
 		dispose();
 	}

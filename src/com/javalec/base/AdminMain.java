@@ -354,7 +354,7 @@ public class AdminMain extends JFrame {
 	private JComboBox getCbSize() {
 		if (cbSize == null) {
 			cbSize = new JComboBox();
-			cbSize.setModel(new DefaultComboBoxModel(new String[] {"170", "180", "190", "200", "210", "220", "230", "240", "250", "255", "260", "265", "270", "275", "280", "290", "300"}));
+			cbSize.setModel(new DefaultComboBoxModel(new String[] {"170", "180", "190", "200", "210", "220", "230", "235", "240", "245", "250", "255", "260", "265", "270", "275", "280", "285", "290", "300"}));
 			cbSize.setBounds(391, 532, 76, 23);
 		}
 		return cbSize;
@@ -558,14 +558,15 @@ public class AdminMain extends JFrame {
 	
 	/* 테이블 클릭했을 때 실행되는 메소드 */
 	private void tableClick() {
+		try {
 		int i = innerTable.getSelectedRow();
 		productCode = Integer.parseInt((String)innerTable.getValueAt(i, 0));
-		size = Integer.parseInt((String)innerTable.getValueAt(i, 3));
+		Object sizeValue = innerTable.getValueAt(i, 3);
+		size = sizeValue != null ? Integer.parseInt(sizeValue.toString()) : null;
 		AdminDao adminDao = new AdminDao();
 		beanList = adminDao.queryAction(size, productCode);
 		int listCount = beanList.size();
 		
-		try {
 			for(int j=0; j<listCount; j++) {
 				ImageIcon icon = new ImageIcon("./" + beanList.get(j).getProductImageName());
 				int x = 250;
@@ -662,6 +663,8 @@ public class AdminMain extends JFrame {
 		tfInsertdate.setEditable(false);
 		tfInsertdate.setVisible(false);
 		String productImageName = tfProductImageName.getText();
+		int size = Integer.parseInt((String)cbSize.getSelectedItem());
+		int productStocke = Integer.parseInt(tfProductStock.getText());
 		FileInputStream input = null;
 		File file = new File(tfImageLocation.getText()); // 파일 가져오기. 파일을 가져왔지만, 헤더가 포함되어 있어 데이터(그림)만 뽑아야 함.
 		try {
@@ -670,9 +673,8 @@ public class AdminMain extends JFrame {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		AdminDao adminDao = new AdminDao(brandNo, productName, productPrice, productImageName, input);
+		AdminDao adminDao = new AdminDao(brandNo, productName, productPrice, size, productStocke, productImageName, input);
 		boolean result = adminDao.insertAction();
-		
 		
 		if (result) {
 			JOptionPane.showMessageDialog(this, "제품 정보 입력이 정상적으로 처리되었습니다.", "제품 등록", JOptionPane.INFORMATION_MESSAGE);
@@ -723,6 +725,11 @@ public class AdminMain extends JFrame {
 			message = "가격";
 			tfProductPrice.requestFocus();
 		}
+		if(tfProductStock.getText().length() == 0) {
+			i++;
+			message = "수량";
+			tfProductStock.requestFocus();
+		}
 		if(tfImageLocation.getText().length() == 0) {
 			i++;
 			message = "이미지";
@@ -737,13 +744,14 @@ public class AdminMain extends JFrame {
 	private void screenPartition() {
 		// 입력일 경우
 		if(rbInsert.isSelected()) {
+			clearColumn();
 			tfBrandNo.setEditable(true);
 			tfBrandName.setEditable(false);
 			tfProductCode.setEditable(false);
 			tfProductName.setEditable(true);
 			tfProductPrice.setEditable(true);
-			tfProductStock.setEditable(false);
-			cbSize.setEditable(false);
+			tfProductStock.setEditable(true);
+			cbSize.setEditable(true);
 			tfInsertdate.setEditable(false);
 			tfProductImageName.setEditable(true);
 			btnComplete.setVisible(true);
@@ -805,9 +813,8 @@ public class AdminMain extends JFrame {
 		
 		// 제품 삭제할 경우
 		if (rbDelete.isSelected()) {
-			int i_chk = insertFieldCheck();
-			if (i_chk == 0) {
-				deleteAction();
+			boolean result = deleteAction();
+			if(result = true) {
 				tableInit();
 				searchAction();
 				clearColumn();
@@ -847,7 +854,7 @@ public class AdminMain extends JFrame {
 	}
 	
 	
-	private void deleteAction() {
+	private boolean deleteAction() {
 		int i = innerTable.getSelectedRow();
 		String wkSequence = (String) innerTable.getValueAt(i, 0);
 		int wsSeqNo = Integer.parseInt(wkSequence);
@@ -858,7 +865,9 @@ public class AdminMain extends JFrame {
 			JOptionPane.showMessageDialog(this, "삭제가 완료 되었습니다.");
 		} else {
 			JOptionPane.showMessageDialog(this, "잘못된 접근입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
+		return true;
 	}
 	
 	

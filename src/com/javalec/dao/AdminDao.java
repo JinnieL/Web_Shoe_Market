@@ -67,15 +67,18 @@ public class AdminDao {
 	}
 
 	/* 상품 추가 해주는 생성자 */
-	public AdminDao(int brandNo, String productName, int price, String productImageName, FileInputStream productImage) {
+	public AdminDao(int brandNo, String productName, int price, int size, int stock, String productImageName,
+			FileInputStream productImage) {
 		super();
 		this.brandNo = brandNo;
 		this.productName = productName;
 		this.price = price;
+		this.size = size;
+		this.stock = stock;
 		this.productImageName = productImageName;
 		this.productImage = productImage;
 	}
-	
+
 	/* 삭제를 위한 제품 코드를 가져와주는 생성자 */
 	public AdminDao(int productCode) {
 		super();
@@ -86,22 +89,23 @@ public class AdminDao {
 	public ArrayList<AdminDto> selectList() {
 		ArrayList<AdminDto> dtoList = new ArrayList<AdminDto>();
 		
-		String whereDefault = "select p.productCode, b.brandName, p.productName, po.size, po.productStock";
-		String whereDefault1 = " from brand b, product p, productOption po";
-		String whereDefault2 = " where b.brandNo = p.brandNo and po.productCode = p.productCode";
+		String query = "SELECT p.productCode, b.brandName, po.size, p.productName, po.productStock"
+				+ " FROM brand b"
+				+ " JOIN product p ON b.brandNo = p.brandNo"
+				+ " LEFT JOIN productOption po ON po.productCode = p.productCode;";
 			
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			ResultSet rs = stmt_mysql.executeQuery(whereDefault + whereDefault1 + whereDefault2);
+			ResultSet rs = stmt_mysql.executeQuery(query);
 			
 			while(rs.next()) {
 				int wkCode = rs.getInt(1);
 				String brandName = rs.getString(2);
-				String productName = rs.getString(3);
-				int size = rs.getInt(4);
+				int size = rs.getInt(3);
+				String productName = rs.getString(4);
 				int stock = rs.getInt(5);
 	
 				
@@ -122,18 +126,26 @@ public class AdminDao {
 	public ArrayList<AdminDto> queryAction(int size, int productCode){
 		PreparedStatement ps = null;
 		ArrayList<AdminDto> beanList = new ArrayList<AdminDto>();
-		String whereDefault = "select b.brandNo, b.brandName, p.productCode, p.productName, po.size, p.productPrice, po.productStock, p.productInsertdate, p.productImageName, p.productImage";
-		String whereDefault1 = " from brand b, product p, productOption po" ;
-		String whereDefault2 = " where b.brandNo = p.brandNo and po.productCode = p.productCode and po.size = " + size + " and p.productCode = " + productCode;
+		String query = "SELECT b.brandNo, b.brandName, p.productCode, p.productName, po.size, p.productPrice, po.productStock, p.productInsertdate, p.productImageName, p.productImage" +
+			    " FROM brand b, product p, productOption po" +
+			    " WHERE b.brandNo = p.brandNo AND po.productCode = p.productCode";
+
+			if (size != 0) {
+			    query += " AND po.size = " + size;
+			} else {
+			    query += " AND (po.size IS NULL OR po.size = 0)";
+			}
+
+			query += " AND p.productCode = " + productCode;
+
+
 		
 		try  {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			ResultSet rs = stmt_mysql.executeQuery(whereDefault + whereDefault1 + whereDefault2);
-			
-			
+			ResultSet rs = stmt_mysql.executeQuery(query);
 			while (rs.next()) {
 			int wkBrandNo = rs.getInt(1);
 			String wkBrandName = rs.getString(2);
@@ -164,7 +176,7 @@ public class AdminDao {
 	
 	// 사용자가 입력한 조건 검색
 	public ArrayList<AdminDto> conditionList(String conditionQueryColumn, String tfSearch) {
-		ArrayList<AdminDto> benaList = new ArrayList<AdminDto> ();
+		ArrayList<AdminDto> beanList = new ArrayList<AdminDto> ();
 		
 		String whereDefault = "select p.productCode, b.brandName, p.productName, po.size, po.productStock";
 		String whereDefault1 = " from brand b, product p, productOption po";
@@ -186,7 +198,7 @@ public class AdminDao {
 	
 				
 				AdminDto dto = new AdminDto(brandName, productName, size, stock, wkCode);
-				benaList.add(dto);
+				beanList.add(dto);
 			}
 
 			conn_mysql.close();
@@ -195,7 +207,7 @@ public class AdminDao {
 			e.printStackTrace();
 		}
 
-		return benaList;
+		return beanList;
 	}
 	
 	
@@ -209,16 +221,24 @@ public class AdminDao {
 			
 //			AdminDao adminDao = new AdminDao(brandNo, productName, productPrice, productImageName, input);
 			
-			String query = "insert into product(brandNo, productName, productPrice, productImageName, productImage) values(?, ?, ?, ?, ?)";
+			String query1 = "INSERT INTO product(brandNo, productName, productPrice, productImageName, productImage) VALUES (?, ?, ?, ?, ?)";
+			String query2 = "INSERT INTO productOption(productCode, size, productStock) VALUES (LAST_INSERT_ID(), ?, ?)";
 			
-			ps = con.prepareStatement(query);
-			ps.setInt(1, brandNo);
-			ps.setString(2, productName);
-			ps.setInt(3, price);
-			ps.setString(4, productImageName);
-			ps.setBinaryStream(5, productImage);
+			    PreparedStatement ps1 = con.prepareStatement(query1);
+			    ps1.setInt(1, brandNo);
+			    ps1.setString(2, productName);
+			    ps1.setInt(3, price);
+			    ps1.setString(4, productImageName);
+			    ps1.setBlob(5, productImage);
+			    
+			    ps1.executeUpdate();
+
+			    PreparedStatement ps2 = con.prepareStatement(query2);
+			    ps2.setInt(1, size);
+			    ps2.setInt(2, stock);
+			    
+			    ps2.executeUpdate();
 			
-			ps.executeUpdate();
 			con.close();
 						
 		}catch(Exception e) {
@@ -272,6 +292,7 @@ public class AdminDao {
 			
 			ps = con.prepareStatement(query);
 			ps.setInt(1, productCode);
+			ps.executeUpdate();
 
 			con.close();
 		}catch(Exception e) {
