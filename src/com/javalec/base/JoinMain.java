@@ -249,7 +249,18 @@ public class JoinMain extends JFrame {
 		}
 		return tfPassword2;
 	}
-
+	private JLabel getLblNewLabel_2() {
+		if (lblNewLabel_2 == null) {
+			lblNewLabel_2 = new JLabel("");
+			lblNewLabel_2.setIcon(new ImageIcon(JoinMain.class.getResource("/com/javalec/images/logoSmall.png")));
+			lblNewLabel_2.setBounds(204, 1, 88, 40);
+		}
+		return lblNewLabel_2;
+	}
+	
+	
+	
+	/* Functions */
 	private int JoinCheck() {
 
 		int i = 0;
@@ -258,22 +269,27 @@ public class JoinMain extends JFrame {
 		if(tfEmail.getText().trim().length() == 0) {
 			i++;
 			message = "이메일을(를)";
-			tfName.requestFocus();
+			tfEmail.requestFocus();
 		}
 		if(tfAddress.getText().trim().length() == 0) {
 			i++;
 			message = "주소를";
-			tfName.requestFocus();
+			tfAddress.requestFocus();
 		}
 		if(tfPhone.getText().trim().length() == 0) {
 			i++;
 			message = "전화번호를";
-			tfName.requestFocus();
+			tfPhone.requestFocus();
+		}
+		if(tfPassword2.getPassword().length == 0) {
+			i++;
+			message = "비밀번호 확인을";
+			tfPassword2.requestFocus();
 		}
 		if(tfPassword.getPassword().length == 0) {
 			i++;
-			message = "아이디를";
-			tfId.requestFocus();
+			message = "비밀번호를";
+			tfPassword.requestFocus();
 		}
 		if(tfId.getText().trim().length() == 0) {
 			i++;
@@ -325,16 +341,12 @@ public class JoinMain extends JFrame {
 		boolean result = joinDao.register(userName, userid, userPassword, userPhone, userAddress, userEmail);
 		if(result == true) {
 			JOptionPane.showMessageDialog(this, userid + "님 회원가입을 축하합니다.");
+			LoginMain loginMain = new LoginMain();
+			loginMain.setVisible(true);
+			dispose();
 		} else {
-			
+			JOptionPane.showMessageDialog(this, "중복되는 아이디로는 가입할 수 없습니다.", "경고!", JOptionPane.WARNING_MESSAGE);
 		}
 	}
-	private JLabel getLblNewLabel_2() {
-		if (lblNewLabel_2 == null) {
-			lblNewLabel_2 = new JLabel("");
-			lblNewLabel_2.setIcon(new ImageIcon(JoinMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel_2.setBounds(204, 1, 88, 40);
-		}
-		return lblNewLabel_2;
-	}
+
 }	// End Class
