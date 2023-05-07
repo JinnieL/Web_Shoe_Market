@@ -22,6 +22,7 @@ import javax.swing.JComboBox;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import javax.swing.ButtonGroup;
 
 public class Main_Admin extends JFrame {
 
@@ -57,6 +58,7 @@ public class Main_Admin extends JFrame {
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	ArrayList<Dto_Admin> beanList = null; 		// 초기 테이블 요약 정보 받아올 리스트
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	/**
 	 * Launch the application.
@@ -122,6 +124,7 @@ public class Main_Admin extends JFrame {
 	private JRadioButton getRbInsert() {
 		if (rbInsert == null) {
 			rbInsert = new JRadioButton("입력");
+			buttonGroup.add(rbInsert);
 			rbInsert.setBounds(8, 19, 60, 23);
 		}
 		return rbInsert;
@@ -129,6 +132,7 @@ public class Main_Admin extends JFrame {
 	private JRadioButton getRbUpdate() {
 		if (rbUpdate == null) {
 			rbUpdate = new JRadioButton("수정");
+			buttonGroup.add(rbUpdate);
 			rbUpdate.setBounds(68, 19, 60, 23);
 		}
 		return rbUpdate;
@@ -136,6 +140,7 @@ public class Main_Admin extends JFrame {
 	private JRadioButton getRbDelete() {
 		if (rbDelete == null) {
 			rbDelete = new JRadioButton("삭제");
+			buttonGroup.add(rbDelete);
 			rbDelete.setBounds(129, 19, 60, 23);
 		}
 		return rbDelete;
@@ -143,6 +148,7 @@ public class Main_Admin extends JFrame {
 	private JRadioButton getRbSearch() {
 		if (rbSearch == null) {
 			rbSearch = new JRadioButton("검색");
+			buttonGroup.add(rbSearch);
 			rbSearch.setSelected(true);
 			rbSearch.setBounds(189, 19, 60, 23);
 		}
