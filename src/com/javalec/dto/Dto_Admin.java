@@ -7,6 +7,27 @@ public class Dto_Admin {
 	String productName;
 	int size;
 	int stock;
+	int productCode;
+	
+	
+	
+	/* Constructor */
+	
+	public Dto_Admin() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	// Dao에게 초기 tableInit() 정보 전달받아 메인에 주기위한 생성자
+	public Dto_Admin(String brandName, String productName, int size, int stock, int productCode) {
+		super();
+		this.brandName = brandName;
+		this.productName = productName;
+		this.size = size;
+		this.stock = stock;
+		this.productCode = productCode;
+	}
+	
+	
 	
 	public String getBrandName() {
 		return brandName;
@@ -40,18 +61,16 @@ public class Dto_Admin {
 		this.stock = stock;
 	}
 
-	public Dto_Admin() {
-		// TODO Auto-generated constructor stub
+	public int getProductCode() {
+		return productCode;
 	}
 
-	// Dao에게 초기 tableInit() 정보 전달받아 메인에 주기위한 생성자
-	public Dto_Admin(String brandName, String productName, int size, int stock) {
-		super();
-		this.brandName = brandName;
-		this.productName = productName;
-		this.size = size;
-		this.stock = stock;
+	public void setProductCode(int productCode) {
+		this.productCode = productCode;
 	}
+
+
+	
 	
 	
 

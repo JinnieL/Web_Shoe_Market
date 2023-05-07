@@ -59,7 +59,7 @@ public class PurchaseDao {
 		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>();
 		
 		String query = "select pc.purchaseNo, p.productCode, pc.size, pc.purchaseQty, u.userid, pc.purchaseInsertdate from user u, product p, purchase pc";
-		String query1 = "where pc.userid = u.userid and pc.productCode = p.productCode";
+		String query1 = " where pc.userid = u.userid and pc.productCode = p.productCode";
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
