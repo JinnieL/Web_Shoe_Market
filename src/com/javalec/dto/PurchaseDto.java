@@ -40,6 +40,35 @@ public class PurchaseDto {
 
 
 
+	public PurchaseDto(int purchaseNo, int productCode, int size, int purchaseQty, String userid,
+			Date purchaseInsertdate, Date prtchaseDeletedate, String name, String fileName, FileInputStream file) {
+		super();
+		this.purchaseNo = purchaseNo;
+		this.productCode = productCode;
+		this.size = size;
+		this.purchaseQty = purchaseQty;
+		this.userid = userid;
+		this.purchaseInsertdate = purchaseInsertdate;
+		this.prtchaseDeletedate = prtchaseDeletedate;
+		this.name = name;
+		this.fileName = fileName;
+		this.file = file;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// Method
 	public int getPurchaseNo() {
 		return purchaseNo;
@@ -154,10 +183,7 @@ public class PurchaseDto {
 
 
 
-	public int getCartQty() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 
 	

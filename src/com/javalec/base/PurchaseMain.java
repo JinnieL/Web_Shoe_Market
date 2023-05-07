@@ -14,13 +14,14 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.ListSelectionModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import com.javalec.dao.CartDao;
+
 import com.javalec.dao.PurchaseDao;
 import com.javalec.dto.PurchaseDto;
 import com.javalec.funtion.BuyAction;
@@ -77,6 +78,7 @@ public class PurchaseMain extends JFrame {
 			@Override
 			public void windowOpened(WindowEvent e) {
 				tableInit();
+				searchAction();
 			}
 		});
 		setTitle("주문");
@@ -224,8 +226,24 @@ public class PurchaseMain extends JFrame {
 			dtoList = new ArrayList<PurchaseDto>();
 			PurchaseDao dao = new PurchaseDao();
 			dtoList = dao.selectList();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			
 			
 			int listCount = dtoList.size();
+			
+			for(int i = 0; i < listCount; i++) {
+				String temp = Integer.toString(dtoList.get(i).getPurchaseNo());
+				String pc = Integer.toString(dtoList.get(i).getProductCode());
+				String sz = Integer.toString(dtoList.get(i).getSize());
+				String pqty = Integer.toString(dtoList.get(i).getPurchaseQty());
+				String pid = sdf.format(dtoList.get(i).getPurchaseInsertdate());
+				String pdd = sdf.format(dtoList.get(i).getPurchaseInsertdate());
+				
+				
+				String[] qTxt = {temp, pc, sz, pqty, dtoList.get(i).getUserid(), pid, pdd};
+				outerTable.addRow(qTxt);
+			}
 			
 			
 			
@@ -235,7 +253,7 @@ public class PurchaseMain extends JFrame {
 	
 	private void tableClick() {
 		int i = innerTable.getSelectedRow();
-		qty = dtoList.get(i).getCartQty();
+		qty = dtoList.get(i).getPurchaseQty();
 		
 		BtnBuy.setEnabled(true);
 	}
