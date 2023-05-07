@@ -19,10 +19,16 @@ public class AdminDao {
 	private final String id_mysql = ShareVar.DBUser;
 	private final String pw_mysql = ShareVar.DBPass;
 
+	int brandNo;
+	int productCode;
 	String brandName ;
 	String productName;
+	int price;
 	int size;
 	int stock;
+	
+	String conditionQueryColumn;
+	String tfSearch;
 	
 	public AdminDao() {
 		// TODO Auto-generated constructor stub
@@ -36,6 +42,29 @@ public class AdminDao {
 		this.size = size;
 		this.stock = stock;
 	}
+	
+	// 조건 검색을 위해 콤보박스에서 선택할 데이터 생성자
+	public AdminDao(String conditionQueryColumn, String tfSearch) {
+		super();
+		this.conditionQueryColumn = conditionQueryColumn;
+		this.tfSearch = tfSearch;
+	}
+	
+	// 데이터 입력을 위해 메인에서 받아올 데이터 생성자
+	public AdminDao(int brandNo, String brandName, int productCode, String productName, int price, int size,
+			int stock) {
+		super();
+		this.brandNo = brandNo;
+		this.brandName = brandName;
+		this.productCode = productCode;
+		this.productName = productName;
+		this.price = price;
+		this.size = size;
+		this.stock = stock;
+	}
+
+	
+	
 	
 	// 윈도우 창 오픈 초기 테이블 데이터 table에 불러오기 - 브랜드명, 제품명, 사이즈, 재고량
 	public ArrayList<AdminDto> selectList() {
@@ -73,6 +102,12 @@ public class AdminDao {
 		return dtoList;
 	}
 	
+
+
+
+
+	
+	// 상세 정보 텍스트 필드를 채우는 메소드
 	public ArrayList<AdminDto> queryAction(int size, int productCode){
 		PreparedStatement ps = null;
 		ArrayList<AdminDto> beanList = new ArrayList<AdminDto>();
@@ -116,8 +151,107 @@ public class AdminDao {
 		
 	}
 	
+	// 사용자가 입력한 조건 검색
+	private void conditionList(String conditionQueryColumn, String tfSearch) {
+		ArrayList<AdminDto> dtoList = new ArrayList<AdminDto> ();
+		
+		String whereDefault = "select p.productCode, b.brandName, p.productName, po.size, po.productStock";
+		String whereDefault1 = " from brand b, product p, productOption po";
+		String whereDefault2 = " where b.brandNo = p.brandNo and po.productCode = p.productCode and (brandName like '%"    ;
+			
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			ResultSet rs = stmt_mysql.executeQuery(whereDefault + whereDefault1 + whereDefault2);
+			
+			while(rs.next()) {
+				int wkCode = rs.getInt(1);
+				String brandName = rs.getString(2);
+				String productName = rs.getString(3);
+				int size = rs.getInt(4);
+				int stock = rs.getInt(5);
+	
+				
+				AdminDto dto = new AdminDto(brandName, productName, size, stock, wkCode);
+				dtoList.add(dto);
+			}
+
+			conn_mysql.close();
+						
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		return dtoList;
+	}
 	
 	
+	// 데이터 입력하기 <<<< 이미지!!!!
+	public boolean insertAction() {
+		PreparedStatement ps = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			String query = "insert all into brand (brandNo, brandName) values (?, ?) " ;
+			String query1 = " into product(productCode, productName, productPrice) values (?, ?, ?) " ;
+			String query2 =	" into productOption (size, productStock) values (?, ?)";
+			 
+			
+			ps = conn_mysql.prepareStatement(query + query1 + query2);
+			ps.setInt(1, brandNo);
+			ps.setString(2, brandName.trim());
+			ps.setInt(3, productCode);
+			ps.setString(4, productName.trim());
+			ps.setInt(5, price);
+			ps.setInt(6, size);
+			ps.setInt(7,  stock);
+			
+			ps.executeUpdate();
+			conn_mysql.close();
+						
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+	}
+	
+	// 데이터 수정하기
+	public boolean updateAction() {
+		PreparedStatement ps = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			String query = "update brand set brandNo = ?, brandName = ?" ;
+			String query1 = "update product set productCode = ?, productName = ?, productPrice = ?";
+			String query2 = "update productOption set size = ?, productStock = ? ";
+			
+			ps = conn_mysql.prepareStatement(query + query1);
+			ps.setInt(1, brandNo);
+			ps.setString(2, brandName.trim());
+			ps.setInt(3, productCode);
+			ps.setString(4, productName.trim());
+			ps.setInt(5, price);
+			ps.setInt(6, size);
+			ps.setInt(7,  stock);
+			
+			ps.executeUpdate();
+			conn_mysql.close();
+						
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+	}
 	
 	
 

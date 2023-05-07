@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -70,6 +71,7 @@ public class AdmianMain extends JFrame {
 	private int productCode;
 	private int size;
 
+	String message = ""; 	// 사용자가 입력하지 않은 부분 체크해줄 메시지 
 	
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
@@ -142,6 +144,11 @@ public class AdmianMain extends JFrame {
 	private JRadioButton getRbInsert() {
 		if (rbInsert == null) {
 			rbInsert = new JRadioButton("입력");
+			rbInsert.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
 			buttonGroup.add(rbInsert);
 			rbInsert.setBounds(8, 19, 60, 23);
 		}
@@ -150,6 +157,12 @@ public class AdmianMain extends JFrame {
 	private JRadioButton getRbUpdate() {
 		if (rbUpdate == null) {
 			rbUpdate = new JRadioButton("수정");
+			rbUpdate.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+					
+				}
+			});
 			buttonGroup.add(rbUpdate);
 			rbUpdate.setBounds(68, 19, 60, 23);
 		}
@@ -158,6 +171,11 @@ public class AdmianMain extends JFrame {
 	private JRadioButton getRbDelete() {
 		if (rbDelete == null) {
 			rbDelete = new JRadioButton("삭제");
+			rbDelete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
 			buttonGroup.add(rbDelete);
 			rbDelete.setBounds(129, 19, 60, 23);
 		}
@@ -166,6 +184,11 @@ public class AdmianMain extends JFrame {
 	private JRadioButton getRbSearch() {
 		if (rbSearch == null) {
 			rbSearch = new JRadioButton("검색");
+			rbSearch.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
 			buttonGroup.add(rbSearch);
 			rbSearch.setSelected(true);
 			rbSearch.setBounds(189, 19, 60, 23);
@@ -351,6 +374,11 @@ public class AdmianMain extends JFrame {
 	private JButton getBtnComplete() {
 		if (btnComplete == null) {
 			btnComplete = new JButton("완료");
+			btnComplete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					actionPartition();
+				}
+			});
 			btnComplete.setBounds(261, 633, 97, 23);
 		}
 		return btnComplete;
@@ -447,7 +475,7 @@ public class AdmianMain extends JFrame {
 				ImageResize resize = new ImageResize(icon, x, y);
 				ImageIcon productIcon = resize.imageResizing();
 				
-				/* formatter 변경 */
+				/* formatter 변경 (날씨) */
 				String date = beanList.get(j).getDate();
 				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -474,7 +502,7 @@ public class AdmianMain extends JFrame {
 		
 	}
 	
-	
+	// 검색어 입력할 때
 	private void conditionQuery() {
 		int i = cbSearch.getSelectedIndex();
 		String conditionQueryColumn = "";
@@ -488,8 +516,8 @@ public class AdmianMain extends JFrame {
 		default : 
 			break;
 		}
-		tableInit() ;
-		clearColumn();
+		tableInit() ; 		// 테이블 초기화
+		clearColumn();		// 컬럼 내용 삭제
 		conditionQueryAction(conditionQueryColumn); 
 	}
 	
@@ -504,8 +532,214 @@ public class AdmianMain extends JFrame {
 		
 	}
 	
+	
+	// 사용자가 입력한 조건 검색
 	private void conditionQueryAction(String conditionQueryColumn) {
+		AdminDao admindao = new AdminDao(conditionQueryColumn, tfSearch.getText());
+		ArrayList <AdminDto> dtoList = admindao.conditionList();
+		int listCount = dtoList.size();
+	
+		for(int i = 0; i < listCount; i++) {
+			String productCode = Integer.toString(beanList.get(i).getProductCode());// db에서 데이터 불러오는 순서 (나중의 조건절 검색을 위해 추가함)
+			String brandName = beanList.get(i).getBrandName();
+			String productName = beanList.get(i).getProductName();
+			String size = Integer.toString(beanList.get(i).getSize());
+			String stock = Integer.toString(beanList.get(i).getProductStock());
+			
+			String[] qTxt = {productCode, brandName, productName, size, stock};
+			outerTable.addRow(qTxt);
+		}
+				
 		
+	}
+	
+	private void insertAction() { 		// <<<<브랜드 코드, 이름 다를 때 체크할 과정 있어야 할 듯
+		int brandNo = Integer.parseInt(tfBrandNo.getText());
+		String brandName = tfBrandName.getText();
+		int productCode = Integer.parseInt(tfProductCode.getText());
+		String productName = tfProductName.getText();
+		int productPrice = Integer.parseInt(tfProductPrice.getText());
+		int size = Integer.parseInt(cbSize.getSelectedItem().toString());
+		int productStock = Integer.parseInt(tfProductStock.getText());
+		tfInsertdate.setEditable(false);
+		tfInsertdate.setVisible(false);
+		
+		AdminDao admindao = new AdminDao(brandNo, brandName, productCode, productName, productPrice, size, productStock);
+		boolean result = admindao.insertAction();
+		
+		if (result) {
+			JOptionPane.showMessageDialog(this, "제품 정보 입력이 정상적으로 처리되었습니다.", "제품 등록", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "제품 입력에 오류가 발생했습니다. \n관리자에게 문의하세요.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+			
+		}
+	}
+	
+	private void updateAction() {
+		int brandNo = Integer.parseInt(tfBrandNo.getText());
+		String brandName = tfBrandName.getText();
+		int productCode = Integer.parseInt(tfProductCode.getText());
+		String productName = tfProductName.getText();
+		int productPrice = Integer.parseInt(tfProductPrice.getText());
+		int size = Integer.parseInt(cbSize.getSelectedItem().toString());
+		int productStock = Integer.parseInt(tfProductStock.getText());
+		tfInsertdate.setEditable(false);
+		tfInsertdate.setVisible(false);
+		
+		AdminDao admindao = new AdminDao(brandNo, brandName, productCode, productName, productPrice, size, productStock);
+		boolean result = admindao.updateAction();
+		
+		if (result) {
+			JOptionPane.showMessageDialog(this, "제품 정보 수정이 정상적으로 처리되었습니다.", "제품 정보 수정", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "수정 작업에 오류가 발생했습니다. \n관리자에게 문의하세요.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+			
+		}
+	}
+	
+	private void deleteAction() {
+		int brandNo = Integer.parseInt(tfBrandNo.getText());
+		String brandName = tfBrandName.getText();
+		int productCode = Integer.parseInt(tfProductCode.getText());
+		String productName = tfProductName.getText();
+		int productPrice = Integer.parseInt(tfProductPrice.getText());
+		int size = Integer.parseInt(cbSize.getSelectedItem().toString());
+		int productStock = Integer.parseInt(tfProductStock.getText());
+		tfInsertdate.setEditable(false);
+		tfInsertdate.setVisible(false);
+		
+		AdminDao admindao = new AdminDao(brandNo, brandName, productCode, productName, productPrice, size, productStock);
+		boolean result = admindao.insertAction();
+		
+		if (result) {
+			JOptionPane.showMessageDialog(this, "제품 정보 입력이 정상적으로 처리되었습니다.", "제품 등록", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "제품 입력에 오류가 발생했습니다. \n관리자에게 문의하세요.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+			
+		}
+	}
+	
+	private int insertFieldCheck() {
+		int i=0;
+		if(tfBrandNo.getText().length() == 0) {
+			i++;
+			message = "브랜드 코드";
+			tfBrandNo.requestFocus();
+		}
+		if(tfBrandName.getText().length() == 0) {
+			i++;
+			message = "브랜드 이름";
+			tfBrandName.requestFocus();
+		}
+		if(tfProductCode.getText().length() == 0) {
+			i++;
+			message = "제품 코드";
+			tfProductCode.requestFocus();
+		}
+		if(tfProductName.getText().length() == 0) {
+			i++;
+			message = "제품 이름";
+			tfProductName.requestFocus();
+		}
+		if(tfProductPrice.getText().length() == 0) {
+			i++;
+			message = "가격";
+			tfProductPrice.requestFocus();
+		}
+		if(tfProductStock.getText().length() == 0) {
+			i++;
+			message = "재고량";
+			tfProductStock.requestFocus();
+		}
+		return i;
+	}
+	
+	private void screenPartition() {
+		// 입력일 경우
+		if(rbInsert.isSelected()) {
+			tfBrandNo.setEditable(true);
+			tfBrandName.setEditable(true);
+			tfProductCode.setEditable(true);
+			tfProductName.setEditable(true);
+			tfProductPrice.setEditable(true);
+			tfProductStock.setEditable(true);
+			btnComplete.setVisible(true);
+			btnComplete.setEnabled(true);
+		}
+		
+		// 검색일 경우
+		if(rbSearch.isSelected()) {
+			tfBrandNo.setEditable(false);
+			tfBrandName.setEditable(false);
+			tfProductCode.setEditable(false);
+			tfProductName.setEditable(false);
+			tfProductPrice.setEditable(false);
+			tfProductStock.setEditable(false);
+			btnComplete.setVisible(false);
+			btnComplete.setEnabled(false);
+		}
+		
+		// 수정 또는 삭제일 경우
+		if(rbUpdate.isSelected() || rbDelete.isSelected()) {
+			tfBrandNo.setEditable(false);
+			tfBrandName.setEditable(false);
+			tfProductCode.setEditable(false);
+			tfProductName.setEditable(false);
+			tfProductPrice.setEditable(false);
+			tfProductStock.setEditable(false);
+			btnComplete.setVisible(true);
+			btnComplete.setEnabled(true);
+		}
+		
+	}
+	
+	private void actionPartition() {
+		// 제품을 입력할 경우
+		if (rbInsert.isSelected()) {
+			int i_chk = insertFieldCheck();
+			if (i_chk == 0) {
+				insertAction();
+				tableInit();
+				searchAction();
+				clearColumn();
+			} else {
+				JOptionPane.showMessageDialog(this, message + " 입력정보를 확인하세요!", "제품등록", JOptionPane.INFORMATION_MESSAGE );
+			}
+		}
+		
+		// 제품 수정할 경우
+		if (rbUpdate.isSelected()) {
+			int i_chk = insertFieldCheck();
+			if (i_chk == 0) {
+				updateAction();
+				tableInit();
+				searchAction();
+				clearColumn();
+			} else {
+				JOptionPane.showMessageDialog(this, message + " 수정할 정보를 확인하세요!", "수정", JOptionPane.INFORMATION_MESSAGE );
+			}
+		}
+		
+		// 제품 삭제할 경우
+		if (rbDelete.isSelected()) {
+			int i_chk = insertFieldCheck();
+			if (i_chk == 0) {
+				deleteAction();
+				tableInit();
+				searchAction();
+				clearColumn();
+			} else {
+				JOptionPane.showMessageDialog(this,"제품 삭제에 실패했습니다. \n관리자에게 문의하세요", "삭제", JOptionPane.INFORMATION_MESSAGE );
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+			
 	}
 	
 }
