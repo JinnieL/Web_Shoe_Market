@@ -31,6 +31,7 @@ import com.javalec.funtion.ImageResize;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingConstants;
+import javax.swing.JTextField;
 
 
 public class PurchaseMain extends JFrame {
@@ -67,6 +68,8 @@ public class PurchaseMain extends JFrame {
 	
 	private JButton BtnDelete;
 	private JLabel lblUser;
+	private JTextField tfTotal;
+	private JLabel lblSum;
 	
 	
 	
@@ -111,6 +114,8 @@ public class PurchaseMain extends JFrame {
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getBtnDelete());
 		contentPane.add(getLblUser());
+		contentPane.add(getTfTotal());
+		contentPane.add(getLblSum());
 	}
 
 	private JScrollPane getScrollPane() {
@@ -129,7 +134,7 @@ public class PurchaseMain extends JFrame {
 					BuyAction();
 				}
 			});
-			BtnBuy.setBounds(6, 365, 117, 29);
+			BtnBuy.setBounds(381, 366, 104, 29);
 		}
 		return BtnBuy;
 	}
@@ -141,7 +146,7 @@ public class PurchaseMain extends JFrame {
 					CancellationAction();
 				}
 			});
-			BtnCancellation.setBounds(467, 365, 117, 29);
+			BtnCancellation.setBounds(6, 366, 104, 29);
 		}
 		return BtnCancellation;
 	}
@@ -224,7 +229,7 @@ public class PurchaseMain extends JFrame {
 		col.setPreferredWidth(width);
 		
 		BtnDelete.setEnabled(false);
-		lblUser.setText(userid + "님의 구매페이지 입니다.");
+		lblUser.setText(userid + "님의 주문페이지 입니다.");
 		
 	}
 	
@@ -254,8 +259,8 @@ public class PurchaseMain extends JFrame {
 			outerTable.addRow(tempData);
 		}
 		
-		
-		
+		tfTotal.setText(String.format("%,d", priceSum)+ "원");
+		lblSum.setText("총 " + listCount + "개 합계:");
 		
 		
 			
@@ -347,7 +352,7 @@ public class PurchaseMain extends JFrame {
 					
 				}
 			});
-			BtnDelete.setBounds(121, 365, 117, 29);
+			BtnDelete.setBounds(480, 366, 104, 29);
 		}
 		return BtnDelete;
 	}
@@ -358,5 +363,21 @@ public class PurchaseMain extends JFrame {
 			lblUser.setBounds(349, 17, 229, 16);
 		}
 		return lblUser;
+	}
+	private JTextField getTfTotal() {
+		if (tfTotal == null) {
+			tfTotal = new JTextField();
+			tfTotal.setBounds(467, 333, 111, 26);
+			tfTotal.setColumns(10);
+		}
+		return tfTotal;
+	}
+	private JLabel getLblSum() {
+		if (lblSum == null) {
+			lblSum = new JLabel("");
+			lblSum.setHorizontalAlignment(SwingConstants.TRAILING);
+			lblSum.setBounds(331, 338, 135, 16);
+		}
+		return lblSum;
 	}
 }// End

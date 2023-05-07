@@ -33,6 +33,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class UserMain extends JFrame {
 
@@ -104,7 +106,7 @@ public class UserMain extends JFrame {
 		});
 		setTitle("유저 메인");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 510, 700);
+		setBounds(100, 100, 510, 629);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -125,14 +127,14 @@ public class UserMain extends JFrame {
 		if (cbSelection == null) {
 			cbSelection = new JComboBox();
 			cbSelection.setModel(new DefaultComboBoxModel(new String[] {"브랜드", "상품명"}));
-			cbSelection.setBounds(16, 62, 89, 27);
+			cbSelection.setBounds(16, 72, 89, 27);
 		}
 		return cbSelection;
 	}
 	private JTextField getTfSelection() {
 		if (tfSelection == null) {
 			tfSelection = new JTextField();
-			tfSelection.setBounds(105, 61, 297, 26);
+			tfSelection.setBounds(105, 71, 297, 26);
 			tfSelection.setColumns(10);
 		}
 		return tfSelection;
@@ -147,7 +149,7 @@ public class UserMain extends JFrame {
 			});
 			btnSelection.setBackground(Color.BLACK);
 			btnSelection.setForeground(Color.BLACK);
-			btnSelection.setBounds(405, 61, 89, 29);
+			btnSelection.setBounds(405, 71, 89, 29);
 		}
 		return btnSelection;
 	}
@@ -155,7 +157,7 @@ public class UserMain extends JFrame {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("");
 			lblNewLabel.setIcon(new ImageIcon(UserMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel.setBounds(211, 6, 89, 29);
+			lblNewLabel.setBounds(214, 6, 89, 29);
 		}
 		return lblNewLabel;
 	}
@@ -182,7 +184,7 @@ public class UserMain extends JFrame {
 			ImageResize resize = new ImageResize(icon, x, y);
 			ImageIcon myPageIcon = resize.imageResizing();
 			lblMyPage.setIcon(myPageIcon);
-			lblMyPage.setBounds(454, 6, 40, 40);
+			lblMyPage.setBounds(454, 19, 40, 40);
 		}
 		return lblMyPage;
 	}
@@ -215,7 +217,7 @@ public class UserMain extends JFrame {
 					redirectCart();
 				}
 			});
-			btnCart.setBounds(16, 528, 117, 56);
+			btnCart.setBounds(254, 528, 117, 56);
 		}
 		return btnCart;
 	}
@@ -223,7 +225,8 @@ public class UserMain extends JFrame {
 	private JLabel getLblLoginUser() {
 		if (lblLoginUser == null) {
 			lblLoginUser = new JLabel("");
-			lblLoginUser.setBounds(16, 44, 169, 16);
+			lblLoginUser.setHorizontalAlignment(SwingConstants.TRAILING);
+			lblLoginUser.setBounds(325, 0, 169, 16);
 		}
 		return lblLoginUser;
 	}
@@ -358,7 +361,7 @@ public class UserMain extends JFrame {
 					dispose();
 				}
 			});
-			btnPurchaseHistory.setBounds(145, 528, 117, 56);
+			btnPurchaseHistory.setBounds(377, 528, 117, 56);
 		}
 		return btnPurchaseHistory;
 	}
@@ -380,6 +383,7 @@ public class UserMain extends JFrame {
 	private JButton getBtnLogout() {
 		if (btnLogout == null) {
 			btnLogout = new JButton("Logout");
+			btnLogout.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 			btnLogout.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int result = JOptionPane.showConfirmDialog(null, "로그아웃 하시겠습니까?", "로그아웃", JOptionPane.YES_NO_OPTION);
@@ -392,7 +396,7 @@ public class UserMain extends JFrame {
 				    }
 				}
 			});
-			btnLogout.setBounds(16, 6, 94, 29);
+			btnLogout.setBounds(6, 6, 76, 29);
 		}
 		return btnLogout;
 	}
