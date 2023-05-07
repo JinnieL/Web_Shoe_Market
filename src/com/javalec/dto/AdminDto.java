@@ -1,6 +1,6 @@
 package com.javalec.dto;
 
-public class Dto_Admin {
+public class AdminDto {
 	
 	// Constructor
 	String brandName ;
@@ -13,12 +13,12 @@ public class Dto_Admin {
 	
 	/* Constructor */
 	
-	public Dto_Admin() {
+	public AdminDto() {
 		// TODO Auto-generated constructor stub
 	}
 	
 	// Dao에게 초기 tableInit() 정보 전달받아 메인에 주기위한 생성자
-	public Dto_Admin(String brandName, String productName, int size, int stock, int productCode) {
+	public AdminDto(String brandName, String productName, int size, int stock, int productCode) {
 		super();
 		this.brandName = brandName;
 		this.productName = productName;

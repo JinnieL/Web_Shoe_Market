@@ -7,10 +7,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 
-import com.javalec.dto.Dto_Admin;
+import com.javalec.dto.AdminDto;
 import com.javalec.util.ShareVar;
 
-public class Dao_Admin {
+public class AdminDao {
 	private final String url_mysql = ShareVar.DBName;
 	private final String id_mysql = ShareVar.DBUser;
 	private final String pw_mysql = ShareVar.DBPass;
@@ -20,12 +20,12 @@ public class Dao_Admin {
 	int size;
 	int stock;
 	
-	public Dao_Admin() {
+	public AdminDao() {
 		// TODO Auto-generated constructor stub
 	}
 
 	// tableInit() 생성 후 테이블에 들어갈 데이터 생성자 ((순서), 브랜드 이름, 제품명, 사이즈, 재고)
-	public Dao_Admin(String brandName, String productName, int size, int stock) {
+	public AdminDao(String brandName, String productName, int size, int stock) {
 		super();
 		this.brandName = brandName;
 		this.productName = productName;
@@ -34,8 +34,8 @@ public class Dao_Admin {
 	}
 	
 	// 윈도우 창 오픈 초기 테이블 데이터 table에 불러오기 - 브랜드명, 제품명, 사이즈, 재고량
-	public ArrayList<Dto_Admin> selectList() {
-		ArrayList<Dto_Admin> dtoList = new ArrayList<Dto_Admin>();
+	public ArrayList<AdminDto> selectList() {
+		ArrayList<AdminDto> dtoList = new ArrayList<AdminDto>();
 		
 		String whereDefault = "select p.productCode, b.brandName, p.productName, po.size, po.productStock";
 		String whereDefault1 = " from brand b, product p, productOption po";
@@ -56,7 +56,7 @@ public class Dao_Admin {
 				int stock = rs.getInt(5);
 	
 				
-				Dto_Admin dto = new Dto_Admin(brandName, productName, size, stock, wkCode);
+				AdminDto dto = new AdminDto(brandName, productName, size, stock, wkCode);
 				dtoList.add(dto);
 			}
 

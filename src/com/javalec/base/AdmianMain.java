@@ -8,8 +8,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import com.javalec.dao.Dao_Admin;
-import com.javalec.dto.Dto_Admin;
+import com.javalec.dao.AdminDao;
+import com.javalec.dto.AdminDto;
 
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -28,7 +28,7 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Main_Admin extends JFrame {
+public class AdmianMain extends JFrame {
 
 	private JPanel contentPane;
 	private JRadioButton rbInsert;
@@ -61,7 +61,7 @@ public class Main_Admin extends JFrame {
 	
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-	ArrayList<Dto_Admin> beanList = null; 		// 초기 테이블 요약 정보 받아올 리스트
+	ArrayList<AdminDto> beanList = null; 		// 초기 테이블 요약 정보 받아올 리스트
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	/**
@@ -71,7 +71,7 @@ public class Main_Admin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main_Admin frame = new Main_Admin();
+					AdmianMain frame = new AdmianMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -83,7 +83,7 @@ public class Main_Admin extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Main_Admin() {
+	public AdmianMain() {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -385,8 +385,8 @@ public class Main_Admin extends JFrame {
 	}
 	
 	private void searchAction() { 		// 테이블에 입력할 데이터 다오에서 받아오기
-		beanList = new ArrayList<Dto_Admin>();
-		Dao_Admin dao = new Dao_Admin();
+		beanList = new ArrayList<AdminDto>();
+		AdminDao dao = new AdminDao();
 		beanList = dao.selectList();
 		
 		int listCount = beanList.size();
