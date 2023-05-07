@@ -37,9 +37,9 @@ public class Dao_Admin {
 	public ArrayList<Dto_Admin> selectList() {
 		ArrayList<Dto_Admin> dtoList = new ArrayList<Dto_Admin>();
 		
-		String whereDefault = "select b.brandName, p.productName, po.size, po.productStock ";
-		String whereDefault1 = "from brand b, product p, productOption po";
-		String whereDefault2 = "where b.brandNo= p.brandNo and po.productCode = p.productCode";
+		String whereDefault = "select p.productCode, b.brandName, p.productName, po.size, po.productStock";
+		String whereDefault1 = " from brand b, product p, productOption po";
+		String whereDefault2 = " where b.brandNo = p.brandNo and po.productCode = p.productCode";
 			
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -49,13 +49,14 @@ public class Dao_Admin {
 			ResultSet rs = stmt_mysql.executeQuery(whereDefault + whereDefault1 + whereDefault2);
 			
 			while(rs.next()) {
-				String brandName = rs.getString(1);
-				String productName = rs.getString(2);
-				int size = rs.getInt(3);
-				int stock = rs.getInt(4);
+				int wkCode = rs.getInt(1);
+				String brandName = rs.getString(2);
+				String productName = rs.getString(3);
+				int size = rs.getInt(4);
+				int stock = rs.getInt(5);
 	
 				
-				Dto_Admin dto = new Dto_Admin(brandName, productName, size, stock);
+				Dto_Admin dto = new Dto_Admin(brandName, productName, size, stock, wkCode);
 				dtoList.add(dto);
 			}
 
