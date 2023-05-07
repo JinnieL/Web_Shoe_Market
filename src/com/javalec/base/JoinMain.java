@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.javalec.dao.JoinDao;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -15,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Choice;
 import javax.swing.JComboBox;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class JoinMain extends JFrame {
 
@@ -31,7 +36,6 @@ public class JoinMain extends JFrame {
 	private JTextField tfAddress;
 	private JLabel lblNewLabel_1_3_2;
 	private JTextField tfEmail;
-	private JButton btnNewButton;
 	private JButton btnOK;
 	private JButton btnCancel;
 	private JPasswordField tfPassword;
@@ -57,9 +61,14 @@ public class JoinMain extends JFrame {
 	 * Create the frame.
 	 */
 	public JoinMain() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+		});
 		setTitle("회원가입");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 390, 400);
+		setBounds(100, 100, 390, 420);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -77,11 +86,22 @@ public class JoinMain extends JFrame {
 		contentPane.add(getTfAddress());
 		contentPane.add(getLblNewLabel_1_3_2());
 		contentPane.add(getTfEmail());
-		contentPane.add(getBtnNewButton());
 		contentPane.add(getBtnOK());
 		contentPane.add(getBtnCancel());
 		contentPane.add(getTfPassword());
 		contentPane.add(getTfPassword2());
+		
+		JButton btnCheckID = new JButton("중복 확인");
+		btnCheckID.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+			/* 아이디 확인 */
+			checkID();
+				
+			}
+		});
+		btnCheckID.setBounds(257, 66, 110, 23);
+		contentPane.add(btnCheckID);
 	}
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
@@ -172,18 +192,6 @@ public class JoinMain extends JFrame {
 		}
 		return tfEmail;
 	}
-	private JButton getBtnNewButton() {
-		if (btnNewButton == null) {
-			btnNewButton = new JButton("비밀번호 확인");
-			btnNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				passwordCheck();
-				}
-			});
-			btnNewButton.setBounds(258, 148, 109, 23);
-		}
-		return btnNewButton;
-	}
 	private JButton getBtnOK() {
 		if (btnOK == null) {
 			btnOK = new JButton("완료");
@@ -271,20 +279,22 @@ public class JoinMain extends JFrame {
 			}
 			return i;
 		}
-		
-
 	
-	private void passwordCheck() {
-		char[] pass = tfPassword.getPassword();
-		char[] pass2 = tfPassword2.getPassword();
+	private void checkID() {
+		String insertID = tfId.getText();
+		JoinDao joinDao = new JoinDao();
+		int result = joinDao.checkID(insertID);
 		
-		String passString = new String(pass);
-		String passString2 = new String(pass2);
-				
-		if(passString.equals(passString2)) {
-			JOptionPane.showMessageDialog(null, "일치 합니다.");
-		}else {
-			JOptionPane.showMessageDialog(null, "일치 하지 않습니다.");
+		if(result == 0) {
+			JOptionPane.showMessageDialog(this, "중복되는 ID가 없습니다.");
+		} else {
+			JOptionPane.showMessageDialog(this, "중복되는 ID입니다.");
 		}
+		
 	}
+	
+	
+	
+	
+	
 }
