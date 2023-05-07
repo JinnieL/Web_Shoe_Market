@@ -79,6 +79,27 @@ public class AdminDao {
 		this.productImageName = productImageName;
 		this.productImage = productImage;
 	}
+	/* 수정을 위한 생성자 */
+	public AdminDao(int brandNo, int productCode, String productName, int price, int size, int stock,
+			String productImageName, FileInputStream productImage) {
+		super();
+		this.brandNo = brandNo;
+		this.productCode = productCode;
+		this.productName = productName;
+		this.price = price;
+		this.size = size;
+		this.stock = stock;
+		this.productImageName = productImageName;
+		this.productImage = productImage;
+	}
+	
+	/* 재고 관리를 해주는 생성자 */
+	public AdminDao(int productCode, int size, int stock) {
+		super();
+		this.productCode = productCode;
+		this.size = size;
+		this.stock = stock;
+	}
 
 	/* 삭제를 위한 제품 코드를 가져와주는 생성자 */
 	public AdminDao(int productCode, int size) {
@@ -248,13 +269,16 @@ public class AdminDao {
 	}
 
 	// 데이터 수정하기
-	public boolean updateAction() {
+	public int updateAction() {
+		int rowsAffected1 = 0;
+		int rowsAffected2 = 0;
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt = con.createStatement();
 			PreparedStatement ps_product = null;
 			PreparedStatement ps_productOption = null;
-//			Class.forName("com.mysql.cj.jdbc.Driver");
+			
 			String updateProductQuery = "UPDATE product SET brandNo = ?, productName = ?, productPrice = ?, productImageName = ?, productImage = ? WHERE productCode = ?";
 			ps_product = con.prepareStatement(updateProductQuery);
 			ps_product.setInt(1, brandNo);
@@ -263,21 +287,25 @@ public class AdminDao {
 			ps_product.setString(4, productImageName);
 			ps_product.setBinaryStream(5, productImage);
 			ps_product.setInt(6, productCode);
-			ps_product.executeUpdate();
+			rowsAffected1 += ps_product.executeUpdate();
+			System.out.println("rowsAffected1 : " + rowsAffected1);
 
-			String updateProductOptionQuery = "UPDATE productOption SET size = ?, productStock = ? WHERE productCode = ?";
+			String updateProductOptionQuery = "UPDATE productOption SET productStock = ? WHERE productCode = ? and size = ?";
 			ps_productOption = con.prepareStatement(updateProductOptionQuery);
-			ps_productOption.setInt(1, size);
-			ps_productOption.setInt(2, stock);
-			ps_productOption.setInt(3, productCode);
-			ps_productOption.executeUpdate();
-
+			ps_productOption.setInt(1, stock);
+			ps_productOption.setInt(2, productCode);
+			ps_productOption.setInt(3, size);
+			rowsAffected2 += ps_productOption.executeUpdate();
+			System.out.println("rowsAffected2 : " + rowsAffected2);
+			if(rowsAffected1 > 0 || rowsAffected2 > 0) {
+				return 1;
+			}
 			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
-		return true;
+		return 1;
 
 	}
 
@@ -313,4 +341,37 @@ public class AdminDao {
 		return false;
 	}
 
-}
+	public int addStock() {
+		int addStockCount = 0;
+		PreparedStatement ps = null;
+		String query = "insert into productOption(size, productCode, productStock) values(?, ?, ?)";
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt = con.createStatement();
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, size);
+			ps.setInt(2, productCode);
+			ps.setInt(3, stock);
+			
+			addStockCount += ps.executeUpdate();
+			con.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+		return addStockCount;
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+}	// End Class

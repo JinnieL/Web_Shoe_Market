@@ -90,7 +90,7 @@ public class AdminMain extends JFrame {
 	private JLabel lblBackArrow;
 	private JButton btnLoad;
 	private JTextField tfImageLocation;
-	private JButton btnAddSize;
+	private JButton btnAddStock;
 	private JLabel lblNewLabel_1_1_2_2_1;
 	private JTextField tfProductImageName;
 	
@@ -159,7 +159,7 @@ public class AdminMain extends JFrame {
 		contentPane.add(getLblBackArrow());
 		contentPane.add(getBtnLoad());
 		contentPane.add(getTfImageLocation());
-		contentPane.add(getBtnAddSize());
+		contentPane.add(getBtnAddStock());
 		contentPane.add(getLblNewLabel_1_1_2_2_1());
 		contentPane.add(getTfProductImageName());
 	}
@@ -401,7 +401,7 @@ public class AdminMain extends JFrame {
 					actionPartition();
 				}
 			});
-			btnComplete.setBounds(457, 624, 97, 23);
+			btnComplete.setBounds(490, 624, 126, 23);
 		}
 		return btnComplete;
 	}
@@ -468,12 +468,17 @@ public class AdminMain extends JFrame {
 		return tfImageLocation;
 	}
 	
-	private JButton getBtnAddSize() {
-		if (btnAddSize == null) {
-			btnAddSize = new JButton("재고 추가");
-			btnAddSize.setBounds(341, 621, 104, 29);
+	private JButton getBtnAddStock() {
+		if (btnAddStock == null) {
+			btnAddStock = new JButton("재고 추가");
+			btnAddStock.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					addStockAction();
+				}
+			});
+			btnAddStock.setBounds(341, 621, 126, 29);
 		}
-		return btnAddSize;
+		return btnAddStock;
 	}
 	private JLabel getLblNewLabel_1_1_2_2_1() {
 		if (lblNewLabel_1_1_2_2_1 == null) {
@@ -593,7 +598,7 @@ public class AdminMain extends JFrame {
 				tfInsertdate.setText(formattedDate);
 				cbSize.setSelectedItem(Integer.toString(beanList.get(j).getSize()));
 				tfProductImageName.setText(beanList.get(j).getProductImageName());
-				tfImageLocation.setText("/" + beanList.get(j).getProductImageName());
+//				tfImageLocation.setText();
 				
 			}
 		} catch(ParseException e) {
@@ -687,6 +692,8 @@ public class AdminMain extends JFrame {
 	}
 	
 	private void updateAction() {
+		int i = innerTable.getSelectedRow();
+		int productCode =  Integer.parseInt((String)innerTable.getValueAt(i, 0));
 		int brandNo = Integer.parseInt(tfBrandNo.getText().trim());
 		String productName = tfProductName.getText();
 		int productPrice = Integer.parseInt(tfProductPrice.getText());
@@ -705,14 +712,14 @@ public class AdminMain extends JFrame {
 		}
 		tfInsertdate.setEditable(false);
 		tfInsertdate.setVisible(false);
+		AdminDao admindao = new AdminDao(brandNo, productCode, productName, productPrice, size, productStock, productImageName, input);
+		int result = admindao.updateAction();
+		System.out.println(result);
 		
-		AdminDao admindao = new AdminDao(brandNo, productName, productPrice, size, productStock, productImageName, input);
-		boolean result = admindao.updateAction();
-		
-		if (result) {
+		if (result > 0) {
 			JOptionPane.showMessageDialog(this, "제품 정보 수정이 정상적으로 처리되었습니다.", "제품 정보 수정", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			JOptionPane.showMessageDialog(this, "수정 작업에 오류가 발생했습니다. \n관리자에게 문의하세요.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+//			JOptionPane.showMessageDialog(this, "수정 작업에 오류가 발생했습니다. \n관리자에게 문의하세요.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
 			
 		}
 	}
@@ -738,10 +745,6 @@ public class AdminMain extends JFrame {
 			i++;
 			message = "수량";
 			tfProductStock.requestFocus();
-		}
-		if(tfImageLocation.getText().length() == 0) {
-			i++;
-			message = "이미지";
 		}
 		if(tfProductImageName.getText().length() == 0) {
 			i++;
@@ -825,10 +828,13 @@ public class AdminMain extends JFrame {
 		if (rbUpdate.isSelected()) {
 			int i_chk = insertFieldCheck();
 			if (i_chk == 0) {
-				updateAction();
-				tableInit();
-				searchAction();
-				clearColumn();
+				if(tfImageLocation.getText().length() == 0) {
+					JOptionPane.showMessageDialog(this, " 수정하시려면 사진을 다시 업로드 해주세요. ", "수정", JOptionPane.INFORMATION_MESSAGE );
+				} else {
+					updateAction();
+					tableInit();
+					searchAction();
+				}
 			} else {
 				JOptionPane.showMessageDialog(this, message + " 수정할 정보를 확인하세요!", "수정", JOptionPane.INFORMATION_MESSAGE );
 			}
@@ -894,6 +900,25 @@ public class AdminMain extends JFrame {
 		return true;
 	}
 	
+	private void addStockAction() {
+		int productCode = Integer.parseInt(tfProductCode.getText());
+		int size = Integer.parseInt((String)cbSize.getSelectedItem());
+		int productStock = Integer.parseInt(tfProductStock.getText());
+		
+		AdminDao adminDao = new AdminDao(productCode, size, productStock);
+		int result = adminDao.addStock();
+		
+		if(result > 0) {
+			JOptionPane.showMessageDialog(this, "재고가 추가 되었습니다.");
+			tableInit();
+			searchAction();
+			
+		} else {
+			JOptionPane.showMessageDialog(this, "잘못된 접근입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+		}
+		
+		
+	}
 	
 
 
