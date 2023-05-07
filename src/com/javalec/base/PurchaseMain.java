@@ -37,7 +37,7 @@ public class PurchaseMain extends JFrame {
 	private JButton BtnCancellation;
 	private JTable innerTable;
 	private JLabel lblNewLabel;
-
+	private int purchaseNo;
 	
 	
 	
@@ -219,6 +219,8 @@ public class PurchaseMain extends JFrame {
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 100;
 		col.setPreferredWidth(width);
+	
+
 	}
 	
 	
@@ -228,9 +230,9 @@ public class PurchaseMain extends JFrame {
 			dtoList = dao.selectList();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
-			
-			
 			int listCount = dtoList.size();
+			
+			
 			
 			for(int i = 0; i < listCount; i++) {
 				String temp = Integer.toString(dtoList.get(i).getPurchaseNo());
@@ -253,7 +255,7 @@ public class PurchaseMain extends JFrame {
 	
 	private void tableClick() {
 		int i = innerTable.getSelectedRow();
-		qty = dtoList.get(i).getPurchaseQty();
+		purchaseNo = (int)innerTable.getValueAt(i, 1);
 		
 		BtnBuy.setEnabled(true);
 	}

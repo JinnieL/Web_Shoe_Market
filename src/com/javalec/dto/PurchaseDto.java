@@ -9,6 +9,7 @@ public class PurchaseDto {
 	
 	int purchaseNo;
 	int productCode;
+	int productName;
 	int size;
 	int purchaseQty;
 	String userid;
@@ -21,30 +22,18 @@ public class PurchaseDto {
 	
 	
 	// Constructor
-	
-	public PurchaseDto(int wkSeq, int wkCode, int wkSize, int wkQty, String wkId, Date wkPurchaseInsertdate) {
+	public PurchaseDto() {
 		// TODO Auto-generated constructor stub
 	}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-	public PurchaseDto(int purchaseNo, int productCode, int size, int purchaseQty, String userid,
+	public PurchaseDto(int purchaseNo, int productCode, int productName, int size, int purchaseQty, String userid,
 			Date purchaseInsertdate, Date prtchaseDeletedate, String name, String fileName, FileInputStream file) {
 		super();
 		this.purchaseNo = purchaseNo;
 		this.productCode = productCode;
+		this.productName = productName;
 		this.size = size;
 		this.purchaseQty = purchaseQty;
 		this.userid = userid;
@@ -57,22 +46,10 @@ public class PurchaseDto {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-	// Method
 	public int getPurchaseNo() {
 		return purchaseNo;
 	}
+
 
 
 	public void setPurchaseNo(int purchaseNo) {
@@ -80,9 +57,11 @@ public class PurchaseDto {
 	}
 
 
+
 	public int getProductCode() {
 		return productCode;
 	}
+
 
 
 	public void setProductCode(int productCode) {
@@ -90,9 +69,23 @@ public class PurchaseDto {
 	}
 
 
+
+	public int getProductName() {
+		return productName;
+	}
+
+
+
+	public void setProductName(int productName) {
+		this.productName = productName;
+	}
+
+
+
 	public int getSize() {
 		return size;
 	}
+
 
 
 	public void setSize(int size) {
@@ -100,9 +93,11 @@ public class PurchaseDto {
 	}
 
 
+
 	public int getPurchaseQty() {
 		return purchaseQty;
 	}
+
 
 
 	public void setPurchaseQty(int purchaseQty) {
@@ -110,9 +105,11 @@ public class PurchaseDto {
 	}
 
 
+
 	public String getUserid() {
 		return userid;
 	}
+
 
 
 	public void setUserid(String userid) {
@@ -120,9 +117,11 @@ public class PurchaseDto {
 	}
 
 
+
 	public Date getPurchaseInsertdate() {
 		return purchaseInsertdate;
 	}
+
 
 
 	public void setPurchaseInsertdate(Date purchaseInsertdate) {
@@ -130,9 +129,11 @@ public class PurchaseDto {
 	}
 
 
+
 	public Date getPrtchaseDeletedate() {
 		return prtchaseDeletedate;
 	}
+
 
 
 	public void setPrtchaseDeletedate(Date prtchaseDeletedate) {
@@ -140,9 +141,11 @@ public class PurchaseDto {
 	}
 
 
+
 	public String getName() {
 		return name;
 	}
+
 
 
 	public void setName(String name) {
@@ -150,9 +153,11 @@ public class PurchaseDto {
 	}
 
 
+
 	public String getFileName() {
 		return fileName;
 	}
+
 
 
 	public void setFileName(String fileName) {
@@ -160,14 +165,47 @@ public class PurchaseDto {
 	}
 
 
+
 	public FileInputStream getFile() {
 		return file;
 	}
 
 
+
 	public void setFile(FileInputStream file) {
 		this.file = file;
 	}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

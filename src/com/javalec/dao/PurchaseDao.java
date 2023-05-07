@@ -40,6 +40,7 @@ public class PurchaseDao {
 	String name;
 	String fileName;
 	FileInputStream file;
+	String wkImageName;
 	
 	
 	public PurchaseDao() {
@@ -58,38 +59,37 @@ public class PurchaseDao {
 	public ArrayList<PurchaseDto> selectList(){
 		ArrayList<PurchaseDto> dtoList = new ArrayList<PurchaseDto>();
 		
-		String query = "select pc.purchaseNo, p.productCode, po.size, pc.purchaseQty, u.userid, pc.purchaseInsertdate, p.productImageName, p.productImage from user u, product p, purchase pc, productOption po";
-		String query1 = "where pc.userid = u.userid and pc.productCode = p.productCode";
+		String query = "select pc.purchaseNo, p.productName, po.size, p.productPrice, pc.purchaseQty, u.userid, pc.purchaseInsertdate, p.productImageName, p.productImage "
+						+ "from user u, product p, purchase pc, productOption po"
+						+ "where pc.userid = u.userid and pc.productCode = p.productCode";
+						
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			ResultSet rs = stmt_mysql.executeQuery(query + query1);
+			ResultSet rs = stmt_mysql.executeQuery(query);
 			
 			while (rs.next()) {
-				int wkSeq = rs.getInt(1);
-				int wkCode = rs.getInt(2);
+				int wkPno = rs.getInt(1);
+				String wkName = rs.getString(2);
 				int wkSize = rs.getInt(3);
-				int wkQty = rs.getInt(4);
-				String wkId = rs.getString(5);
-				Date wkPurchaseInsertdate = rs.getDate(6);
+				int wkPrice = rs.getInt(4);
+				int wkQty = rs.getInt(5);
+				String wkUser = rs.getString(6);
+				String wkDate = rs.getString(7);
+				wkImageName = rs.getString(8);
 				
-				String wkFilename = rs.getString(7);
-				
-				File file = new File("./" + wkFilename);
-				
+				File file = new File("./" + wkImageName);
 				FileOutputStream output = new FileOutputStream(file);
-				InputStream input =rs.getBinaryStream(8);
+				InputStream input = rs.getBinaryStream(9);
 				
 				byte[] buffer = new byte[1024];
-				
-				while(input.read() > 0) {
+				while(input.read(buffer) > 0) {
 					output.write(buffer);
 				}
-				PurchaseDto dto = new PurchaseDto(wkSeq, wkCode, wkSize, wkQty, wkId, wkPurchaseInsertdate);
-				dtoList.add(dto);
+				PurchaseDto dto = new PurchaseDto(wkPno, wkName, wkSize, wkPrice, wkQty, wkUser, wkDate, wkImageName);
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
