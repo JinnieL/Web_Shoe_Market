@@ -337,9 +337,7 @@ public class CartMain extends JFrame {
 			}else {
 				JOptionPane.showMessageDialog(this,"장바구니 비우기\n" +  "비우는 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
-		}else {
-			
-		}
+		}	
 		
 	}
 	

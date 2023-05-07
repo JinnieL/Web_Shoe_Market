@@ -149,8 +149,7 @@ public class CartDao {
 	// 수량 업데이트
 	public boolean tableUpdate() {
 		PreparedStatement ps = null;
-		System.out.println(cartNO);
-		System.out.println(cartQty);
+
 		try {
 			// DB 연결!!! 선언자
 			Class.forName("com.mysql.cj.jdbc.Driver");

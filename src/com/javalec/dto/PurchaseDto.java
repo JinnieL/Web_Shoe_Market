@@ -7,108 +7,82 @@ public class PurchaseDto {
 
 	//  Field
 	
-	int purchaseNo;
-	int productCode;
-	int productName;
-	int size;
-	int purchaseQty;
-	String userid;
-	Date purchaseInsertdate;
-	Date prtchaseDeletedate;
-	String name;
-	String fileName;
-	FileInputStream file;
-	
+	int purchasseNO;			// 주문번호
+	int purchasseQty;		// 수량
+	int purchassePrice;		// 가격
+	int purchasseSize;		// 신발 사이즈
+	String name;		// 상품명
+	String filename;	// 이미지
+	String userid;		// userid
+	int productCode;	// 상품 코드
+	String purchaseInsertdate;	// 구매일자
+	String purchaseDeletedate;	// 환불
 	
 	
 	// Constructor
 	public PurchaseDto() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+	
+	
 
-
-
-	public PurchaseDto(int purchaseNo, int productCode, int productName, int size, int purchaseQty, String userid,
-			Date purchaseInsertdate, Date prtchaseDeletedate, String name, String fileName, FileInputStream file) {
+	public PurchaseDto(String userid, int productCode, int purchasseSize, int purchasseQty) {
 		super();
-		this.purchaseNo = purchaseNo;
-		this.productCode = productCode;
-		this.productName = productName;
-		this.size = size;
-		this.purchaseQty = purchaseQty;
+		this.purchasseQty = purchasseQty;
+		this.purchasseSize = purchasseSize;
 		this.userid = userid;
-		this.purchaseInsertdate = purchaseInsertdate;
-		this.prtchaseDeletedate = prtchaseDeletedate;
-		this.name = name;
-		this.fileName = fileName;
-		this.file = file;
-	}
-
-
-
-	public int getPurchaseNo() {
-		return purchaseNo;
-	}
-
-
-
-	public void setPurchaseNo(int purchaseNo) {
-		this.purchaseNo = purchaseNo;
-	}
-
-
-
-	public int getProductCode() {
-		return productCode;
-	}
-
-
-
-	public void setProductCode(int productCode) {
 		this.productCode = productCode;
 	}
 
 
 
-	public int getProductName() {
-		return productName;
+
+
+	public PurchaseDto(int purchasseNO, String userid, int productCode, int purchasseSize,  
+			String purchaseInsertdate, String purchaseDeletedate ,int purchasseQty ) {
+		super();
+		this.purchasseNO = purchasseNO;
+		this.purchasseQty = purchasseQty;
+		this.purchasseSize = purchasseSize;
+		this.userid = userid;
+		this.productCode = productCode;
+		this.purchaseInsertdate = purchaseInsertdate;
+		this.purchaseDeletedate = purchaseDeletedate;
 	}
 
 
 
-	public void setProductName(int productName) {
-		this.productName = productName;
+
+
+
+
+
+
+	public PurchaseDto(int purchasseNO, String name, int purchasseSize, int purchasseQty, int purchassePrice, 
+			String filename) {
+		super();
+		this.purchasseNO = purchasseNO;
+		this.purchasseQty = purchasseQty;
+		this.purchassePrice = purchassePrice;
+		this.purchasseSize = purchasseSize;
+		this.name = name;
+		this.filename = filename;
 	}
 
 
-
-	public int getSize() {
-		return size;
-	}
-
-
-
-	public void setSize(int size) {
-		this.size = size;
-	}
-
-
-
-	public int getPurchaseQty() {
-		return purchaseQty;
-	}
-
-
-
-	public void setPurchaseQty(int purchaseQty) {
-		this.purchaseQty = purchaseQty;
-	}
-
-
+	
+	
+	
+	
+	
+	
 
 	public String getUserid() {
 		return userid;
 	}
+
 
 
 
@@ -118,26 +92,93 @@ public class PurchaseDto {
 
 
 
-	public Date getPurchaseInsertdate() {
+
+	public int getProductCode() {
+		return productCode;
+	}
+
+
+
+
+	public void setProductCode(int productCode) {
+		this.productCode = productCode;
+	}
+
+
+
+
+	public String getPurchaseInsertdate() {
 		return purchaseInsertdate;
 	}
 
 
 
-	public void setPurchaseInsertdate(Date purchaseInsertdate) {
+
+	public void setPurchaseInsertdate(String purchaseInsertdate) {
 		this.purchaseInsertdate = purchaseInsertdate;
 	}
 
 
 
-	public Date getPrtchaseDeletedate() {
-		return prtchaseDeletedate;
+
+	public String getPurchaseDeletedate() {
+		return purchaseDeletedate;
 	}
 
 
 
-	public void setPrtchaseDeletedate(Date prtchaseDeletedate) {
-		this.prtchaseDeletedate = prtchaseDeletedate;
+
+	public void setPurchaseDeletedate(String purchaseDeletedate) {
+		this.purchaseDeletedate = purchaseDeletedate;
+	}
+
+
+
+
+	public int getPurchasseNO() {
+		return purchasseNO;
+	}
+
+
+
+	public void setPurchasseNO(int purchasseNO) {
+		this.purchasseNO = purchasseNO;
+	}
+
+
+
+	public int getPurchasseQty() {
+		return purchasseQty;
+	}
+
+
+
+	public void setPurchasseQty(int purchasseQty) {
+		this.purchasseQty = purchasseQty;
+	}
+
+
+
+	public int getPurchassePrice() {
+		return purchassePrice;
+	}
+
+
+
+	public void setPurchassePrice(int purchassePrice) {
+		this.purchassePrice = purchassePrice;
+	}
+
+
+
+	public int getPurchasseSize() {
+		return purchasseSize;
+	}
+
+
+
+	public void setPurchasseSize(int purchasseSize) {
+		this.purchasseSize = purchasseSize;
 	}
 
 
@@ -154,28 +195,19 @@ public class PurchaseDto {
 
 
 
-	public String getFileName() {
-		return fileName;
+	public String getFilename() {
+		return filename;
 	}
 
 
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 
 
-	public FileInputStream getFile() {
-		return file;
-	}
 
-
-
-	public void setFile(FileInputStream file) {
-		this.file = file;
-	}
-	
 
 
 
