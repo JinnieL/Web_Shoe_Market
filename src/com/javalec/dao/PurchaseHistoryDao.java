@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -81,6 +82,24 @@ public class PurchaseHistoryDao {
 		return beanList;
 	}
 	
+	/* 02. 주문을 취소하는 메소드 */
+	public boolean canclePurchase(int purchaseNo) {
+		String query = "delete from purchase where purchaseNo = ?";
+		PreparedStatement ps = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt = con.createStatement();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, purchaseNo);
+			ps.executeUpdate();
+			con.close();
+			return true;
+		} catch(Exception e)	{
+			e.printStackTrace();
+			return false;
+		}
+	}
 	
 	
 	

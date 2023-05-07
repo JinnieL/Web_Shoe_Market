@@ -48,7 +48,6 @@ public class ProductDetailMain extends JFrame {
 	
 	private JButton btnNewButton;
 	private JButton btnPurchase;
-	private JButton btnNewButton_1_1;
 	private JLabel lblMain;
 	private JLabel lblNewLabel_3_1;
 	private JComboBox cbQty;
@@ -120,7 +119,7 @@ public class ProductDetailMain extends JFrame {
 		});
 		setTitle("상품 상세");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
+		setBounds(100, 100, 676, 360);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -139,7 +138,6 @@ public class ProductDetailMain extends JFrame {
 		contentPane.add(getCbSize());
 		contentPane.add(getBtnNewButton());
 		contentPane.add(getBtnPurchase());
-		contentPane.add(getBtnNewButton_1_1());
 		contentPane.add(getLblMain());
 		contentPane.add(getLblNewLabel_3_1());
 		contentPane.add(getCbQty());
@@ -245,7 +243,7 @@ public class ProductDetailMain extends JFrame {
 					}
 				}
 			});
-			btnNewButton.setBounds(418, 261, 117, 68);
+			btnNewButton.setBounds(418, 221, 117, 68);
 		}
 		return btnNewButton;
 	}
@@ -265,16 +263,9 @@ public class ProductDetailMain extends JFrame {
 					}
 				}
 			});
-			btnPurchase.setBounds(547, 261, 117, 68);
+			btnPurchase.setBounds(547, 221, 117, 68);
 		}
 		return btnPurchase;
-	}
-	private JButton getBtnNewButton_1_1() {
-		if (btnNewButton_1_1 == null) {
-			btnNewButton_1_1 = new JButton("취소");
-			btnNewButton_1_1.setBounds(676, 261, 117, 68);
-		}
-		return btnNewButton_1_1;
 	}
 	private JLabel getLblMain() {
 		if (lblMain == null) {
