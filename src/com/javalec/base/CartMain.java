@@ -52,10 +52,11 @@ public class CartMain extends JFrame {
 	private JButton btnCancel;
 	
 	// Table
-	private String userid;
+	String userid;
 	
 	
 	/* Constructor */
+	
 	
 	/* 로그인 유저를 가져올 getter & setter */
 	public String getUserid() {
@@ -65,8 +66,13 @@ public class CartMain extends JFrame {
 		this.userid = userid;
 	}
 	
+
+	
+	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-	CartDto user = new CartDto(userid);
+	
+	
+
 	
 	ArrayList<CartDto> beanList = null;
 	int qty = 0;
@@ -103,6 +109,7 @@ public class CartMain extends JFrame {
 			public void windowOpened(WindowEvent e) {	// windowopend
 				tableInit();	// table 정리
 				searchAction();	// table 내용
+
 			}
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -297,7 +304,7 @@ public class CartMain extends JFrame {
 		beanList = new ArrayList<CartDto>();
 		CartDao dao = new CartDao();
 		
-		beanList = dao.selectList();
+		beanList = dao.selectList(userid);
 		int priceSum = 0;			// 총 합계
 		int priceQty = 0;			// 상품별 수량 가격 합계
 		
@@ -322,6 +329,7 @@ public class CartMain extends JFrame {
 		tfTotal.setText(String.format("%,d", priceSum)+ "원");
 		lblTotal.setText("총 " + listCount + "개 합계:" );
 		lblUser.setText(userid + " 님의 장바구니 입니다.");
+		
 	
 	}
 	
@@ -330,7 +338,7 @@ public class CartMain extends JFrame {
 		int i = innerTable.getSelectedRow();
 		
 		CartDao dao = new CartDao(beanList.get(i).getCartNO());
-		Boolean result = dao.deleteAction();
+		Boolean result = dao.deleteAction(userid);
 		
 		if(result) {
 			JOptionPane.showMessageDialog(this,"장바구니 취소\n" + beanList.get(i).getName() + " 신발이 \n취소 되었습니다!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
@@ -345,7 +353,7 @@ public class CartMain extends JFrame {
 	private void tableEmpty() {
 		CartDao dao = new CartDao();
 		int i = JOptionPane.showConfirmDialog(this, "장바구니를 비우시겠습니까???", "장바구니",JOptionPane.YES_NO_OPTION);
-		boolean result =  dao.alldeleteAction();
+		boolean result =  dao.alldeleteAction(userid);
 		if(i == 0) {
 			if(result) {
 				JOptionPane.showMessageDialog(this,"장바구니 비우기\n"  + "님의 장바구니가 비워졌습니다.!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
@@ -377,7 +385,7 @@ public class CartMain extends JFrame {
 		// 업데이트
 		
 			CartDao dao = new CartDao(beanList.get(i).getCartNO(),userqty);
-			Boolean result = dao.tableUpdate();
+			Boolean result = dao.tableUpdate(userid);
 			
 			if(result) {
 				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" + beanList.get(i).getName() + "신발 \n수량이 변경되었습니다.", "상품 정보", JOptionPane.INFORMATION_MESSAGE);
@@ -400,6 +408,8 @@ public class CartMain extends JFrame {
 
 		
 	}	
+	
+
 	
 	
 	private JLabel getLblUser() {
