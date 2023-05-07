@@ -27,7 +27,7 @@ public class CartDao {
 	String name;
 	String fileName;
 	FileInputStream file;
-	String userid;
+	String userid = null;
 	int productCode;
 	
 	
@@ -55,9 +55,9 @@ public class CartDao {
 	// 테이블에 데이터
 	public ArrayList<CartDto> selectList(){
 		ArrayList<CartDto> beanList = new ArrayList<CartDto>();	//데이터를 쌓을 장소
-		
+		CartDto user = new CartDto(userid);
 		String query = "select c.cartNo, p.productName, p.productPrice, c.size, c.cartQty, p.productImageName, p.productImage from cart c, user u, product p";
-		String query1 = " where c.userid = u.userid and c.productCode = p.productCode";
+		String query1 = " where c.userid = u.userid and c.productCode = p.productCode and c.userid = " + "'" + user + "'";
 	
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");											
@@ -99,13 +99,14 @@ public class CartDao {
 	// 취소
 	public boolean deleteAction() {
 		PreparedStatement ps = null;
+		CartDto user = new CartDto(userid);
 		try {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			String query = "delete from cart where cartNo = ?";
+			String query = "delete from cart where cartNo = ? and userid = " + "'" + user + "'";
 			
 			ps = conn_mysql.prepareStatement(query);
 			ps.setInt(1, cartNO);
@@ -126,12 +127,13 @@ public class CartDao {
 	// 장바구니 비우기
 	public boolean alldeleteAction() {
 		PreparedStatement ps = null;
+		CartDto user = new CartDto(userid);
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			String query = "delete from cart";
+			String query = "delete from cart where userid =" + "'" + user + "'";
 			
 			ps = conn_mysql.prepareStatement(query);
 			
@@ -149,7 +151,7 @@ public class CartDao {
 	// 수량 업데이트
 	public boolean tableUpdate() {
 		PreparedStatement ps = null;
-
+		CartDto user = new CartDto(userid);
 		try {
 			// DB 연결!!! 선언자
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -157,7 +159,7 @@ public class CartDao {
 			Statement stmt_mysql = conn_mysql.createStatement();
 
 			String query = "update cart set cartQty = ?";
-			String query1 = " where cartNo = ?";
+			String query1 = " where cartNo = ? and userid = " + "'" + user + "'";
 		
 			ps = conn_mysql.prepareStatement(query + query1); 
 

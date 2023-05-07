@@ -52,7 +52,21 @@ public class CartMain extends JFrame {
 	private JButton btnCancel;
 	
 	// Table
+	private String userid;
+	
+	
+	/* Constructor */
+	
+	/* 로그인 유저를 가져올 getter & setter */
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	CartDto user = new CartDto(userid);
 	
 	ArrayList<CartDto> beanList = null;
 	int qty = 0;
@@ -282,6 +296,7 @@ public class CartMain extends JFrame {
 	private void searchAction() {
 		beanList = new ArrayList<CartDto>();
 		CartDao dao = new CartDao();
+		
 		beanList = dao.selectList();
 		int priceSum = 0;			// 총 합계
 		int priceQty = 0;			// 상품별 수량 가격 합계
@@ -306,7 +321,7 @@ public class CartMain extends JFrame {
 		
 		tfTotal.setText(String.format("%,d", priceSum)+ "원");
 		lblTotal.setText("총 " + listCount + "개 합계:" );
-		lblUser.setText(" 님의 장바구니 입니다.");
+		lblUser.setText(userid + " 님의 장바구니 입니다.");
 	
 	}
 	

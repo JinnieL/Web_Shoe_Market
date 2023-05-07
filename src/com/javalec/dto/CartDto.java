@@ -9,6 +9,7 @@ public class CartDto {
 	int cartSize;		// 신발 사이즈
 	String name;		// 상품명
 	String filename;	// 이미지
+	String userid;		// 고객이름
 
 	
 	public CartDto() {
@@ -28,11 +29,29 @@ public class CartDto {
 	}
 
 
+	
+	public CartDto(String userid) {
+		super();
+		this.userid = userid;
+	}
 
-	
-	
-	
-	
+
+
+
+
+
+	public String getUserid() {
+		return userid;
+	}
+
+
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+
+
 	public int getCartSize() {
 		return cartSize;
 	}
