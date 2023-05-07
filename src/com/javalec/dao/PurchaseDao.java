@@ -126,7 +126,6 @@ public class PurchaseDao {
 
 	}
 	
-	
 	// 구매 데이터 입력
 	public boolean addToPurchase() {
 		PreparedStatement ps = null ;
@@ -204,10 +203,7 @@ public class PurchaseDao {
 			return false;
 		}
 		
-		
 	}
-	
-
 	
 	// 구매 후 장바구니 비우기
 	public boolean alldeleteAction(String userid) {

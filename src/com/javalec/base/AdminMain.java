@@ -1,6 +1,7 @@
 package com.javalec.base;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -37,6 +38,7 @@ import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import java.awt.event.MouseAdapter;
@@ -590,15 +592,13 @@ public class AdminMain extends JFrame {
 				tfProductStock.setText(Integer.toString(beanList.get(j).getProductStock()));
 				tfInsertdate.setText(formattedDate);
 				cbSize.setSelectedItem(Integer.toString(beanList.get(j).getSize()));
+				tfProductImageName.setText(beanList.get(j).getProductImageName());
+				tfImageLocation.setText("/" + beanList.get(j).getProductImageName());
 				
 			}
 		} catch(ParseException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-		
 	}
 	
 	// 검색어 입력할 때
@@ -687,17 +687,26 @@ public class AdminMain extends JFrame {
 	}
 	
 	private void updateAction() {
-		int brandNo = Integer.parseInt(tfBrandNo.getText());
-		String brandName = tfBrandName.getText();
-		int productCode = Integer.parseInt(tfProductCode.getText());
+		int brandNo = Integer.parseInt(tfBrandNo.getText().trim());
 		String productName = tfProductName.getText();
 		int productPrice = Integer.parseInt(tfProductPrice.getText());
 		int size = Integer.parseInt(cbSize.getSelectedItem().toString());
 		int productStock = Integer.parseInt(tfProductStock.getText());
+		String productImageName = tfProductImageName.getText().trim();
+		
+		FileInputStream input = null;
+		File file = new File(tfImageLocation.getText()); // 파일 가져오기. 파일을 가져왔지만, 헤더가 포함되어 있어 데이터(그림)만 뽑아야 함.
+		
+		try {
+			// input의 데이터만 가져옴.
+			input = new FileInputStream(file);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		tfInsertdate.setEditable(false);
 		tfInsertdate.setVisible(false);
 		
-		AdminDao admindao = new AdminDao(brandNo, brandName, productCode, productName, productPrice, size, productStock);
+		AdminDao admindao = new AdminDao(brandNo, productName, productPrice, size, productStock, productImageName, input);
 		boolean result = admindao.updateAction();
 		
 		if (result) {
@@ -770,8 +779,22 @@ public class AdminMain extends JFrame {
 			btnComplete.setEnabled(false);
 		}
 		
-		// 수정 또는 삭제일 경우
-		if(rbUpdate.isSelected() || rbDelete.isSelected()) {
+		/* 수정일 경우 */
+		if(rbUpdate.isSelected()) {
+			tfBrandNo.setEditable(true);
+			tfBrandName.setEditable(false);
+			tfProductCode.setEditable(false);
+			tfProductName.setEditable(true);
+			tfProductPrice.setEditable(true);
+			tfProductStock.setEditable(true);
+			cbSize.setEditable(true);
+			tfProductImageName.setEditable(true);
+			btnComplete.setVisible(true);
+			btnComplete.setEnabled(true);
+		}
+		
+		/* 삭제일 경우 */
+		if(rbDelete.isSelected()) {
 			tfBrandNo.setEditable(false);
 			tfBrandName.setEditable(false);
 			tfProductCode.setEditable(false);
@@ -857,9 +880,10 @@ public class AdminMain extends JFrame {
 	private boolean deleteAction() {
 		int i = innerTable.getSelectedRow();
 		String wkSequence = (String) innerTable.getValueAt(i, 0);
-		int wsSeqNo = Integer.parseInt(wkSequence);
+		int wkSeqNo = Integer.parseInt(wkSequence);
+		int wkSize = Integer.parseInt((String)cbSize.getSelectedItem());
 		
-		AdminDao admindao = new AdminDao(wsSeqNo);
+		AdminDao admindao = new AdminDao(wkSeqNo, wkSize);
 		boolean result = admindao.deleteAction();
 		if(result = true) {
 			JOptionPane.showMessageDialog(this, "삭제가 완료 되었습니다.");

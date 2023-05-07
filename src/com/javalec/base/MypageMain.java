@@ -348,9 +348,9 @@ public class MypageMain extends JFrame {
 		UserDao userDao = new UserDao(userid, name, password, address, phone, email);
 		boolean result = userDao.updateAction();
 		if(result) {
-			JOptionPane.showMessageDialog(this, "주소록 정보 수정!\n" + tfName.getText() + "님의 정보가 수정 되었습니다.!", "주소록 정보", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "정보 수정\n" + tfName.getText() + "님의 정보가 수정 되었습니다.!", "마이페이지 정보", JOptionPane.INFORMATION_MESSAGE);
 		}else {
-			JOptionPane.showMessageDialog(this, "주소록 정보 수정!\n" + "입력중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "정보 수정\n" + "입력중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

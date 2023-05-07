@@ -254,9 +254,10 @@ public class ProductDetailMain extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					boolean result = checkQty();
 					if(result == true) {
-						PurchaseMain purchaseMain = new PurchaseMain();
-						purchaseMain.setVisible(true);
-						dispose();
+						int wkResult = JOptionPane.showConfirmDialog(null, "바로 주문하시겠습니까?", "주문", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+						if(wkResult == JOptionPane.YES_OPTION) {
+							purchaseAction();
+						}
 					} else {
 						/* 오류 메세지 추가 예정 */
 						System.out.println("오류");
@@ -343,12 +344,10 @@ public class ProductDetailMain extends JFrame {
 		cartQty = Integer.parseInt((String)cbQty.getSelectedItem());
 		size = Integer.parseInt((String)cbSize.getSelectedItem());
 		ProductDao productDao = new ProductDao(userid, cartQty, productCode, size);
-
 		boolean result = productDao.addToCart();
 		if(result == true) {
 			JOptionPane.showMessageDialog(this, "장바구니에 상품 추가!\n" + tfProductName.getText() + "이 " + cartQty + "개 추가 되었습니다.");
 		}
-		
 	}
 	
 	/* 04. 장바구니에 담기, 주문 전 수량을 체크해주는 메소드 */
@@ -362,6 +361,17 @@ public class ProductDetailMain extends JFrame {
 			return false;
 		}
 		return true;
+	}
+	
+	/* 05. 주문하기 버튼을 눌렀을 때 실행하는 메소드 */
+	private void purchaseAction() {
+		purchaseQty = Integer.parseInt((String)cbQty.getSelectedItem());
+		size = Integer.parseInt((String)cbSize.getSelectedItem());
+		ProductDao productDao = new ProductDao(userid, purchaseQty, productCode, size);
+		boolean result = productDao.insertPurchase();
+		if(result == true) {
+			JOptionPane.showMessageDialog(this, "주문 완료!\n" + tfProductName.getText() + "이 " + purchaseQty + "개 추가 되었습니다.");
+		}
 	}
 	
 }	// End Class

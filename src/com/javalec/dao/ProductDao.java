@@ -30,6 +30,7 @@ public class ProductDao {
 	int size;
 	String productName;
 	int productPrice;
+	int purchaseQty;
 	String productInsertdate;
 	String productUpdatedate;
 	String productDeletedate;
@@ -63,8 +64,6 @@ public class ProductDao {
 		this.conName = conName;
 		this.conData = conData;
 	}
-	
-	
 	
 	/* productDetail을 위해 검색 할 productCode와 사진 이름을 가져와주는 생성자 */
 //	public ProductDao(int productCode, String productImageName) {
@@ -229,6 +228,27 @@ public class ProductDao {
 			e.printStackTrace();
 		}
 		return beanList;
+	}
+	
+	/* 06. 사용자가 주문할 때 수행하는 메소드 */
+	public boolean insertPurchase() {
+		String query = "insert into purchase(userid, productCode, size, purchaseQty) values(?, ?, ?, ?)";
+		PreparedStatement ps = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt = con.createStatement();
+			ps = con.prepareStatement(query);
+			ps.setString(1, userid);
+			ps.setInt(2, productCode);
+			ps.setInt(3, size);
+			ps.setInt(4, cartQty);
+			ps.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 }	// End Class
