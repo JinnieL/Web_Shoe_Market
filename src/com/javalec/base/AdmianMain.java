@@ -9,7 +9,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import com.javalec.dao.AdminDao;
+import com.javalec.dao.ProductDao;
 import com.javalec.dto.AdminDto;
+import com.javalec.funtion.ImageResize;
 
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -21,12 +23,19 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AdmianMain extends JFrame {
 
@@ -35,34 +44,38 @@ public class AdmianMain extends JFrame {
 	private JRadioButton rbUpdate;
 	private JRadioButton rbDelete;
 	private JRadioButton rbSearch;
-	private JTextField textField;
+	private JTextField tfSearch;
 	private JButton btnOK;
 	private JScrollPane scrollPane;
 	private JTable innerTable;
 	private JLabel lblProductImage;
 	private JLabel lblNewLabel_1_1_1;
-	private JTextField textField_1;
+	private JTextField tfBrandNo;
 	private JLabel lblNewLabel_1_1_1_1;
-	private JTextField textField_2;
+	private JTextField tfBrandName;
 	private JLabel lblNewLabel_1;
-	private JTextField textField_3;
+	private JTextField tfProductCode;
 	private JLabel lblNewLabel_1_1;
-	private JTextField textField_4;
+	private JTextField tfProductName;
 	private JLabel lblNewLabel_1_1_2;
-	private JTextField textField_5;
+	private JTextField tfProductPrice;
 	private JLabel lblNewLabel_1_1_2_1;
 	private JComboBox cbSize;
 	private JLabel lblNewLabel_1_1_2_1_1;
-	private JTextField textField_6;
+	private JTextField tfProductStock;
 	private JLabel lblNewLabel_1_1_2_2;
-	private JTextField textField_7;
+	private JTextField tfInsertdate;
 	private JButton btnComplete;
+	
+	private int productCode;
+	private int size;
 
 	
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	ArrayList<AdminDto> beanList = null; 		// 초기 테이블 요약 정보 받아올 리스트
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JComboBox cbSearch;
 	
 	/**
 	 * Launch the application.
@@ -103,27 +116,28 @@ public class AdmianMain extends JFrame {
 		contentPane.add(getRbUpdate());
 		contentPane.add(getRbDelete());
 		contentPane.add(getRbSearch());
-		contentPane.add(getTextField());
+		contentPane.add(getTfSearch());
 		contentPane.add(getBtnOK());
 		contentPane.add(getScrollPane());
 		contentPane.add(getLblProductImage());
 		contentPane.add(getLblNewLabel_1_1_1());
-		contentPane.add(getTextField_1());
+		contentPane.add(getTfBrandNo());
 		contentPane.add(getLblNewLabel_1_1_1_1());
-		contentPane.add(getTextField_2());
+		contentPane.add(getTfBrandName());
 		contentPane.add(getLblNewLabel_1());
-		contentPane.add(getTextField_3());
+		contentPane.add(getTfProductCode());
 		contentPane.add(getLblNewLabel_1_1());
-		contentPane.add(getTextField_4());
+		contentPane.add(getTfProductName());
 		contentPane.add(getLblNewLabel_1_1_2());
-		contentPane.add(getTextField_5());
+		contentPane.add(getTfProductPrice());
 		contentPane.add(getLblNewLabel_1_1_2_1());
 		contentPane.add(getCbSize());
 		contentPane.add(getLblNewLabel_1_1_2_1_1());
-		contentPane.add(getTextField_6());
+		contentPane.add(getTfProductStock());
 		contentPane.add(getLblNewLabel_1_1_2_2());
-		contentPane.add(getTextField_7());
+		contentPane.add(getTfInsertdate());
 		contentPane.add(getBtnComplete());
+		contentPane.add(getCbSearch());
 	}
 	private JRadioButton getRbInsert() {
 		if (rbInsert == null) {
@@ -158,18 +172,23 @@ public class AdmianMain extends JFrame {
 		}
 		return rbSearch;
 	}
-	private JTextField getTextField() {
-		if (textField == null) {
-			textField = new JTextField();
-			textField.setColumns(10);
-			textField.setBounds(243, 20, 200, 21);
+	private JTextField getTfSearch() {
+		if (tfSearch == null) {
+			tfSearch = new JTextField();
+			tfSearch.setColumns(10);
+			tfSearch.setBounds(373, 18, 200, 21);
 		}
-		return textField;
+		return tfSearch;
 	}
 	private JButton getBtnOK() {
 		if (btnOK == null) {
 			btnOK = new JButton("OK");
-			btnOK.setBounds(455, 21, 59, 23);
+			btnOK.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					conditionQuery();
+				}
+			});
+			btnOK.setBounds(585, 19, 59, 23);
 		}
 		return btnOK;
 	}
@@ -198,7 +217,7 @@ public class AdmianMain extends JFrame {
 	private JLabel getLblProductImage() {
 		if (lblProductImage == null) {
 			lblProductImage = new JLabel("");
-			lblProductImage.setBounds(8, 221, 181, 182);
+			lblProductImage.setBounds(8, 348, 284, 219);
 		}
 		return lblProductImage;
 	}
@@ -209,14 +228,14 @@ public class AdmianMain extends JFrame {
 		}
 		return lblNewLabel_1_1_1;
 	}
-	private JTextField getTextField_1() {
-		if (textField_1 == null) {
-			textField_1 = new JTextField();
-			textField_1.setEditable(false);
-			textField_1.setColumns(10);
-			textField_1.setBounds(405, 345, 116, 21);
+	private JTextField getTfBrandNo() {
+		if (tfBrandNo == null) {
+			tfBrandNo = new JTextField();
+			tfBrandNo.setEditable(false);
+			tfBrandNo.setColumns(10);
+			tfBrandNo.setBounds(405, 345, 116, 21);
 		}
-		return textField_1;
+		return tfBrandNo;
 	}
 	private JLabel getLblNewLabel_1_1_1_1() {
 		if (lblNewLabel_1_1_1_1 == null) {
@@ -225,14 +244,14 @@ public class AdmianMain extends JFrame {
 		}
 		return lblNewLabel_1_1_1_1;
 	}
-	private JTextField getTextField_2() {
-		if (textField_2 == null) {
-			textField_2 = new JTextField();
-			textField_2.setEditable(false);
-			textField_2.setColumns(10);
-			textField_2.setBounds(405, 373, 116, 21);
+	private JTextField getTfBrandName() {
+		if (tfBrandName == null) {
+			tfBrandName = new JTextField();
+			tfBrandName.setEditable(false);
+			tfBrandName.setColumns(10);
+			tfBrandName.setBounds(405, 373, 116, 21);
 		}
-		return textField_2;
+		return tfBrandName;
 	}
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
@@ -241,14 +260,14 @@ public class AdmianMain extends JFrame {
 		}
 		return lblNewLabel_1;
 	}
-	private JTextField getTextField_3() {
-		if (textField_3 == null) {
-			textField_3 = new JTextField();
-			textField_3.setEditable(false);
-			textField_3.setColumns(10);
-			textField_3.setBounds(405, 401, 116, 21);
+	private JTextField getTfProductCode() {
+		if (tfProductCode == null) {
+			tfProductCode = new JTextField();
+			tfProductCode.setEditable(false);
+			tfProductCode.setColumns(10);
+			tfProductCode.setBounds(405, 401, 116, 21);
 		}
-		return textField_3;
+		return tfProductCode;
 	}
 	private JLabel getLblNewLabel_1_1() {
 		if (lblNewLabel_1_1 == null) {
@@ -257,14 +276,14 @@ public class AdmianMain extends JFrame {
 		}
 		return lblNewLabel_1_1;
 	}
-	private JTextField getTextField_4() {
-		if (textField_4 == null) {
-			textField_4 = new JTextField();
-			textField_4.setEditable(false);
-			textField_4.setColumns(10);
-			textField_4.setBounds(405, 429, 181, 21);
+	private JTextField getTfProductName() {
+		if (tfProductName == null) {
+			tfProductName = new JTextField();
+			tfProductName.setEditable(false);
+			tfProductName.setColumns(10);
+			tfProductName.setBounds(405, 429, 181, 21);
 		}
-		return textField_4;
+		return tfProductName;
 	}
 	private JLabel getLblNewLabel_1_1_2() {
 		if (lblNewLabel_1_1_2 == null) {
@@ -273,14 +292,14 @@ public class AdmianMain extends JFrame {
 		}
 		return lblNewLabel_1_1_2;
 	}
-	private JTextField getTextField_5() {
-		if (textField_5 == null) {
-			textField_5 = new JTextField();
-			textField_5.setEditable(false);
-			textField_5.setColumns(10);
-			textField_5.setBounds(405, 459, 116, 21);
+	private JTextField getTfProductPrice() {
+		if (tfProductPrice == null) {
+			tfProductPrice = new JTextField();
+			tfProductPrice.setEditable(false);
+			tfProductPrice.setColumns(10);
+			tfProductPrice.setBounds(405, 459, 116, 21);
 		}
-		return textField_5;
+		return tfProductPrice;
 	}
 	private JLabel getLblNewLabel_1_1_2_1() {
 		if (lblNewLabel_1_1_2_1 == null) {
@@ -304,14 +323,14 @@ public class AdmianMain extends JFrame {
 		}
 		return lblNewLabel_1_1_2_1_1;
 	}
-	private JTextField getTextField_6() {
-		if (textField_6 == null) {
-			textField_6 = new JTextField();
-			textField_6.setEditable(false);
-			textField_6.setColumns(10);
-			textField_6.setBounds(514, 490, 60, 21);
+	private JTextField getTfProductStock() {
+		if (tfProductStock == null) {
+			tfProductStock = new JTextField();
+			tfProductStock.setEditable(false);
+			tfProductStock.setColumns(10);
+			tfProductStock.setBounds(514, 490, 60, 21);
 		}
-		return textField_6;
+		return tfProductStock;
 	}
 	private JLabel getLblNewLabel_1_1_2_2() {
 		if (lblNewLabel_1_1_2_2 == null) {
@@ -320,14 +339,14 @@ public class AdmianMain extends JFrame {
 		}
 		return lblNewLabel_1_1_2_2;
 	}
-	private JTextField getTextField_7() {
-		if (textField_7 == null) {
-			textField_7 = new JTextField();
-			textField_7.setEditable(false);
-			textField_7.setColumns(10);
-			textField_7.setBounds(405, 515, 116, 21);
+	private JTextField getTfInsertdate() {
+		if (tfInsertdate == null) {
+			tfInsertdate = new JTextField();
+			tfInsertdate.setEditable(false);
+			tfInsertdate.setColumns(10);
+			tfInsertdate.setBounds(405, 515, 116, 21);
 		}
-		return textField_7;
+		return tfInsertdate;
 	}
 	private JButton getBtnComplete() {
 		if (btnComplete == null) {
@@ -337,7 +356,14 @@ public class AdmianMain extends JFrame {
 		return btnComplete;
 	}
 	
-	
+	private JComboBox getCbSearch() {
+		if (cbSearch == null) {
+			cbSearch = new JComboBox();
+			cbSearch.setModel(new DefaultComboBoxModel(new String[] {"브랜드 이름", "제품 명"}));
+			cbSearch.setBounds(245, 17, 116, 27);
+		}
+		return cbSearch;
+	}
 	
 	// ----------------------functions
 	
@@ -396,7 +422,7 @@ public class AdmianMain extends JFrame {
 			String brandName = beanList.get(i).getBrandName();
 			String productName = beanList.get(i).getProductName();
 			String size = Integer.toString(beanList.get(i).getSize());
-			String stock = Integer.toString(beanList.get(i).getStock());
+			String stock = Integer.toString(beanList.get(i).getProductStock());
 			
 			String[] qTxt = {productCode, brandName, productName, size, stock};
 			outerTable.addRow(qTxt);
@@ -404,15 +430,82 @@ public class AdmianMain extends JFrame {
 	
 	}
 	
+	/* 테이블 클릭했을 때 실행되는 메소드 */
 	private void tableClick() {
 		int i = innerTable.getSelectedRow();
+		productCode = Integer.parseInt((String)innerTable.getValueAt(i, 0));
+		size = Integer.parseInt((String)innerTable.getValueAt(i, 3));
+		AdminDao adminDao = new AdminDao();
+		beanList = adminDao.queryAction(size, productCode);
+		int listCount = beanList.size();
+		
+		try {
+			for(int j=0; j<listCount; j++) {
+				ImageIcon icon = new ImageIcon("./" + beanList.get(j).getProductImageName());
+				int x = 250;
+				int y = 150;
+				ImageResize resize = new ImageResize(icon, x, y);
+				ImageIcon productIcon = resize.imageResizing();
+				
+				/* formatter 변경 */
+				String date = beanList.get(j).getDate();
+				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+				Date parsedDate = inputFormat.parse(date);
+				String formattedDate = outputFormat.format(parsedDate);
+		        
+				tfBrandNo.setText(Integer.toString(beanList.get(j).getBrandNo()));
+				tfBrandName.setText(beanList.get(j).getBrandName());
+				tfProductCode.setText(Integer.toString(beanList.get(j).getProductCode()));
+				tfProductName.setText(beanList.get(j).getProductName());
+				lblProductImage.setIcon(productIcon);
+				tfProductPrice.setText(Integer.toString(beanList.get(j).getProductPrice()));
+				tfProductStock.setText(Integer.toString(beanList.get(j).getProductStock()));
+				tfInsertdate.setText(formattedDate);
+				cbSize.setSelectedItem(Integer.toString(beanList.get(j).getSize()));
+				
+			}
+		} catch(ParseException e) {
+			e.printStackTrace();
+		}
+		
 		
 		
 		
 	}
 	
 	
+	private void conditionQuery() {
+		int i = cbSearch.getSelectedIndex();
+		String conditionQueryColumn = "";
+		switch (i) {
+		case 0 : 
+			conditionQueryColumn = "brandName";
+			break;
+		case 1 : 
+			conditionQueryColumn = "productName";
+			break;
+		default : 
+			break;
+		}
+		tableInit() ;
+		clearColumn();
+		conditionQueryAction(conditionQueryColumn); 
+	}
 	
+	private void clearColumn() {
+		tfBrandNo.setText("");
+		tfBrandName.setText("");
+		tfProductCode.setText("");
+		tfProductName.setText("");
+		tfProductPrice.setText("");
+		tfProductStock.setText("");
+		tfInsertdate.setText("");
+		
+	}
 	
+	private void conditionQueryAction(String conditionQueryColumn) {
+		
+	}
 	
 }

@@ -158,7 +158,7 @@ public class PurchaseHistoryMain extends JFrame {
 			btnCancle = new JButton("주문 취소하기");
 			btnCancle.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-				    int result = JOptionPane.showConfirmDialog(null, "주문을 취소하시겠습니까?", "주문 취소", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);;
+				    int result = JOptionPane.showConfirmDialog(null, "주문을 취소하시겠습니까?", "주문 취소", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				    /* 주문 취소 물어보기 */
 				    if (result == JOptionPane.YES_OPTION) {
 				        cancleAction();

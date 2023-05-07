@@ -1,7 +1,11 @@
 package com.javalec.dao;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -67,8 +71,54 @@ public class AdminDao {
 		}
 
 		return dtoList;
+	}
+	
+	public ArrayList<AdminDto> queryAction(int size, int productCode){
+		PreparedStatement ps = null;
+		ArrayList<AdminDto> beanList = new ArrayList<AdminDto>();
+		String whereDefault = "select b.brandNo, b.brandName, p.productCode, p.productName, po.size, p.productPrice, po.productStock, p.productInsertdate, p.productImageName, p.productImage";
+		String whereDefault1 = " from brand b, product p, productOption po" ;
+		String whereDefault2 = " where b.brandNo = p.brandNo and po.productCode = p.productCode and po.size = " + size + " and p.productCode = " + productCode;
+		
+		try  {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			ResultSet rs = stmt_mysql.executeQuery(whereDefault + whereDefault1 + whereDefault2);
+			
+			
+			while (rs.next()) {
+			int wkBrandNo = rs.getInt(1);
+			String wkBrandName = rs.getString(2);
+			int wkProductCode = rs.getInt(3);
+			String wkProductName = rs.getString(4);
+			int wkSize = rs.getInt(5);
+			int wkPrice = rs.getInt(6);
+			int wkStock = rs.getInt(7);
+			String wkDate = rs.getString(8);
+			String wkImageName = rs.getString(9);
+			File file = new File("./" + wkImageName);
+			FileOutputStream output = new FileOutputStream(file);
+			InputStream input = rs.getBinaryStream(10);
+			byte[] buffer = new byte[1024];
+			AdminDto adminDto = new AdminDto(wkBrandNo, wkBrandName, wkProductName, wkSize, wkProductCode, wkPrice, wkStock, wkDate, wkImageName);
+			beanList.add(adminDto);
+			while(input.read(buffer) > 0) {
+				output.write(buffer);
+			}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return beanList;
 		
 	}
+	
+	
+	
+	
 	
 
 }
