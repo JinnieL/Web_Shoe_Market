@@ -35,6 +35,7 @@ public class LoginMain extends JFrame {
 	private JPasswordField pfUserPassword;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
+	String userid;
 	String message = ""; 		// 사용자가 입력하지 않은 데이터(id or pw) 알려주기
 	private JLabel lblNewLabel_2;
 
@@ -180,7 +181,12 @@ public class LoginMain extends JFrame {
 			if (i_chk != 0) { 		// id나 pw가 제대로 입력 되지 않은 경우
 				JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
 			} else {		// id, pw 정상 입력된 상태 
-				loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
+				boolean result = existsUserID();
+				if(result == true) {
+					loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
+				} else {
+					JOptionPane.showMessageDialog(this, "아이디가 존재하지 않습니다.");
+				}
 							
 			} 
 		}
@@ -214,21 +220,41 @@ public class LoginMain extends JFrame {
 		return i;
 	}
 	
+	/* 아이디 체크 */
+	private boolean existsUserID() {
+		boolean result = false;
+		userid = tfUserId.getText();
+		LoginDao loginDao = new LoginDao();
+		int count = loginDao.existsUserID(userid);
+		if(count == 0) {
+			return result = false;
+		} else {
+			return result = true;
+		}
+		
+	}
+	
+	
 	private void loginCheck() {
 		String id = tfUserId.getText();
 		char[] pass = pfUserPassword.getPassword();
 		String password = new String(pass);
 		
 		LoginDao loginDao = new LoginDao(id, password) ;
-		String result = loginDao.loginCheck(); 
+		boolean result = loginDao.loginCheck(id, password);
 		
-		if (result.equals(id)) {
-			JOptionPane.showMessageDialog(this, result + " 님, 환영합니다!", "로그인 성공!", JOptionPane.INFORMATION_MESSAGE);;
+		if (result == true) {
+			JOptionPane.showMessageDialog(this, id + " 님, 환영합니다!", "로그인 성공!", JOptionPane.INFORMATION_MESSAGE);;
 			UserMain userMain = new UserMain();
 			String userid = tfUserId.getText();
-			userMain.setUserid(userid);
-			userMain.setVisible(true);
-			dispose();
+			if(userid.equals("admin") && rbAdmin.isSelected()) {
+				AdminMain admianMain = new AdminMain();
+				admianMain.setVisible(true);
+			} else {
+				userMain.setUserid(userid);
+				userMain.setVisible(true);
+				dispose();
+			}
 		} else {
 			JOptionPane.showMessageDialog(this, "존재하지 않거나 잘못 입력된 회원정보입니다. \n" + "Id나 Password를 확인해 주세요", "Error", JOptionPane.INFORMATION_MESSAGE);;
 			

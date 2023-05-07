@@ -1,6 +1,7 @@
 package com.javalec.dao;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -26,6 +27,8 @@ public class AdminDao {
 	int price;
 	int size;
 	int stock;
+	String productImageName;
+	FileInputStream productImage;
 	
 	String conditionQueryColumn;
 	String tfSearch;
@@ -63,9 +66,22 @@ public class AdminDao {
 		this.stock = stock;
 	}
 
+	/* 상품 추가 해주는 생성자 */
+	public AdminDao(int brandNo, String productName, int price, String productImageName, FileInputStream productImage) {
+		super();
+		this.brandNo = brandNo;
+		this.productName = productName;
+		this.price = price;
+		this.productImageName = productImageName;
+		this.productImage = productImage;
+	}
 	
-	
-	
+	/* 삭제를 위한 제품 코드를 가져와주는 생성자 */
+	public AdminDao(int productCode) {
+		super();
+		this.productCode = productCode;
+	}
+
 	// 윈도우 창 오픈 초기 테이블 데이터 table에 불러오기 - 브랜드명, 제품명, 사이즈, 재고량
 	public ArrayList<AdminDto> selectList() {
 		ArrayList<AdminDto> dtoList = new ArrayList<AdminDto>();
@@ -101,11 +117,6 @@ public class AdminDao {
 
 		return dtoList;
 	}
-	
-
-
-
-
 	
 	// 상세 정보 텍스트 필드를 채우는 메소드
 	public ArrayList<AdminDto> queryAction(int size, int productCode){
@@ -152,12 +163,12 @@ public class AdminDao {
 	}
 	
 	// 사용자가 입력한 조건 검색
-	private void conditionList(String conditionQueryColumn, String tfSearch) {
-		ArrayList<AdminDto> dtoList = new ArrayList<AdminDto> ();
+	public ArrayList<AdminDto> conditionList(String conditionQueryColumn, String tfSearch) {
+		ArrayList<AdminDto> benaList = new ArrayList<AdminDto> ();
 		
 		String whereDefault = "select p.productCode, b.brandName, p.productName, po.size, po.productStock";
 		String whereDefault1 = " from brand b, product p, productOption po";
-		String whereDefault2 = " where b.brandNo = p.brandNo and po.productCode = p.productCode and (brandName like '%"    ;
+		String whereDefault2 = " where b.brandNo = p.brandNo and po.productCode = p.productCode and " + conditionQueryColumn + " like " + "'%" + tfSearch + "%'";
 			
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -175,7 +186,7 @@ public class AdminDao {
 	
 				
 				AdminDto dto = new AdminDto(brandName, productName, size, stock, wkCode);
-				dtoList.add(dto);
+				benaList.add(dto);
 			}
 
 			conn_mysql.close();
@@ -184,7 +195,7 @@ public class AdminDao {
 			e.printStackTrace();
 		}
 
-		return dtoList;
+		return benaList;
 	}
 	
 	
@@ -193,25 +204,22 @@ public class AdminDao {
 		PreparedStatement ps = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
-			Statement stmt_mysql = conn_mysql.createStatement();
+			Connection con = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt = con.createStatement();
 			
-			String query = "insert all into brand (brandNo, brandName) values (?, ?) " ;
-			String query1 = " into product(productCode, productName, productPrice) values (?, ?, ?) " ;
-			String query2 =	" into productOption (size, productStock) values (?, ?)";
-			 
+//			AdminDao adminDao = new AdminDao(brandNo, productName, productPrice, productImageName, input);
 			
-			ps = conn_mysql.prepareStatement(query + query1 + query2);
+			String query = "insert into product(brandNo, productName, productPrice, productImageName, productImage) values(?, ?, ?, ?, ?)";
+			
+			ps = con.prepareStatement(query);
 			ps.setInt(1, brandNo);
-			ps.setString(2, brandName.trim());
-			ps.setInt(3, productCode);
-			ps.setString(4, productName.trim());
-			ps.setInt(5, price);
-			ps.setInt(6, size);
-			ps.setInt(7,  stock);
+			ps.setString(2, productName);
+			ps.setInt(3, price);
+			ps.setString(4, productImageName);
+			ps.setBinaryStream(5, productImage);
 			
 			ps.executeUpdate();
-			conn_mysql.close();
+			con.close();
 						
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -251,6 +259,27 @@ public class AdminDao {
 		}
 		return true;
 		
+	}
+	
+	public boolean deleteAction() {
+		PreparedStatement ps = null;
+		String query = "delete from product where producCode = ?";
+			
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt = con.createStatement();
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, productCode);
+
+			con.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 	
 	

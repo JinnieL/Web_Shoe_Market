@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -16,14 +17,19 @@ import com.javalec.funtion.ImageResize;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +44,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class AdmianMain extends JFrame {
+public class AdminMain extends JFrame {
 
 	private JPanel contentPane;
 	private JRadioButton rbInsert;
@@ -46,7 +52,7 @@ public class AdmianMain extends JFrame {
 	private JRadioButton rbDelete;
 	private JRadioButton rbSearch;
 	private JTextField tfSearch;
-	private JButton btnOK;
+	private JButton btnSeletion;
 	private JScrollPane scrollPane;
 	private JTable innerTable;
 	private JLabel lblProductImage;
@@ -70,7 +76,7 @@ public class AdmianMain extends JFrame {
 	
 	private int productCode;
 	private int size;
-
+	
 	String message = ""; 	// 사용자가 입력하지 않은 부분 체크해줄 메시지 
 	
 	
@@ -78,6 +84,13 @@ public class AdmianMain extends JFrame {
 	ArrayList<AdminDto> beanList = null; 		// 초기 테이블 요약 정보 받아올 리스트
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JComboBox cbSearch;
+	private JLabel lblNewLabel;
+	private JLabel lblBackArrow;
+	private JButton btnLoad;
+	private JTextField tfImageLocation;
+	private JButton btnAddSize;
+	private JLabel lblNewLabel_1_1_2_2_1;
+	private JTextField tfProductImageName;
 	
 	/**
 	 * Launch the application.
@@ -86,7 +99,7 @@ public class AdmianMain extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdmianMain frame = new AdmianMain();
+					AdminMain frame = new AdminMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -98,7 +111,7 @@ public class AdmianMain extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AdmianMain() {
+	public AdminMain() {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -119,7 +132,7 @@ public class AdmianMain extends JFrame {
 		contentPane.add(getRbDelete());
 		contentPane.add(getRbSearch());
 		contentPane.add(getTfSearch());
-		contentPane.add(getBtnOK());
+		contentPane.add(getBtnSeletion());
 		contentPane.add(getScrollPane());
 		contentPane.add(getLblProductImage());
 		contentPane.add(getLblNewLabel_1_1_1());
@@ -140,6 +153,13 @@ public class AdmianMain extends JFrame {
 		contentPane.add(getTfInsertdate());
 		contentPane.add(getBtnComplete());
 		contentPane.add(getCbSearch());
+		contentPane.add(getLblNewLabel());
+		contentPane.add(getLblBackArrow());
+		contentPane.add(getBtnLoad());
+		contentPane.add(getTfImageLocation());
+		contentPane.add(getBtnAddSize());
+		contentPane.add(getLblNewLabel_1_1_2_2_1());
+		contentPane.add(getTfProductImageName());
 	}
 	private JRadioButton getRbInsert() {
 		if (rbInsert == null) {
@@ -150,7 +170,7 @@ public class AdmianMain extends JFrame {
 				}
 			});
 			buttonGroup.add(rbInsert);
-			rbInsert.setBounds(8, 19, 60, 23);
+			rbInsert.setBounds(6, 61, 60, 23);
 		}
 		return rbInsert;
 	}
@@ -164,7 +184,7 @@ public class AdmianMain extends JFrame {
 				}
 			});
 			buttonGroup.add(rbUpdate);
-			rbUpdate.setBounds(68, 19, 60, 23);
+			rbUpdate.setBounds(66, 61, 60, 23);
 		}
 		return rbUpdate;
 	}
@@ -177,7 +197,7 @@ public class AdmianMain extends JFrame {
 				}
 			});
 			buttonGroup.add(rbDelete);
-			rbDelete.setBounds(129, 19, 60, 23);
+			rbDelete.setBounds(127, 61, 60, 23);
 		}
 		return rbDelete;
 	}
@@ -191,7 +211,7 @@ public class AdmianMain extends JFrame {
 			});
 			buttonGroup.add(rbSearch);
 			rbSearch.setSelected(true);
-			rbSearch.setBounds(189, 19, 60, 23);
+			rbSearch.setBounds(187, 61, 60, 23);
 		}
 		return rbSearch;
 	}
@@ -199,26 +219,26 @@ public class AdmianMain extends JFrame {
 		if (tfSearch == null) {
 			tfSearch = new JTextField();
 			tfSearch.setColumns(10);
-			tfSearch.setBounds(373, 18, 200, 21);
+			tfSearch.setBounds(371, 60, 200, 21);
 		}
 		return tfSearch;
 	}
-	private JButton getBtnOK() {
-		if (btnOK == null) {
-			btnOK = new JButton("OK");
-			btnOK.addActionListener(new ActionListener() {
+	private JButton getBtnSeletion() {
+		if (btnSeletion == null) {
+			btnSeletion = new JButton("검색");
+			btnSeletion.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					conditionQuery();
 				}
 			});
-			btnOK.setBounds(585, 19, 59, 23);
+			btnSeletion.setBounds(567, 60, 77, 23);
 		}
-		return btnOK;
+		return btnSeletion;
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(8, 48, 636, 288);
+			scrollPane.setBounds(6, 90, 636, 288);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
@@ -240,14 +260,14 @@ public class AdmianMain extends JFrame {
 	private JLabel getLblProductImage() {
 		if (lblProductImage == null) {
 			lblProductImage = new JLabel("");
-			lblProductImage.setBounds(8, 348, 284, 219);
+			lblProductImage.setBounds(6, 390, 328, 219);
 		}
 		return lblProductImage;
 	}
 	private JLabel getLblNewLabel_1_1_1() {
 		if (lblNewLabel_1_1_1 == null) {
 			lblNewLabel_1_1_1 = new JLabel("브랜드 코드");
-			lblNewLabel_1_1_1.setBounds(304, 348, 89, 15);
+			lblNewLabel_1_1_1.setBounds(346, 393, 89, 15);
 		}
 		return lblNewLabel_1_1_1;
 	}
@@ -256,14 +276,14 @@ public class AdmianMain extends JFrame {
 			tfBrandNo = new JTextField();
 			tfBrandNo.setEditable(false);
 			tfBrandNo.setColumns(10);
-			tfBrandNo.setBounds(405, 345, 116, 21);
+			tfBrandNo.setBounds(447, 390, 116, 21);
 		}
 		return tfBrandNo;
 	}
 	private JLabel getLblNewLabel_1_1_1_1() {
 		if (lblNewLabel_1_1_1_1 == null) {
 			lblNewLabel_1_1_1_1 = new JLabel("브랜드 명");
-			lblNewLabel_1_1_1_1.setBounds(304, 376, 89, 15);
+			lblNewLabel_1_1_1_1.setBounds(346, 421, 89, 15);
 		}
 		return lblNewLabel_1_1_1_1;
 	}
@@ -272,14 +292,14 @@ public class AdmianMain extends JFrame {
 			tfBrandName = new JTextField();
 			tfBrandName.setEditable(false);
 			tfBrandName.setColumns(10);
-			tfBrandName.setBounds(405, 373, 116, 21);
+			tfBrandName.setBounds(447, 418, 116, 21);
 		}
 		return tfBrandName;
 	}
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("제품 코드");
-			lblNewLabel_1.setBounds(304, 404, 89, 15);
+			lblNewLabel_1.setBounds(346, 449, 89, 15);
 		}
 		return lblNewLabel_1;
 	}
@@ -288,14 +308,14 @@ public class AdmianMain extends JFrame {
 			tfProductCode = new JTextField();
 			tfProductCode.setEditable(false);
 			tfProductCode.setColumns(10);
-			tfProductCode.setBounds(405, 401, 116, 21);
+			tfProductCode.setBounds(447, 446, 116, 21);
 		}
 		return tfProductCode;
 	}
 	private JLabel getLblNewLabel_1_1() {
 		if (lblNewLabel_1_1 == null) {
 			lblNewLabel_1_1 = new JLabel("제품명");
-			lblNewLabel_1_1.setBounds(304, 432, 89, 15);
+			lblNewLabel_1_1.setBounds(346, 477, 89, 15);
 		}
 		return lblNewLabel_1_1;
 	}
@@ -304,14 +324,14 @@ public class AdmianMain extends JFrame {
 			tfProductName = new JTextField();
 			tfProductName.setEditable(false);
 			tfProductName.setColumns(10);
-			tfProductName.setBounds(405, 429, 181, 21);
+			tfProductName.setBounds(447, 474, 181, 21);
 		}
 		return tfProductName;
 	}
 	private JLabel getLblNewLabel_1_1_2() {
 		if (lblNewLabel_1_1_2 == null) {
 			lblNewLabel_1_1_2 = new JLabel("가격");
-			lblNewLabel_1_1_2.setBounds(304, 462, 89, 15);
+			lblNewLabel_1_1_2.setBounds(346, 507, 89, 15);
 		}
 		return lblNewLabel_1_1_2;
 	}
@@ -320,14 +340,14 @@ public class AdmianMain extends JFrame {
 			tfProductPrice = new JTextField();
 			tfProductPrice.setEditable(false);
 			tfProductPrice.setColumns(10);
-			tfProductPrice.setBounds(405, 459, 116, 21);
+			tfProductPrice.setBounds(447, 504, 116, 21);
 		}
 		return tfProductPrice;
 	}
 	private JLabel getLblNewLabel_1_1_2_1() {
 		if (lblNewLabel_1_1_2_1 == null) {
 			lblNewLabel_1_1_2_1 = new JLabel("사이즈");
-			lblNewLabel_1_1_2_1.setBounds(304, 490, 43, 15);
+			lblNewLabel_1_1_2_1.setBounds(346, 535, 43, 15);
 		}
 		return lblNewLabel_1_1_2_1;
 	}
@@ -335,14 +355,14 @@ public class AdmianMain extends JFrame {
 		if (cbSize == null) {
 			cbSize = new JComboBox();
 			cbSize.setModel(new DefaultComboBoxModel(new String[] {"170", "180", "190", "200", "210", "220", "230", "240", "250", "255", "260", "265", "270", "275", "280", "290", "300"}));
-			cbSize.setBounds(349, 487, 76, 23);
+			cbSize.setBounds(391, 532, 76, 23);
 		}
 		return cbSize;
 	}
 	private JLabel getLblNewLabel_1_1_2_1_1() {
 		if (lblNewLabel_1_1_2_1_1 == null) {
 			lblNewLabel_1_1_2_1_1 = new JLabel("재고량");
-			lblNewLabel_1_1_2_1_1.setBounds(475, 493, 43, 15);
+			lblNewLabel_1_1_2_1_1.setBounds(517, 538, 43, 15);
 		}
 		return lblNewLabel_1_1_2_1_1;
 	}
@@ -351,14 +371,14 @@ public class AdmianMain extends JFrame {
 			tfProductStock = new JTextField();
 			tfProductStock.setEditable(false);
 			tfProductStock.setColumns(10);
-			tfProductStock.setBounds(514, 490, 60, 21);
+			tfProductStock.setBounds(556, 535, 60, 21);
 		}
 		return tfProductStock;
 	}
 	private JLabel getLblNewLabel_1_1_2_2() {
 		if (lblNewLabel_1_1_2_2 == null) {
 			lblNewLabel_1_1_2_2 = new JLabel("입고날짜");
-			lblNewLabel_1_1_2_2.setBounds(304, 518, 99, 15);
+			lblNewLabel_1_1_2_2.setBounds(346, 563, 99, 15);
 		}
 		return lblNewLabel_1_1_2_2;
 	}
@@ -367,7 +387,7 @@ public class AdmianMain extends JFrame {
 			tfInsertdate = new JTextField();
 			tfInsertdate.setEditable(false);
 			tfInsertdate.setColumns(10);
-			tfInsertdate.setBounds(405, 515, 116, 21);
+			tfInsertdate.setBounds(447, 560, 116, 21);
 		}
 		return tfInsertdate;
 	}
@@ -379,7 +399,7 @@ public class AdmianMain extends JFrame {
 					actionPartition();
 				}
 			});
-			btnComplete.setBounds(261, 633, 97, 23);
+			btnComplete.setBounds(457, 624, 97, 23);
 		}
 		return btnComplete;
 	}
@@ -388,10 +408,88 @@ public class AdmianMain extends JFrame {
 		if (cbSearch == null) {
 			cbSearch = new JComboBox();
 			cbSearch.setModel(new DefaultComboBoxModel(new String[] {"브랜드 이름", "제품 명"}));
-			cbSearch.setBounds(245, 17, 116, 27);
+			cbSearch.setBounds(243, 59, 116, 27);
 		}
 		return cbSearch;
 	}
+	
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("");
+			lblNewLabel.setIcon(new ImageIcon(AdminMain.class.getResource("/com/javalec/images/logoSmall.png")));
+			lblNewLabel.setBounds(286, 4, 80, 43);
+		}
+		return lblNewLabel;
+	}
+	
+	private JLabel getLblBackArrow() {
+		if (lblBackArrow == null) {
+			lblBackArrow = new JLabel("");
+			lblBackArrow.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					LoginMain loginMain = new LoginMain();
+					loginMain.setVisible(true);
+					dispose();
+				}
+			});
+			ImageIcon icon = new ImageIcon(AdminMain.class.getResource("/com/javalec/images/backArrow.png"));
+			int x = 40;
+			int y = 40;
+			ImageResize resize = new ImageResize(icon, x, y);
+			ImageIcon backArrow = resize.imageResizing();
+			
+			lblBackArrow.setIcon(backArrow);
+			lblBackArrow.setBounds(17, 7, 43, 46);
+		}
+		return lblBackArrow;
+	}
+	
+	private JButton getBtnLoad() {
+		if (btnLoad == null) {
+			btnLoad = new JButton("Load");
+			btnLoad.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					filePath();
+				}
+			});
+			btnLoad.setBounds(223, 621, 67, 29);
+		}
+		return btnLoad;
+	}
+	private JTextField getTfImageLocation() {
+		if (tfImageLocation == null) {
+			tfImageLocation = new JTextField();
+			tfImageLocation.setBounds(6, 621, 205, 26);
+			tfImageLocation.setColumns(10);
+		}
+		return tfImageLocation;
+	}
+	
+	private JButton getBtnAddSize() {
+		if (btnAddSize == null) {
+			btnAddSize = new JButton("재고 추가");
+			btnAddSize.setBounds(341, 621, 104, 29);
+		}
+		return btnAddSize;
+	}
+	private JLabel getLblNewLabel_1_1_2_2_1() {
+		if (lblNewLabel_1_1_2_2_1 == null) {
+			lblNewLabel_1_1_2_2_1 = new JLabel("이미지 이름");
+			lblNewLabel_1_1_2_2_1.setBounds(346, 591, 99, 15);
+		}
+		return lblNewLabel_1_1_2_2_1;
+	}
+	private JTextField getTfProductImageName() {
+		if (tfProductImageName == null) {
+			tfProductImageName = new JTextField();
+			tfProductImageName.setEditable(false);
+			tfProductImageName.setColumns(10);
+			tfProductImageName.setBounds(447, 588, 169, 21);
+		}
+		return tfProductImageName;
+	}
+	
 	
 	// ----------------------functions
 	
@@ -529,15 +627,19 @@ public class AdmianMain extends JFrame {
 		tfProductPrice.setText("");
 		tfProductStock.setText("");
 		tfInsertdate.setText("");
+		lblProductImage.setIcon(null);
+		tfProductImageName.setText("");
+		tfImageLocation.setText("");
 		
 	}
 	
 	
 	// 사용자가 입력한 조건 검색
 	private void conditionQueryAction(String conditionQueryColumn) {
-		AdminDao admindao = new AdminDao(conditionQueryColumn, tfSearch.getText());
-		ArrayList <AdminDto> dtoList = admindao.conditionList();
-		int listCount = dtoList.size();
+		AdminDao admindao = new AdminDao();
+		ArrayList<AdminDto> beanList = new ArrayList<AdminDto>();
+		beanList = admindao.conditionList(conditionQueryColumn, tfSearch.getText());
+		int listCount = beanList.size();
 	
 		for(int i = 0; i < listCount; i++) {
 			String productCode = Integer.toString(beanList.get(i).getProductCode());// db에서 데이터 불러오는 순서 (나중의 조건절 검색을 위해 추가함)
@@ -555,20 +657,27 @@ public class AdmianMain extends JFrame {
 	
 	private void insertAction() { 		// <<<<브랜드 코드, 이름 다를 때 체크할 과정 있어야 할 듯
 		int brandNo = Integer.parseInt(tfBrandNo.getText());
-		String brandName = tfBrandName.getText();
-		int productCode = Integer.parseInt(tfProductCode.getText());
 		String productName = tfProductName.getText();
 		int productPrice = Integer.parseInt(tfProductPrice.getText());
-		int size = Integer.parseInt(cbSize.getSelectedItem().toString());
-		int productStock = Integer.parseInt(tfProductStock.getText());
 		tfInsertdate.setEditable(false);
 		tfInsertdate.setVisible(false);
+		String productImageName = tfProductImageName.getText();
+		FileInputStream input = null;
+		File file = new File(tfImageLocation.getText()); // 파일 가져오기. 파일을 가져왔지만, 헤더가 포함되어 있어 데이터(그림)만 뽑아야 함.
+		try {
+			// input의 데이터만 가져옴.
+			input = new FileInputStream(file);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		AdminDao adminDao = new AdminDao(brandNo, productName, productPrice, productImageName, input);
+		boolean result = adminDao.insertAction();
 		
-		AdminDao admindao = new AdminDao(brandNo, brandName, productCode, productName, productPrice, size, productStock);
-		boolean result = admindao.insertAction();
 		
 		if (result) {
 			JOptionPane.showMessageDialog(this, "제품 정보 입력이 정상적으로 처리되었습니다.", "제품 등록", JOptionPane.INFORMATION_MESSAGE);
+			tableInit();
+			clearColumn();
 		} else {
 			JOptionPane.showMessageDialog(this, "제품 입력에 오류가 발생했습니다. \n관리자에게 문의하세요.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
 			
@@ -597,44 +706,12 @@ public class AdmianMain extends JFrame {
 		}
 	}
 	
-	private void deleteAction() {
-		int brandNo = Integer.parseInt(tfBrandNo.getText());
-		String brandName = tfBrandName.getText();
-		int productCode = Integer.parseInt(tfProductCode.getText());
-		String productName = tfProductName.getText();
-		int productPrice = Integer.parseInt(tfProductPrice.getText());
-		int size = Integer.parseInt(cbSize.getSelectedItem().toString());
-		int productStock = Integer.parseInt(tfProductStock.getText());
-		tfInsertdate.setEditable(false);
-		tfInsertdate.setVisible(false);
-		
-		AdminDao admindao = new AdminDao(brandNo, brandName, productCode, productName, productPrice, size, productStock);
-		boolean result = admindao.insertAction();
-		
-		if (result) {
-			JOptionPane.showMessageDialog(this, "제품 정보 입력이 정상적으로 처리되었습니다.", "제품 등록", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			JOptionPane.showMessageDialog(this, "제품 입력에 오류가 발생했습니다. \n관리자에게 문의하세요.", "ERROR", JOptionPane.INFORMATION_MESSAGE);
-			
-		}
-	}
-	
 	private int insertFieldCheck() {
 		int i=0;
 		if(tfBrandNo.getText().length() == 0) {
 			i++;
 			message = "브랜드 코드";
 			tfBrandNo.requestFocus();
-		}
-		if(tfBrandName.getText().length() == 0) {
-			i++;
-			message = "브랜드 이름";
-			tfBrandName.requestFocus();
-		}
-		if(tfProductCode.getText().length() == 0) {
-			i++;
-			message = "제품 코드";
-			tfProductCode.requestFocus();
 		}
 		if(tfProductName.getText().length() == 0) {
 			i++;
@@ -646,10 +723,13 @@ public class AdmianMain extends JFrame {
 			message = "가격";
 			tfProductPrice.requestFocus();
 		}
-		if(tfProductStock.getText().length() == 0) {
+		if(tfImageLocation.getText().length() == 0) {
 			i++;
-			message = "재고량";
-			tfProductStock.requestFocus();
+			message = "이미지";
+		}
+		if(tfProductImageName.getText().length() == 0) {
+			i++;
+			message = "이미지 이름";
 		}
 		return i;
 	}
@@ -658,11 +738,14 @@ public class AdmianMain extends JFrame {
 		// 입력일 경우
 		if(rbInsert.isSelected()) {
 			tfBrandNo.setEditable(true);
-			tfBrandName.setEditable(true);
-			tfProductCode.setEditable(true);
+			tfBrandName.setEditable(false);
+			tfProductCode.setEditable(false);
 			tfProductName.setEditable(true);
 			tfProductPrice.setEditable(true);
-			tfProductStock.setEditable(true);
+			tfProductStock.setEditable(false);
+			cbSize.setEditable(false);
+			tfInsertdate.setEditable(false);
+			tfProductImageName.setEditable(true);
 			btnComplete.setVisible(true);
 			btnComplete.setEnabled(true);
 		}
@@ -733,13 +816,52 @@ public class AdmianMain extends JFrame {
 			}
 		}
 		
-		
-		
-		
-		
-		
-		
-			
 	}
 	
-}
+	private void filePath() {
+		JFileChooser chooser = new JFileChooser();
+		// 확장자 정의해주기.
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG, PNG, BMP", "jpg", "png", "bmp");
+		chooser.setFileFilter(filter);
+		int ret = chooser.showOpenDialog(null);
+		// 파일을 아무것도 선택하지 않았을 경우 -> 불필요한 듯.
+		if(ret != JFileChooser.APPROVE_OPTION) {
+			JOptionPane.showMessageDialog(null, "파일을 선택하지 않았습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
+		// 어디에 있는 누구인지 가져온다.
+		String filePath = chooser.getSelectedFile().getPath();
+		// 경로 출력해주기
+		tfImageLocation.setText(filePath);
+		// 경로 이미지 가져오기
+		ImageIcon icon = new ImageIcon(filePath);
+		int x = 320;
+		int y = 200;
+		ImageResize resize = new ImageResize(icon, x, y);
+		ImageIcon productIcon = resize.imageResizing();
+		
+		lblProductImage.setIcon(productIcon);
+		// 이미지 중앙 정렬
+		lblProductImage.setHorizontalAlignment(SwingConstants.CENTER);
+	}
+	
+	
+	private void deleteAction() {
+		int i = innerTable.getSelectedRow();
+		String wkSequence = (String) innerTable.getValueAt(i, 0);
+		int wsSeqNo = Integer.parseInt(wkSequence);
+		
+		AdminDao admindao = new AdminDao(wsSeqNo);
+		boolean result = admindao.deleteAction();
+		if(result = true) {
+			JOptionPane.showMessageDialog(this, "삭제가 완료 되었습니다.");
+		} else {
+			JOptionPane.showMessageDialog(this, "잘못된 접근입니다.", "경고", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+	
+
+
+}	// End Class
