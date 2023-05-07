@@ -1,6 +1,7 @@
 package com.javalec.base;
 
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,6 +19,7 @@ import javax.swing.Icon;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
@@ -43,7 +45,22 @@ public class UserMain extends JFrame {
 	private JLabel lblMyPage;
 	private JTable innerTable;
 	
-	private String userid = "donghyun";
+	/* Field */
+	private String userid;
+	
+	
+	/* Constructor */
+	
+	/* 로그인 유저를 가져올 getter & setter */
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+
+
 	private ArrayList<ProductDto> beanList = null;
 	private ImageIcon icon;
 	private ImageIcon productIcon;
@@ -70,6 +87,8 @@ public class UserMain extends JFrame {
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private JButton btnCart;
 	private JButton btnPurchaseHistory;
+	private JLabel lblLoginUser;
+	private JButton btnLogout;
 	
 
 	/**
@@ -99,6 +118,8 @@ public class UserMain extends JFrame {
 		contentPane.add(getLblMyPage());
 		contentPane.add(getBtnCart());
 		contentPane.add(getBtnPurchaseHistory());
+		contentPane.add(getLblLoginUser());
+		contentPane.add(getBtnLogout());
 	}
 	private JComboBox getCbSelection() {
 		if (cbSelection == null) {
@@ -152,8 +173,7 @@ public class UserMain extends JFrame {
 			lblMyPage.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					/* MouseClick을 할 경우 MyPage로 보내주기 */
-					System.out.println("작동 확인");
+					redirectMyPage();
 				}
 			});
 			ImageIcon icon = new ImageIcon(UserMain.class.getResource("/com/javalec/images/myPageBtn.png"));
@@ -200,6 +220,14 @@ public class UserMain extends JFrame {
 		return btnCart;
 	}
 	
+	private JLabel getLblLoginUser() {
+		if (lblLoginUser == null) {
+			lblLoginUser = new JLabel("");
+			lblLoginUser.setBounds(16, 44, 169, 16);
+		}
+		return lblLoginUser;
+	}
+	
 	/**** Functions ****/
 	
 	/* 01. 테이블 정리 메소드 */
@@ -237,6 +265,10 @@ public class UserMain extends JFrame {
 		col = innerTable.getColumnModel().getColumn(vColIndex);
 		width = 60;
 		col.setPreferredWidth(width);
+		
+		lblLoginUser.setText(userid + "님 환영합니다.");
+		
+		
 	}
 	
 	/* 02. 테이블에 데이터 채워주기 */
@@ -312,12 +344,15 @@ public class UserMain extends JFrame {
 		}
 		
 	}
+	
+	/* 07. 주문 현황 버튼을 클릭했을 때 */
 	private JButton getBtnPurchaseHistory() {
 		if (btnPurchaseHistory == null) {
 			btnPurchaseHistory = new JButton("주문내역");
 			btnPurchaseHistory.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					PurchaseHistoryMain historyMain = new PurchaseHistoryMain();
+					historyMain.setUserid(userid);
 					historyMain.setVisible(true);
 					dispose();
 				}
@@ -327,11 +362,37 @@ public class UserMain extends JFrame {
 		return btnPurchaseHistory;
 	}
 	
+	/* 08. My Page를 클릭했을 때 */
+	private void redirectMyPage() {
+		MypageMain mypageMain = new MypageMain();
+		mypageMain.setUserid(userid);
+		mypageMain.setVisible(true);
+		dispose();
+	}
 	
 	
 	
 	
 	/* */
 	
-	
+
+	private JButton getBtnLogout() {
+		if (btnLogout == null) {
+			btnLogout = new JButton("Logout");
+			btnLogout.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int result = JOptionPane.showConfirmDialog(null, "로그아웃 하시겠습니까?", "로그아웃", JOptionPane.YES_NO_OPTION);
+				    if (result == JOptionPane.YES_OPTION) {
+				    	LoginMain loginMain = new LoginMain();
+				    	loginMain.setVisible(true);
+				    	dispose();
+				    } else {
+				    	
+				    }
+				}
+			});
+			btnLogout.setBounds(16, 6, 94, 29);
+		}
+		return btnLogout;
+	}
 } // End Class

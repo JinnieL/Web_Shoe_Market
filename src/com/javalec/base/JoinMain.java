@@ -222,7 +222,7 @@ public class JoinMain extends JFrame {
 			btnCancel = new JButton("취소");
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int result = JOptionPane.showConfirmDialog(null, "주문을 취소하시겠습니까?", "주문 취소", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					int result = JOptionPane.showConfirmDialog(null, "회원가입을 취소하시겠습니까?", "회원가입 취소", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if(result == JOptionPane.YES_OPTION) {
 						dispose();
 					} else {

@@ -333,6 +333,7 @@ public class ProductDetailMain extends JFrame {
 	/* 02. 메인으로 돌아가기 버튼을 눌렀을 때 실행되는 메소드 */
 	private void redirectMain() {
 		UserMain main = new UserMain();
+		main.setUserid(userid);
 		main.setVisible(true);
 		dispose();
 	}

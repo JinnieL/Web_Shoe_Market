@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class PurchaseHistoryMain extends JFrame {
 
@@ -44,7 +45,7 @@ public class PurchaseHistoryMain extends JFrame {
 	private JTable innerTable;
 	
 	private ImageIcon icon;
-	private String userid = "donghyun";
+	private String userid;
 	private int purchaseNo;
 	
 	private ArrayList<PurchaseHistoryDto> beanList;
@@ -53,8 +54,17 @@ public class PurchaseHistoryMain extends JFrame {
 	/* Table */
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private JButton btnCancle;
+	private JLabel lblLoginUser;
 	
 	
+	/* User ID를 가져올 getter & setter */
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 
 	/**
 	 * Launch the application.
@@ -95,6 +105,7 @@ public class PurchaseHistoryMain extends JFrame {
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getLblNewLabel_1());
 		contentPane.add(getBtnCancle());
+		contentPane.add(getLblLoginUser());
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
@@ -108,7 +119,7 @@ public class PurchaseHistoryMain extends JFrame {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("");
 			lblNewLabel.setIcon(new ImageIcon(PurchaseHistoryMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel.setBounds(307, 2, 80, 35);
+			lblNewLabel.setBounds(279, 1, 80, 35);
 		}
 		return lblNewLabel;
 	}
@@ -178,6 +189,14 @@ public class PurchaseHistoryMain extends JFrame {
 		return btnCancle;
 	}
 	
+	private JLabel getLblLoginUser() {
+		if (lblLoginUser == null) {
+			lblLoginUser = new JLabel("");
+			lblLoginUser.setHorizontalAlignment(SwingConstants.TRAILING);
+			lblLoginUser.setBounds(443, 10, 187, 16);
+		}
+		return lblLoginUser;
+	}
 	
 	/******************* Functions *******************/
 	
@@ -235,6 +254,8 @@ public class PurchaseHistoryMain extends JFrame {
 		width = 60;
 		col.setPreferredWidth(width);
 		
+		lblLoginUser.setText(userid + "님의 주문 현황");
+		
 		
 		System.out.println("01. Method Pass");
 	}
@@ -276,6 +297,7 @@ public class PurchaseHistoryMain extends JFrame {
 	/* 03. 메인으로 리다이렉트 */
 	private void redirectMain() {
 		UserMain userMain = new UserMain();
+		userMain.setUserid(userid);
 		userMain.setVisible(true);
 		dispose();
 	}
@@ -297,7 +319,6 @@ public class PurchaseHistoryMain extends JFrame {
 		}
 		
 	}
-	
 
 }	// End Class
 

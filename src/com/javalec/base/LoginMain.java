@@ -32,11 +32,11 @@ public class LoginMain extends JFrame {
 	private JLabel lblNewLabel_1;
 	private JRadioButton rbUser;
 	private JRadioButton rbAdmin;
-	private JLabel lblNewLabel_1_1;
 	private JPasswordField pfUserPassword;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	String message = ""; 		// 사용자가 입력하지 않은 데이터(id or pw) 알려주기
+	private JLabel lblNewLabel_2;
 
 	/**
 	 * Launch the application.
@@ -60,9 +60,9 @@ public class LoginMain extends JFrame {
 	public LoginMain() {
 		setTitle("로그인");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 345, 386);
+		setBounds(100, 100, 520, 430);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -75,20 +75,20 @@ public class LoginMain extends JFrame {
 		contentPane.add(getLblNewLabel_1());
 		contentPane.add(getRbUser());
 		contentPane.add(getRbAdmin());
-		contentPane.add(getLblNewLabel_1_1());
 		contentPane.add(getPfUserPassword());
+		contentPane.add(getLblNewLabel_2());
 	}
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("ID : ");
-			lblNewLabel.setBounds(103, 98, 57, 15);
+			lblNewLabel.setBounds(158, 198, 57, 15);
 		}
 		return lblNewLabel;
 	}
 	private JTextField getTfUserId() {
 		if (tfUserId == null) {
 			tfUserId = new JTextField();
-			tfUserId.setBounds(145, 95, 116, 21);
+			tfUserId.setBounds(242, 194, 146, 21);
 			tfUserId.setColumns(10);
 		}
 		return tfUserId;
@@ -96,7 +96,7 @@ public class LoginMain extends JFrame {
 	private JLabel getLblPassword() {
 		if (lblPassword == null) {
 			lblPassword = new JLabel("Password : ");
-			lblPassword.setBounds(61, 142, 78, 15);
+			lblPassword.setBounds(158, 236, 78, 15);
 		}
 		return lblPassword;
 	}
@@ -108,14 +108,26 @@ public class LoginMain extends JFrame {
 					loginAction();
 				}
 			});
-			btnOK.setBounds(110, 181, 97, 23);
+			btnOK.setBounds(209, 287, 97, 23);
 		}
 		return btnOK;
 	}
 	private JButton getBtnJoin() {
 		if (btnJoin == null) {
 			btnJoin = new JButton("회원가입");
-			btnJoin.setBounds(111, 254, 97, 23);
+			btnJoin.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int result = JOptionPane.showConfirmDialog(null, "회원가입을 하시겠습니까??", "회원가입", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if(result == JOptionPane.YES_OPTION) {
+						JoinMain joinMain = new JoinMain();
+						joinMain.setVisible(true);
+						dispose();
+					} else {
+						
+					}
+				}
+			});
+			btnJoin.setBounds(209, 356, 97, 23);
 		}
 		return btnJoin;
 	}
@@ -123,7 +135,7 @@ public class LoginMain extends JFrame {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("아직 회원이 아니신가요?");
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel_1.setBounds(61, 229, 200, 15);
+			lblNewLabel_1.setBounds(158, 329, 200, 15);
 		}
 		return lblNewLabel_1;
 	}
@@ -132,7 +144,7 @@ public class LoginMain extends JFrame {
 			rbUser = new JRadioButton("회원");
 			rbUser.setSelected(true);
 			buttonGroup.add(rbUser);
-			rbUser.setBounds(61, 43, 57, 23);
+			rbUser.setBounds(148, 150, 57, 23);
 		}
 		return rbUser;
 	}
@@ -140,35 +152,28 @@ public class LoginMain extends JFrame {
 		if (rbAdmin == null) {
 			rbAdmin = new JRadioButton("관리자");
 			buttonGroup.add(rbAdmin);
-			rbAdmin.setBounds(184, 43, 75, 23);
+			rbAdmin.setBounds(265, 150, 75, 23);
 		}
 		return rbAdmin;
-	}
-	private JLabel getLblNewLabel_1_1() {
-		if (lblNewLabel_1_1 == null) {
-			lblNewLabel_1_1 = new JLabel("");
-			lblNewLabel_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel_1_1.setIcon(new ImageIcon(LoginMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel_1_1.setBounds(110, 287, 97, 44);
-		}
-		return lblNewLabel_1_1;
 	}
 	private JPasswordField getPfUserPassword() {
 		if (pfUserPassword == null) {
 			pfUserPassword = new JPasswordField();
-			pfUserPassword.setBounds(145, 139, 116, 21);
+			pfUserPassword.setBounds(242, 233, 146, 21);
 		}
 		return pfUserPassword;
 	}
 	
-	
-	
-	
-	
+	private JLabel getLblNewLabel_2() {
+		if (lblNewLabel_2 == null) {
+			lblNewLabel_2 = new JLabel("");
+			lblNewLabel_2.setIcon(new ImageIcon(LoginMain.class.getResource("/com/javalec/images/logo.png")));
+			lblNewLabel_2.setBounds(54, 6, 400, 132);
+		}
+		return lblNewLabel_2;
+	}
 	
 	//------------------functions
-	
-	
 	private void loginAction() {
 		if (rbUser.isSelected()) {		// 사용자가 로그인 할 때
 			int i_chk = insertFieldCheck();
@@ -211,22 +216,24 @@ public class LoginMain extends JFrame {
 	
 	private void loginCheck() {
 		String id = tfUserId.getText();
-		String pw = pfUserPassword.getText();
+		char[] pass = pfUserPassword.getPassword();
+		String password = new String(pass);
 		
-		LoginDao loginDao = new LoginDao(id, pw) ;
+		LoginDao loginDao = new LoginDao(id, password) ;
 		String result = loginDao.loginCheck(); 
 		
 		if (result.equals(id)) {
 			JOptionPane.showMessageDialog(this, result + " 님, 환영합니다!", "로그인 성공!", JOptionPane.INFORMATION_MESSAGE);;
+			UserMain userMain = new UserMain();
+			String userid = tfUserId.getText();
+			userMain.setUserid(userid);
+			userMain.setVisible(true);
+			dispose();
 		} else {
 			JOptionPane.showMessageDialog(this, "존재하지 않거나 잘못 입력된 회원정보입니다. \n" + "Id나 Password를 확인해 주세요", "Error", JOptionPane.INFORMATION_MESSAGE);;
 			
 		}
 		
 	}
-	
-	
-	
-	
-	
+
 }
