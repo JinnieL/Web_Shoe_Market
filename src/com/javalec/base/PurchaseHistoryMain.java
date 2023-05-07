@@ -18,6 +18,7 @@ import com.javalec.funtion.ImageResize;
 
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -30,6 +31,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PurchaseHistoryMain extends JFrame {
 
@@ -41,12 +45,14 @@ public class PurchaseHistoryMain extends JFrame {
 	
 	private ImageIcon icon;
 	private String userid = "donghyun";
+	private int purchaseNo;
 	
 	private ArrayList<PurchaseHistoryDto> beanList;
 	
 	
 	/* Table */
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	private JButton btnCancle;
 	
 	
 
@@ -79,7 +85,7 @@ public class PurchaseHistoryMain extends JFrame {
 		});
 		setTitle("주문 내역");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 550);
+		setBounds(100, 100, 642, 474);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -88,11 +94,12 @@ public class PurchaseHistoryMain extends JFrame {
 		contentPane.add(getScrollPane());
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getLblNewLabel_1());
+		contentPane.add(getBtnCancle());
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 44, 688, 320);
+			scrollPane.setBounds(6, 44, 630, 320);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
@@ -101,7 +108,7 @@ public class PurchaseHistoryMain extends JFrame {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("");
 			lblNewLabel.setIcon(new ImageIcon(PurchaseHistoryMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel.setBounds(236, 2, 80, 35);
+			lblNewLabel.setBounds(307, 2, 80, 35);
 		}
 		return lblNewLabel;
 	}
@@ -132,6 +139,12 @@ public class PurchaseHistoryMain extends JFrame {
 					return (column == 2) ? Icon.class : Object.class;
 				}
 			};
+			innerTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					tableClick();
+				}
+			});
 			innerTable.setModel(outerTable);
 			innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
 			innerTable.setRowHeight(150);
@@ -139,6 +152,34 @@ public class PurchaseHistoryMain extends JFrame {
 		}
 		return innerTable;
 	}
+	
+	private JButton getBtnCancle() {
+		if (btnCancle == null) {
+			btnCancle = new JButton("주문 취소하기");
+			btnCancle.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				    int result = JOptionPane.showConfirmDialog(null, "주문을 취소하시겠습니까?", "주문 취소", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);;
+				    /* 주문 취소 물어보기 */
+				    if (result == JOptionPane.YES_OPTION) {
+				        cancleAction();
+				        tableInit();
+				        queryAction();
+				        btnCancle.setEnabled(false);
+				    } else {
+				    	tableInit();
+				    	queryAction();
+				    	btnCancle.setEnabled(false);
+				    }
+				}
+			});
+			btnCancle.setEnabled(false);
+			btnCancle.setBounds(6, 376, 117, 57);
+		}
+		return btnCancle;
+	}
+	
+	
+	/******************* Functions *******************/
 	
 	/* 01. 창이 열리면 테이블을 정리해주는 메소드 */
 	private void tableInit() {
@@ -157,7 +198,8 @@ public class PurchaseHistoryMain extends JFrame {
 	    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 	    innerTable.setDefaultRenderer(String.class, centerRenderer);
-		/* 주문날짜 컬럼 크기*/
+		
+	    /* 주문날짜 컬럼 크기*/
 		int vColIndex = 0;
 		TableColumn col = innerTable.getColumnModel().getColumn(vColIndex);
 		int width = 100;
@@ -231,17 +273,31 @@ public class PurchaseHistoryMain extends JFrame {
 		}
 	}
 	
+	/* 03. 메인으로 리다이렉트 */
 	private void redirectMain() {
 		UserMain userMain = new UserMain();
 		userMain.setVisible(true);
 		dispose();
 	}
-
-
-
-
-
-
+	
+	/* 04. 테이블 클릭 */
+	private void tableClick() {
+		int i = innerTable.getSelectedRow();
+		purchaseNo = (int)innerTable.getValueAt(i, 1);
+		btnCancle.setEnabled(true);
+	}
+	
+	private void cancleAction() {
+		PurchaseHistoryDao historyDao = new PurchaseHistoryDao();
+		boolean result = historyDao.canclePurchase(purchaseNo);
+		if(result == true) {
+			JOptionPane.showMessageDialog(null, "주문이 취소 되었습니다.");
+		} else {
+			JOptionPane.showMessageDialog(this, "잘못된 접근입니다.");
+		}
+		
+	}
+	
 
 }	// End Class
 

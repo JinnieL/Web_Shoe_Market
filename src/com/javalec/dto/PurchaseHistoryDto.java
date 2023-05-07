@@ -32,6 +32,12 @@ public class PurchaseHistoryDto {
 		this.productImageName = productImageName;
 		this.productPrice = productPrice;
 	}
+	
+	/* 주문번호를 가져와 줄 생성자 */
+	public PurchaseHistoryDto(int purchaseNo) {
+		super();
+		this.purchaseNo = purchaseNo;
+	}
 
 	/* getter & setter */
 	public int getPurchaseNo() {
