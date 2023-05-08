@@ -123,7 +123,7 @@ public class AdminMain extends JFrame {
 		});
 		setTitle("관리자 페이지");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 650, 700);
+		setBounds(100, 100, 650, 720);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -364,7 +364,7 @@ public class AdminMain extends JFrame {
 	private JLabel getLblNewLabel_1_1_2_1_1() {
 		if (lblNewLabel_1_1_2_1_1 == null) {
 			lblNewLabel_1_1_2_1_1 = new JLabel("재고량");
-			lblNewLabel_1_1_2_1_1.setBounds(517, 538, 43, 15);
+			lblNewLabel_1_1_2_1_1.setBounds(479, 535, 43, 15);
 		}
 		return lblNewLabel_1_1_2_1_1;
 	}
@@ -373,7 +373,7 @@ public class AdminMain extends JFrame {
 			tfProductStock = new JTextField();
 			tfProductStock.setEditable(false);
 			tfProductStock.setColumns(10);
-			tfProductStock.setBounds(556, 535, 60, 21);
+			tfProductStock.setBounds(521, 531, 60, 21);
 		}
 		return tfProductStock;
 	}
@@ -401,7 +401,7 @@ public class AdminMain extends JFrame {
 					actionPartition();
 				}
 			});
-			btnComplete.setBounds(490, 624, 126, 23);
+			btnComplete.setBounds(479, 643, 126, 43);
 		}
 		return btnComplete;
 	}
@@ -471,12 +471,13 @@ public class AdminMain extends JFrame {
 	private JButton getBtnAddStock() {
 		if (btnAddStock == null) {
 			btnAddStock = new JButton("재고 추가");
+			btnAddStock.setEnabled(false);
 			btnAddStock.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					addStockAction();
 				}
 			});
-			btnAddStock.setBounds(341, 621, 126, 29);
+			btnAddStock.setBounds(341, 643, 126, 43);
 		}
 		return btnAddStock;
 	}
@@ -764,6 +765,8 @@ public class AdminMain extends JFrame {
 			tfProductPrice.setEditable(true);
 			tfProductStock.setEditable(true);
 			cbSize.setEditable(true);
+			btnAddStock.setVisible(true);
+			btnAddStock.setEnabled(true);
 			tfInsertdate.setEditable(false);
 			tfProductImageName.setEditable(true);
 			btnComplete.setVisible(true);
@@ -780,6 +783,9 @@ public class AdminMain extends JFrame {
 			tfProductStock.setEditable(false);
 			btnComplete.setVisible(false);
 			btnComplete.setEnabled(false);
+			btnAddStock.setVisible(false);
+			btnAddStock.setEnabled(false);
+			cbSize.setEditable(false);
 		}
 		
 		/* 수정일 경우 */
@@ -790,10 +796,12 @@ public class AdminMain extends JFrame {
 			tfProductName.setEditable(true);
 			tfProductPrice.setEditable(true);
 			tfProductStock.setEditable(true);
-			cbSize.setEditable(true);
+			cbSize.setEditable(false);
 			tfProductImageName.setEditable(true);
 			btnComplete.setVisible(true);
 			btnComplete.setEnabled(true);
+			btnAddStock.setVisible(false);
+			btnAddStock.setEnabled(false);
 		}
 		
 		/* 삭제일 경우 */
@@ -804,8 +812,12 @@ public class AdminMain extends JFrame {
 			tfProductName.setEditable(false);
 			tfProductPrice.setEditable(false);
 			tfProductStock.setEditable(false);
+			cbSize.setEditable(false);
 			btnComplete.setVisible(true);
 			btnComplete.setEnabled(true);
+			btnAddStock.setVisible(false);
+			btnAddStock.setEnabled(false);
+			cbSize.setEditable(false);
 		}
 		
 	}

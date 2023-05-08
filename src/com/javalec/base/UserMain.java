@@ -396,7 +396,7 @@ public class UserMain extends JFrame {
 				    }
 				}
 			});
-			btnLogout.setBounds(6, 6, 76, 29);
+			btnLogout.setBounds(6, 23, 76, 29);
 		}
 		return btnLogout;
 	}

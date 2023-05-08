@@ -119,7 +119,7 @@ public class ProductDetailMain extends JFrame {
 		});
 		setTitle("상품 상세");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 676, 360);
+		setBounds(100, 100, 676, 339);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -147,11 +147,11 @@ public class ProductDetailMain extends JFrame {
 			lblProductImage = new JLabel("");
 			ImageIcon productIcon = new ImageIcon(ProductDetailMain.class.getResource("/com/javalec/images/P000001.png"));
 			int x = 200;
-			int y = 100;
+			int y = 120;
 			ImageResize imageResize = new ImageResize(productIcon, x, y);
 			ImageIcon resizeIcon = imageResize.imageResizing();
 			lblProductImage.setIcon(null);
-			lblProductImage.setBounds(6, 60, 400, 200);
+			lblProductImage.setBounds(6, 59, 400, 230);
 		}
 		return lblProductImage;
 	}
@@ -159,7 +159,7 @@ public class ProductDetailMain extends JFrame {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("");
 			lblNewLabel_1.setIcon(new ImageIcon(ProductDetailMain.class.getResource("/com/javalec/images/logoSmall.png")));
-			lblNewLabel_1.setBounds(352, 6, 90, 42);
+			lblNewLabel_1.setBounds(291, 5, 90, 42);
 		}
 		return lblNewLabel_1;
 	}
@@ -185,7 +185,7 @@ public class ProductDetailMain extends JFrame {
 		if (lblNewLabel_2 == null) {
 			lblNewLabel_2 = new JLabel("상품명");
 			lblNewLabel_2.setFont(new Font("Noto Sans KR Medium", Font.PLAIN, 13));
-			lblNewLabel_2.setBounds(418, 98, 52, 16);
+			lblNewLabel_2.setBounds(418, 92, 52, 16);
 		}
 		return lblNewLabel_2;
 	}
@@ -194,7 +194,7 @@ public class ProductDetailMain extends JFrame {
 			tfProductName = new JTextField();
 			tfProductName.setEditable(false);
 			tfProductName.setColumns(10);
-			tfProductName.setBounds(470, 94, 200, 26);
+			tfProductName.setBounds(470, 88, 200, 26);
 		}
 		return tfProductName;
 	}
@@ -203,7 +203,7 @@ public class ProductDetailMain extends JFrame {
 			tfPrice = new JTextField();
 			tfPrice.setEditable(false);
 			tfPrice.setColumns(10);
-			tfPrice.setBounds(470, 126, 130, 26);
+			tfPrice.setBounds(470, 120, 130, 26);
 		}
 		return tfPrice;
 	}
@@ -211,21 +211,21 @@ public class ProductDetailMain extends JFrame {
 		if (lblNewLabel_2_1 == null) {
 			lblNewLabel_2_1 = new JLabel("가격");
 			lblNewLabel_2_1.setFont(new Font("Noto Sans KR Medium", Font.PLAIN, 13));
-			lblNewLabel_2_1.setBounds(418, 130, 52, 16);
+			lblNewLabel_2_1.setBounds(418, 124, 52, 16);
 		}
 		return lblNewLabel_2_1;
 	}
 	private JLabel getLblNewLabel_3() {
 		if (lblNewLabel_3 == null) {
 			lblNewLabel_3 = new JLabel("사이즈");
-			lblNewLabel_3.setBounds(418, 158, 41, 16);
+			lblNewLabel_3.setBounds(418, 152, 41, 16);
 		}
 		return lblNewLabel_3;
 	}
 	private JComboBox getCbSize() {
 		if (cbSize == null) {
 			cbSize = new JComboBox();
-			cbSize.setBounds(470, 154, 80, 27);
+			cbSize.setBounds(470, 148, 80, 27);
 		}
 		return cbSize;
 	}
@@ -237,7 +237,10 @@ public class ProductDetailMain extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					check = checkQty();
 					if(check == true) {
-						addToCart();
+						int wkResult = JOptionPane.showConfirmDialog(null, "장바구니에 추가 하시겠습니까?", "장바구니", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+						if(wkResult == JOptionPane.YES_OPTION) {
+							addToCart();
+						}
 					} else {
 						JOptionPane.showMessageDialog(null, "재고가 부족합니다.\n" + "수량을 확인해주세요.");
 					}
@@ -259,8 +262,7 @@ public class ProductDetailMain extends JFrame {
 							purchaseAction();
 						}
 					} else {
-						/* 오류 메세지 추가 예정 */
-						System.out.println("오류");
+						JOptionPane.showMessageDialog(null, "재고가 부족합니다.\n" + "수량을 확인해주세요.");
 					}
 				}
 			});
@@ -293,7 +295,7 @@ public class ProductDetailMain extends JFrame {
 	private JLabel getLblNewLabel_3_1() {
 		if (lblNewLabel_3_1 == null) {
 			lblNewLabel_3_1 = new JLabel("수량");
-			lblNewLabel_3_1.setBounds(418, 186, 41, 16);
+			lblNewLabel_3_1.setBounds(418, 180, 41, 16);
 		}
 		return lblNewLabel_3_1;
 	}
@@ -301,7 +303,7 @@ public class ProductDetailMain extends JFrame {
 		if (cbQty == null) {
 			cbQty = new JComboBox();
 			cbQty.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"}));
-			cbQty.setBounds(470, 182, 80, 27);
+			cbQty.setBounds(470, 176, 80, 27);
 		}
 		return cbQty;
 	}
@@ -370,10 +372,9 @@ public class ProductDetailMain extends JFrame {
 		ProductDao productDao = new ProductDao(userid, purchaseQty, productCode, size);
 		boolean result = productDao.insertPurchase();
 		if(result == true) {
-			JOptionPane.showMessageDialog(this, "주문 완료!\n" + tfProductName.getText() + "이 " + purchaseQty + "개 추가 되었습니다.");
+			JOptionPane.showMessageDialog(this, "주문 완료!\n" + tfProductName.getText() + "가 " + purchaseQty + "개 주문 되었습니다.");
 		}
 	}
-	
 }	// End Class
 
 

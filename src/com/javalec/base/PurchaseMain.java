@@ -131,7 +131,10 @@ public class PurchaseMain extends JFrame {
 			BtnBuy = new JButton("구매");
 			BtnBuy.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					BuyAction();
+					int wkResult = JOptionPane.showConfirmDialog(null, "위 상품들을 주문하시겠습니까?", "주문", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if(wkResult == JOptionPane.YES_OPTION) {
+						BuyAction();
+					}
 				}
 			});
 			BtnBuy.setBounds(381, 366, 104, 29);

@@ -20,6 +20,8 @@ import javax.swing.SwingConstants;
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class LoginMain extends JFrame {
 
@@ -59,6 +61,13 @@ public class LoginMain extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginMain() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				/* 시작 시 자동으로 userid 텍스트 창에 포커스 */
+				tfUserId.requestFocus();
+			}
+		});
 		setTitle("로그인");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 520, 430);
@@ -186,6 +195,7 @@ public class LoginMain extends JFrame {
 					loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
 				} else {
 					JOptionPane.showMessageDialog(this, "아이디가 존재하지 않습니다.");
+					tfUserId.requestFocus();
 				}
 							
 			} 
@@ -256,7 +266,8 @@ public class LoginMain extends JFrame {
 				dispose();
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "존재하지 않거나 잘못 입력된 회원정보입니다. \n" + "Id나 Password를 확인해 주세요", "Error", JOptionPane.INFORMATION_MESSAGE);;
+			JOptionPane.showMessageDialog(this, "아이디 혹은 비밀번호를 확인해 주세요", "로그인 실패", JOptionPane.INFORMATION_MESSAGE);
+			tfUserId.requestFocus();
 			
 		}
 		

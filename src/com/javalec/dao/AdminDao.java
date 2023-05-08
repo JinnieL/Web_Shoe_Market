@@ -137,7 +137,7 @@ public class AdminDao {
 			conn_mysql.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		return dtoList;
@@ -188,7 +188,7 @@ public class AdminDao {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return beanList;
 
@@ -224,7 +224,7 @@ public class AdminDao {
 			conn_mysql.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		return beanList;
@@ -261,7 +261,7 @@ public class AdminDao {
 			con.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -302,7 +302,7 @@ public class AdminDao {
 			}
 			con.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return 0;
 		}
 		return 1;
@@ -336,7 +336,7 @@ public class AdminDao {
 			}
 			con.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return false;
 	}
@@ -358,7 +358,7 @@ public class AdminDao {
 			addStockCount += ps.executeUpdate();
 			con.close();
 		}catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return 0;
 		}
 		return addStockCount;
