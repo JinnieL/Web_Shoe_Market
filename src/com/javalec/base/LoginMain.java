@@ -185,35 +185,35 @@ public class LoginMain extends JFrame {
 	
 	//------------------functions
 	private void loginAction() {
-		if (rbUser.isSelected()) {		// 사용자가 로그인 할 때
-			boolean result = true;
-			System.out.println(result);
-			if(tfUserId.getText().length() != 0) {
-				result = existsUserID();
-			}
-			
-			if(result == true) {
-				loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
-			} else {
-				JOptionPane.showMessageDialog(this, "아이디가 존재하지 않습니다.");
-				tfUserId.requestFocus();
-			}
-			
-			int i_chk = insertFieldCheck();
-			if (i_chk != 0) { 		// id나 pw가 제대로 입력 되지 않은 경우
-				JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
-			} 
-		}
-		
-		if (rbAdmin.isSelected()) { 		// 관리자가 로그인 할 때 <<<<< 확인해야돼!!! 어떻게 할지 
-			int i_chk = insertFieldCheck();
-			if (i_chk != 0) { 		// id나 pw가 제대로 입력 되지 않은 경우
-				JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
-			} else {		// id, pw 정상 입력된 상태 
-				loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인	
-			} 
-		}
-		
+	    if (rbUser.isSelected()) { // 사용자가 로그인 할 때
+	        boolean result = true;
+	        System.out.println(result);
+	        if (tfUserId.getText().length() != 0) {
+	            result = existsUserID();
+	        }
+
+	        if (result) {
+	            int i_chk = insertFieldCheck();
+	            if (i_chk != 0) { // id나 pw가 제대로 입력 되지 않은 경우
+	                JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
+	            } else {
+	                loginCheck(); // 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
+	            }
+	        } else {
+	            JOptionPane.showMessageDialog(this, "아이디가 존재하지 않습니다.");
+	            tfUserId.requestFocus();
+	        }
+	    }
+
+	    if (rbAdmin.isSelected()) { // 관리자가 로그인 할 때 <<<<< 확인해야돼!!! 어떻게 할지
+	        int i_chk = insertFieldCheck();
+	        if (i_chk != 0) { // id나 pw가 제대로 입력 되지 않은 경우
+	            JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
+	        } else { // id, pw 정상 입력된 상태
+	            loginCheck(); // 데이터 베이스에서 유저 ID, PW가 있는지 확인
+	        }
+	    }
+
 	}
 	
 	
