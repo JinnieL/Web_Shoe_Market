@@ -224,6 +224,8 @@ public class JoinMain extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					int result = JOptionPane.showConfirmDialog(null, "회원가입을 취소하시겠습니까?", "회원가입 취소", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if(result == JOptionPane.YES_OPTION) {
+						UserMain userMain = new UserMain();
+						userMain.setVisible(true);
 						dispose();
 					} else {
 						
