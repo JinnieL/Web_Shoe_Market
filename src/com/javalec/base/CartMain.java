@@ -353,8 +353,8 @@ public class CartMain extends JFrame {
 	private void tableEmpty() {
 		CartDao dao = new CartDao();
 		int i = JOptionPane.showConfirmDialog(this, "장바구니를 비우시겠습니까???", "장바구니",JOptionPane.YES_NO_OPTION);
-		boolean result =  dao.alldeleteAction(userid);
 		if(i == 0) {
+			boolean result =  dao.alldeleteAction(userid);
 			if(result) {
 				JOptionPane.showMessageDialog(this,"장바구니 비우기\n"  + userid + "님의 장바구니가 비워졌습니다.!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
 			}else {
