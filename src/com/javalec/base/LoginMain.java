@@ -186,28 +186,30 @@ public class LoginMain extends JFrame {
 	//------------------functions
 	private void loginAction() {
 		if (rbUser.isSelected()) {		// 사용자가 로그인 할 때
+			boolean result = true;
+			System.out.println(result);
+			if(tfUserId.getText().length() != 0) {
+				result = existsUserID();
+				System.out.println(result);
+			}
+			
+			if(result == true) {
+				loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
+			} else {
+				JOptionPane.showMessageDialog(this, "아이디가 존재하지 않습니다.");
+				tfUserId.requestFocus();
+			}
+			
 			int i_chk = insertFieldCheck();
 			if (i_chk != 0) { 		// id나 pw가 제대로 입력 되지 않은 경우
-				//
-			} else {		// id, pw 정상 입력된 상태 
-				boolean result = existsUserID();
-				if(result == true) {
-					loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
-				} else {
-					JOptionPane.showMessageDialog(this, "존재하지 않는 회원입니다.");
-					tfUserId.setText(""); 			// 입력한 필드 비워주기	 
-					pfUserPassword.setText("");		// 입력한 필드 비워주기
-					tfUserId.requestFocus();		// 아이디 필드로 커서 돌려주기
-				}
-							
+				JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
 			} 
 		}
 		
-		if (rbAdmin.isSelected()) { 		// 관리자가 로그인 할 때 <<<<< 확인해야돼!!! 어떻게 할지. 동현이가 했지롱 
+		if (rbAdmin.isSelected()) { 		// 관리자가 로그인 할 때 <<<<< 확인해야돼!!! 어떻게 할지 
 			int i_chk = insertFieldCheck();
 			if (i_chk != 0) { 		// id나 pw가 제대로 입력 되지 않은 경우
-				//
-				
+				JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
 			} else {		// id, pw 정상 입력된 상태 
 				loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인	
 			} 
@@ -216,24 +218,21 @@ public class LoginMain extends JFrame {
 	}
 	
 	
-	private int insertFieldCheck() { 		// 사용자의 Id, pw 입력여부 확인하기
+	private int insertFieldCheck() { 		// 사용자가 입력한 Id, pw 확인하기
 		int i = 0;
 		
-		if (tfUserId.getText().trim().length() == 0 && pfUserPassword.getText().trim().length() == 0) {
-			i ++;
-			JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 입력해주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
-			tfUserId.requestFocus(); 		// id 입력하도록 커서 돌려줌.
-		} 	else if (tfUserId.getText().trim().length() == 0) {
-			i ++;
-			message = "아이디를 ";
-			JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
-			tfUserId.requestFocus(); 		// id 입력하도록 커서 돌려줌.
-		} else if (pfUserPassword.getText().trim().length() == 0) {
+		if (pfUserPassword.getText().trim().length() == 0) {
 			i ++;
 			message = "비밀번호를 ";
-			JOptionPane.showMessageDialog(this, message + "확인해 주세요", "로그인 오류", JOptionPane.INFORMATION_MESSAGE);
 			pfUserPassword.requestFocus(); 		// pw 입력하도록 커서 돌려줌.
 		}
+		
+		if (tfUserId.getText().trim().length() == 0) {
+			i ++;
+			message = "아이디를 ";
+			tfUserId.requestFocus();
+		} 
+		
 		return i;
 	}
 	
@@ -274,10 +273,7 @@ public class LoginMain extends JFrame {
 			}
 		} else {
 			JOptionPane.showMessageDialog(this, "아이디 혹은 비밀번호를 확인해 주세요", "로그인 실패", JOptionPane.INFORMATION_MESSAGE);
-			tfUserId.setText(""); 			// 입력한 필드 비워주기	 
-			pfUserPassword.setText("");		// 입력한 필드 비워주기
-			tfUserId.requestFocus();		// 아이디 필드로 커서 돌려주기
-			
+			tfUserId.requestFocus();
 			
 		}
 		

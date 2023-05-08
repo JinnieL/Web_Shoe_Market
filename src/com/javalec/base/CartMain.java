@@ -356,7 +356,7 @@ public class CartMain extends JFrame {
 		boolean result =  dao.alldeleteAction(userid);
 		if(i == 0) {
 			if(result) {
-				JOptionPane.showMessageDialog(this,"장바구니 비우기\n"  + "님의 장바구니가 비워졌습니다.!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this,"장바구니 비우기\n"  + userid + "님의 장바구니가 비워졌습니다.!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
 			}else {
 				JOptionPane.showMessageDialog(this,"장바구니 비우기\n" +  "비우는 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -390,7 +390,7 @@ public class CartMain extends JFrame {
 			Boolean result = dao.tableUpdate(userid);
 			
 			if(result) {
-				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" + beanList.get(i).getName() + "신발 \n수량이 변경되었습니다.", "상품 정보", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" + beanList.get(i).getName() + "\n수량이 변경되었습니다.", "상품 정보", JOptionPane.INFORMATION_MESSAGE);
 			}else {
 				JOptionPane.showMessageDialog(this,"상품 수량 변경\n" +  "변경 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
