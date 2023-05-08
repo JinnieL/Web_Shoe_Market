@@ -190,7 +190,6 @@ public class LoginMain extends JFrame {
 			System.out.println(result);
 			if(tfUserId.getText().length() != 0) {
 				result = existsUserID();
-				System.out.println(result);
 			}
 			
 			if(result == true) {
