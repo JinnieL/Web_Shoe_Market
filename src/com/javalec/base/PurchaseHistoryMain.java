@@ -95,7 +95,7 @@ public class PurchaseHistoryMain extends JFrame {
 		});
 		setTitle("주문 내역");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 642, 474);
+		setBounds(100, 100, 670, 474);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -110,7 +110,7 @@ public class PurchaseHistoryMain extends JFrame {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 44, 630, 320);
+			scrollPane.setBounds(6, 44, 658, 320);
 			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
