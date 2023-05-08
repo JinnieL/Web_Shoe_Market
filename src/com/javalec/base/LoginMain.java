@@ -194,7 +194,7 @@ public class LoginMain extends JFrame {
 				if(result == true) {
 					loginCheck();		// 데이터 베이스에서 유저 ID, PW가 있는지 확인 -> Dao 역할
 				} else {
-					JOptionPane.showMessageDialog(this, "아이디가 존재하지 않습니다.");
+					JOptionPane.showMessageDialog(this, "존재하지 않는 회원입니다.");
 					tfUserId.setText(""); 			// 입력한 필드 비워주기	 
 					pfUserPassword.setText("");		// 입력한 필드 비워주기
 					tfUserId.requestFocus();		// 아이디 필드로 커서 돌려주기
@@ -203,7 +203,7 @@ public class LoginMain extends JFrame {
 			} 
 		}
 		
-		if (rbAdmin.isSelected()) { 		// 관리자가 로그인 할 때 <<<<< 확인해야돼!!! 어떻게 할지 
+		if (rbAdmin.isSelected()) { 		// 관리자가 로그인 할 때 <<<<< 확인해야돼!!! 어떻게 할지. 동현이가 했지롱 
 			int i_chk = insertFieldCheck();
 			if (i_chk != 0) { 		// id나 pw가 제대로 입력 되지 않은 경우
 				//
