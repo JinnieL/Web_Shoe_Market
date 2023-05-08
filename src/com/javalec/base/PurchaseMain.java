@@ -137,16 +137,19 @@ public class PurchaseMain extends JFrame {
 				
 					
 					int listCount = beanList.size();
+					int i = 0;
 					
 					if(listCount == 0) {
-						int i = JOptionPane.showConfirmDialog(null, "주문 하실 상품이 없습니다.", "주문", JOptionPane.DEFAULT_OPTION);
-						if(i == 1) {
+						i = JOptionPane.showConfirmDialog(null, "주문 하실 상품이 없습니다.", "주문", JOptionPane.DEFAULT_OPTION);
+					}else {
+						if(i == 0) {
 							int wkResult = JOptionPane.showConfirmDialog(null, "위 상품들을 주문하시겠습니까?", "주문", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 							if(wkResult == JOptionPane.YES_OPTION) {
 								BuyAction();
 							}
-						}
+						}						
 					}
+					
 
 				}
 			});
