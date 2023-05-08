@@ -4,7 +4,7 @@ public class ShareVar {
 
 //	public static final String DBName = "jdbc:mysql://127.0.0.1/shoemarket?serverTimezone=UTC&characterEncoding=utf8&useSSL=FALSE";
 	/* 팀장 IP */
-	public static final String DBName = "jdbc:mysql://210.126.27.251/shoemarket?serverTimezone=UTC&characterEncoding=utf8&useSSL=FALSE";
+	public static final String DBName = "jdbc:mysql://192.168.50.7/shoemarket?serverTimezone=UTC&characterEncoding=utf8&useSSL=FALSE";
 	/* DB 계정 */
 	public static final String DBUser = "root";
 	/* DB 비밀번호 */
