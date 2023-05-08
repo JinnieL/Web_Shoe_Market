@@ -351,14 +351,23 @@ public class CartMain extends JFrame {
 	
 	// 장바구니 비우기
 	private void tableEmpty() {
+		beanList = new ArrayList<CartDto>();
 		CartDao dao = new CartDao();
+		beanList = dao.selectList(userid);
+		int listCount = beanList.size();
+		
 		int i = JOptionPane.showConfirmDialog(this, "장바구니를 비우시겠습니까???", "장바구니",JOptionPane.YES_NO_OPTION);
 		if(i == 0) {
-			boolean result =  dao.alldeleteAction(userid);
-			if(result) {
-				JOptionPane.showMessageDialog(this,"장바구니 비우기\n"  + userid + "님의 장바구니가 비워졌습니다.!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
+			if(listCount == 0) {
+				JOptionPane.showMessageDialog(this, "장바구니에 상품이 담겨있지 않습니다.");
 			}else {
-				JOptionPane.showMessageDialog(this,"장바구니 비우기\n" +  "비우는 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+				boolean result =  dao.alldeleteAction(userid);
+				if(result) {
+					JOptionPane.showMessageDialog(this,"장바구니 비우기\n"  + userid + "님의 장바구니가 비워졌습니다.!", "장바구니 정보", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					JOptionPane.showMessageDialog(this,"장바구니 비우기\n" +  "비우는 중 문제가 발생했습니다. \n관리자에게 문의하세요!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
 			}
 		}	
 		
@@ -366,18 +375,34 @@ public class CartMain extends JFrame {
 	
 	// main 버튼
 	private void redirectUserMain() {
-		UserMain userMain = new UserMain();
-		userMain.setUserid(userid);
-		userMain.setVisible(true);
-		dispose();
+		
+
+			UserMain userMain = new UserMain();
+			userMain.setUserid(userid);
+			userMain.setVisible(true);
+			dispose();
+			
+		
 	}
 	
 	// 주문 버튼
 	private void redirectPurchase() {
-		PurchaseMain main = new PurchaseMain();
-		main.setUserid(userid);
-		main.setVisible(true);
-		dispose();
+		beanList = new ArrayList<CartDto>();
+		CartDao dao = new CartDao();
+		
+		beanList = dao.selectList(userid);
+		int listCount = beanList.size();
+		
+		if(listCount == 0) {
+			JOptionPane.showMessageDialog(this, "장바구니에 상품이 담겨있지 않습니다.");
+		}else {
+			PurchaseMain main = new PurchaseMain();
+			main.setUserid(userid);
+			main.setVisible(true);
+			dispose();
+			
+		}
+		
 	}
 	
 	// 수량 update

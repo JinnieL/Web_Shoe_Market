@@ -131,10 +131,23 @@ public class PurchaseMain extends JFrame {
 			BtnBuy = new JButton("구매");
 			BtnBuy.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					int wkResult = JOptionPane.showConfirmDialog(null, "위 상품들을 주문하시겠습니까?", "주문", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-					if(wkResult == JOptionPane.YES_OPTION) {
-						BuyAction();
+					beanList = new ArrayList<PurchaseDto>();
+					PurchaseDao dao = new PurchaseDao();
+					beanList = dao.selectList(userid);
+				
+					
+					int listCount = beanList.size();
+					
+					if(listCount == 0) {
+						int i = JOptionPane.showConfirmDialog(null, "주문 하실 상품이 없습니다.", "주문", JOptionPane.DEFAULT_OPTION);
+						if(i == 1) {
+							int wkResult = JOptionPane.showConfirmDialog(null, "위 상품들을 주문하시겠습니까?", "주문", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+							if(wkResult == JOptionPane.YES_OPTION) {
+								BuyAction();
+							}
+						}
 					}
+
 				}
 			});
 			BtnBuy.setBounds(381, 366, 104, 29);
