@@ -271,9 +271,10 @@ public class LoginMain extends JFrame {
 				dispose();
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "아이디 혹은 비밀번호를 확인해 주세요", "로그인 실패", JOptionPane.INFORMATION_MESSAGE);
-			tfUserId.requestFocus();
-			
+			if(tfUserId.getText().length() != 0) {
+				JOptionPane.showMessageDialog(this, "아이디 혹은 비밀번호를 확인해 주세요", "로그인 실패", JOptionPane.INFORMATION_MESSAGE);
+				tfUserId.requestFocus();
+			}
 		}
 		
 	}
